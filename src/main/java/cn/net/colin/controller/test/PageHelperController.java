@@ -1,5 +1,7 @@
 package cn.net.colin.controller.test;
 
+import cn.net.colin.common.exception.entity.ResultCode;
+import cn.net.colin.common.exception.entity.ResultInfo;
 import cn.net.colin.mapper.test.UserMapper;
 import cn.net.colin.model.test.User;
 import com.github.pagehelper.PageHelper;
@@ -18,14 +20,14 @@ import java.util.List;
 public class PageHelperController {
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @GetMapping("/pageHelper")
     @ResponseBody
     public Object pageHelper(){
-        PageHelper.startPage(1,5);
+        PageHelper.startPage(1,1);
         List<User> list = userMapper.findUserList();
-        PageInfo result = new PageInfo(list);
-        return result;
+        PageInfo<User> result = new PageInfo(list);
+        return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,list,result.getTotal());
     }
 }
