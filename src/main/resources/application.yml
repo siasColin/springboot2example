@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    # 默认使用单数据源环境 需要禁用掉配置类：MultipleDataSourceConfig
+    active: dynamic
+  thymeleaf:
+  # 禁用缓存
+    cache: false
+  messages:
+    # 指定国际化文件路径
+    basename: i18n.login
+mybatis:
+  # 指定全局配置文件位置
+  config-location: classpath:mybatis-config.xml
+  # 指定sql映射文件位置
+  mapper-locations: classpath:mapping/*/*.xml
+#pagehelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+logging:
+  file:
+    # 指定日志生成位置
+    path: ../logs/springboot2example
+
+

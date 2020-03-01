@@ -1,0 +1,318 @@
+
+body{
+	overflow: hidden;
+}
+.contentBigBox {
+  width: 100%;
+}
+.contentBigBox #headerNav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  min-width: 1100px;
+  height: 55px;
+  background: #2855b0;
+}
+.contentBigBox #headerNav > h1 {
+  float: left;
+  margin: 0;
+}
+.contentBigBox #headerNav > h1 img {
+  margin: 3px 0 0 10px;
+  width: 350px;
+}
+.contentBigBox #headerNav #nav {
+  float: left;
+  font-size: 0;
+  height: 100%;
+  margin-left: 5%;
+  margin-bottom: 0;
+}
+.contentBigBox #headerNav #nav li {
+  float: left;
+  height: 100%;
+  text-align: center;
+  width: 80px;
+  line-height: 14px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+}
+.contentBigBox #headerNav #nav li i {
+    font-size: 20px;
+    color: #FFF;
+    margin-top: 9px;
+}
+.contentBigBox #headerNav #nav li p {
+  font-size: 14px;
+  color: #FFFFFF;
+}
+.contentBigBox #headerNav #nav li:hover {
+  background: #1d4c9e;
+}
+.contentBigBox #headerNav .navTime {
+  float: right;
+  color: #FFFFFF;
+  height: 100%;
+  position: relative;
+}
+.contentBigBox #headerNav .navTime >ul , .contentBigBox #headerNav .navTime >ul li {
+	list-style: none;
+  overflow: hidden;
+  margin-bottom: 0;
+  margin-left: 0;
+  height: 100%;
+}
+.contentBigBox #headerNav .navTime >ul li {
+  float: left;
+}
+.contentBigBox #headerNav .navTime >ul .time {
+    line-height: 5px;
+    text-align: center;
+    padding-top:15px;
+}
+.contentBigBox #headerNav .navTime >ul .time p {
+  font-size: 12px;
+	padding-top: 2px;
+}
+.contentBigBox #headerNav .navTime >ul .userName span {
+  padding: 0 8px;
+  display: inline-block;
+  font-size: 12px;
+  width: 115px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  margin: 14px 13px;
+  border: 1px solid #2b96dc;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  background: #1d4c9e;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.contentBigBox #headerNav .navTime >ul .exit, .contentBigBox #headerNav .navTime ul .list {
+  cursor: pointer;
+}
+.contentBigBox #headerNav .navTime >ul .exit i {
+  margin-top: 15px;
+  font-size: 20px;
+}
+.contentBigBox #headerNav .navTime >ul .list{
+	background: #163C87;
+	text-align: center;
+  width: 55px;
+  line-height: 55px;
+  margin-left: 10px;
+}
+.contentBigBox #headerNav .navTime >ul .list:hover i{
+	opacity: 1;
+}
+.contentBigBox #headerNav .navTime >ul .list i{
+	font-size: 20px;
+	opacity: .8;
+}
+.navActive {
+  background: #1d4c9e !important;
+}
+.navActive:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4px;
+  background: #21a5f0;
+}
+.contentBigBox #headerNav .navTime #userBox{
+	position: absolute;
+	right: 0;
+	top:55px;
+	z-index: 100;
+  background: #163C87;
+  width: 38vw;
+  min-height: 300px;
+  max-height: 80vh;
+  padding: 15px;
+  line-height: initial;
+  display: none;
+}
+.contentBigBox #headerNav .navTime #userBox .userHeader{
+	width: 100%;
+	padding-bottom: 10px;
+	border-bottom:1px solid #DDD;
+}
+.contentBigBox #headerNav .navTime #userBox .userHeader i{
+	font-size: 20px;
+}
+.contentBigBox #headerNav .navTime #userBox .userList .leftList .headerTitle{
+	opacity: 0.8;
+	display: inline-block;
+  margin-top: 10px;
+}
+.contentBigBox #headerNav .navTime #userBox .userList .leftList >div{
+	margin-top: 5px;
+	opacity: .8;
+	cursor: pointer;
+}
+.contentBigBox #headerNav .navTime #userBox .userList .leftList >div:hover{
+	opacity: 1;
+}
+.contentBigBox #headerNav .navTime #userBox .userList .leftList >div i{
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	background: #0078D7;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+	font-size: 18px;
+}
+.contentBigBox #headerNav .navTime #userBox .userList .leftList >div span{
+	font-size: 14px;
+	vertical-align: text-bottom;
+}
+.contentBigBox #headerNav .navTime #userBox .userList .rightList  ul  {
+		list-style:none;
+    margin: 0;
+    margin-top: 15px;
+	}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList  >li {
+		height:80px;
+		padding-right: 5px;
+		padding-left: 5px;
+}
+.contentBigBox #headerNav .navTime #userBox .userList .rightList .item {
+		height:75px;
+		text-align:center;
+		cursor:pointer;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+}
+
+.contentBigBox #headerNav .navTime #userBox .userList .rightList  .item i{
+	font-size: 25px;
+	margin:13px 0 3px 0 ;
+}
+.contentBigBox #headerNav .navTime #userBox .userList .rightList .addItem{
+	padding:0 5px ;
+}
+.contentBigBox #headerNav .navTime #userBox .userList .rightList .addItem .item{
+	background: #7CCD02;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.contentBigBox #headerNav .navTime #userBox .userList .rightList .addItem .item:hover{
+	opacity: .8;
+}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList >li{
+	position: relative;
+	-webkit-transition: width 0.3s;
+	-moz-transition: width 0.3s;
+	-ms-transition: width 0.3s;
+	-o-transition: width 0.3s;
+	transition: width 0.3s;
+  margin-bottom: 5px;
+}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList >li .setings{
+	position: absolute;
+	top: -7px;
+	right: 0;
+	z-index: 999;
+}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList >li:hover .setings >i{
+	display: block;
+}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList >li .setings >i{
+	font-size: 15px;
+	color:#555;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	background: #FFFFFF;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	margin-left: 27px;
+	display: none;
+	cursor: pointer;
+}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList >li .setings ul{
+	margin:1px 0 0 -5px ;
+	border:1px solid #555555;
+	display: none;
+}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList >li .setings ul li{
+	background: #FFFFFF;
+	border-bottom:1px dashed #DDD;
+	color: #555;
+	line-height: 30px;
+	width: 50px;
+	text-align: center;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	font-weight: 600;
+}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList >li .setings ul li:hover{
+	background: #EEEEEE;
+}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList >li .setings ul .colorItem{
+	position: relative;
+}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList >li .setings ul .colorItem:hover >div{
+	display: block;
+}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList >li .setings ul .colorItem >div{
+	width: 50px;
+	position: absolute;
+	left: -51px;
+	top: 0;
+	background: #FFFFFF;
+	display: none;
+	border:1px solid #555555;
+}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList >li .setings ul .colorItem >div div{
+	width: 86%;
+	height: 20px;
+	margin: auto;
+	margin-top: 5px;
+}
+.contentBigBox #headerNav .navTime #userBox .userList #rightList >li .setings ul .colorItem >div div:last-of-type{
+	margin-bottom: 5px;
+}
+@media  screen and (max-width: 1366px) {
+	.contentBigBox #headerNav #nav{
+		margin-left: 2%;
+	}
+	#headerNav .navTime .time, #headerNav .navTime .times{
+		display: none;
+	}
+	#headerNav .navTime .time, #headerNav .navTime .userName{
+		display: none;
+	}
+}
+@media  screen and (max-width: 1300px) {
+	.contentBigBox #headerNav .navTime #userBox{
+		width: 500px;
+	}
+	.contentBigBox #headerNav #nav{
+		margin-left: 3%;
+	}
+	.contentBigBox #headerNav #nav li{
+		width: 75px;		
+	}
+}
