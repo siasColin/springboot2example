@@ -45,7 +45,7 @@ public class MyServerConfig {
         return new WebServerFactoryCustomizer<ConfigurableWebServerFactory>() {
             @Override
             public void customize(ConfigurableWebServerFactory factory) {
-                factory.setPort(8088);
+//                factory.setPort(8088);
             }
         };
     }
