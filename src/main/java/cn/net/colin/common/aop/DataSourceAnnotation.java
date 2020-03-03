@@ -13,6 +13,6 @@ import java.lang.annotation.Target;
 @Target({
         ElementType.METHOD
 })
-public @interface MyDataSource {
+public @interface DataSourceAnnotation {
     String value() default "db1";
 }

@@ -21,22 +21,22 @@ public class DynamicDataSourceAspect {
 
     /**
      * 切入点只对@Service注解的类上的@DataSource方法生效
-     * @param myDataSource
+     * @param dataSourceAnnotation
      */
-    @Pointcut(value="@within(org.springframework.stereotype.Service) && @annotation(myDataSource)" )
-    public void dynamicDataSourcePointCut(MyDataSource myDataSource){}
+    @Pointcut(value="@within(org.springframework.stereotype.Service) && @annotation(dataSourceAnnotation)" )
+    public void dynamicDataSourcePointCut(DataSourceAnnotation dataSourceAnnotation){}
 
-    @Before(value = "dynamicDataSourcePointCut(myDataSource)")
-    public void switchDataSource(MyDataSource myDataSource) {
-        DynamicDataSourceSwitcher.setDataSource(myDataSource.value());
+    @Before(value = "dynamicDataSourcePointCut(dataSourceAnnotation)")
+    public void switchDataSource(DataSourceAnnotation dataSourceAnnotation) {
+        DynamicDataSourceSwitcher.setDataSource(dataSourceAnnotation.value());
     }
 
     /**
      * 切点执行完后 切换成主数据库
-     * @param myDataSource
+     * @param dataSourceAnnotation
      */
-    @After(value="dynamicDataSourcePointCut(myDataSource)")
-    public void after(MyDataSource myDataSource){
+    @After(value="dynamicDataSourcePointCut(dataSourceAnnotation)")
+    public void after(DataSourceAnnotation dataSourceAnnotation){
         DynamicDataSourceSwitcher.cleanDataSource();
     }
 }

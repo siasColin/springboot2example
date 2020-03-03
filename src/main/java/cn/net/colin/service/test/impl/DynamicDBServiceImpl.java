@@ -1,12 +1,11 @@
 package cn.net.colin.service.test.impl;
 
-import cn.net.colin.common.aop.MyDataSource;
+import cn.net.colin.common.aop.DataSourceAnnotation;
 import cn.net.colin.common.util.DynamicDataSourceSwitcher;
 import cn.net.colin.mapper.test.UserMapper;
 import cn.net.colin.service.test.IDynamicDBService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +23,7 @@ public class DynamicDBServiceImpl implements IDynamicDBService {
         return userMapper.findUserList();
     }
     @Override
-    @MyDataSource(DynamicDataSourceSwitcher.db2)
+    @DataSourceAnnotation(DynamicDataSourceSwitcher.db2)
     public Object findUserListOnDB2Auto() {
         return userMapper.findUserList();
     }
@@ -45,7 +44,7 @@ public class DynamicDBServiceImpl implements IDynamicDBService {
     }
 
 //    @Transactional(rollbackFor = Exception.class)
-    @MyDataSource(DynamicDataSourceSwitcher.db2)
+    @DataSourceAnnotation(DynamicDataSourceSwitcher.db2)
     public void testTransactional_db2() {
         Map<String,Object> userMap = new HashMap<String,Object>();
         userMap.put("loginId","sxf");

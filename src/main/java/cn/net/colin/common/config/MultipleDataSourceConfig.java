@@ -22,7 +22,7 @@ import java.util.Map;
  * 多数据源bean的配置类
  * Created by sxf on 2020-3-1.
  */
-@Configuration
+//@Configuration
 public class MultipleDataSourceConfig {
     @Bean("db1")
     @ConfigurationProperties("spring.datasource.druid.db1")
