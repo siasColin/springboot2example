@@ -48,4 +48,18 @@ public class DynamicDBController {
         DynamicDataSourceSwitcher.cleanDataSource();
         return list;
     }
+
+    @GetMapping("/testTransactional_db1")
+    @ResponseBody
+    public Object transactional_db1(){
+        dynamicDBService.testTransactional_db1();
+        return "Transactional";
+    }
+
+    @GetMapping("/testTransactional_db2")
+    @ResponseBody
+    public Object testTransactional_db2(){
+        dynamicDBService.testTransactional_db2();
+        return "Transactional";
+    }
 }

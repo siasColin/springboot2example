@@ -7,4 +7,7 @@ public interface IDynamicDBService {
     Object findUserListOnDB1();
     Object findUserListOnDB2Auto();
     Object findUserListOnDB2();
+
+    void testTransactional_db1();
+    void testTransactional_db2();
 }

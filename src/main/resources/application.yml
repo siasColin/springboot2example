@@ -19,6 +19,8 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+  # 动态数据源 autoRuntimeDialect:true，确保使用不同数据源时，会使用匹配的分页进行查询
+#  auto-runtime-dialect: true
 logging:
   file:
     # 指定日志生成位置

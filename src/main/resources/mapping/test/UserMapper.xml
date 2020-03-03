@@ -24,4 +24,9 @@
           t_user tu
   </select>
 
+  <insert id="addUser" parameterType="map">
+        insert into t_user(user_name,password,nick_name)
+        values(#{loginId},#{loginPwd},#{userName})
+  </insert>
+
 </mapper>

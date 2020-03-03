@@ -6,6 +6,10 @@ import cn.net.colin.mapper.test.UserMapper;
 import cn.net.colin.service.test.IDynamicDBService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sxf on 2020-3-1.
@@ -28,5 +32,26 @@ public class DynamicDBServiceImpl implements IDynamicDBService {
     @Override
     public Object findUserListOnDB2() {
         return userMapper.findUserList();
+    }
+
+//    @Transactional(rollbackFor = Exception.class)
+    public void testTransactional_db1() {
+        Map<String,Object> userMap = new HashMap<String,Object>();
+        userMap.put("loginId","sxf");
+        userMap.put("loginPwd","123");
+        userMap.put("userName","colin");
+        userMapper.addUser(userMap);
+        int i = 1/0;
+    }
+
+//    @Transactional(rollbackFor = Exception.class)
+    @MyDataSource(DynamicDataSourceSwitcher.db2)
+    public void testTransactional_db2() {
+        Map<String,Object> userMap = new HashMap<String,Object>();
+        userMap.put("loginId","sxf");
+        userMap.put("loginPwd","123");
+        userMap.put("userName","colin");
+        userMapper.addUser(userMap);
+        int i = 1/0;
     }
 }

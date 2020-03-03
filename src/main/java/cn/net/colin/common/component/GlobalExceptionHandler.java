@@ -13,6 +13,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e, HttpServletRequest request){
+        e.printStackTrace();
         ResultInfo result = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
         if (e instanceof BusinessRuntimeException) {
             BusinessRuntimeException bex = (BusinessRuntimeException)e;
