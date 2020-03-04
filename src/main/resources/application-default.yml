@@ -3,7 +3,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     #   数据源基本配置
-    url: jdbc:mysql://127.0.0.1:3306/webchatnew?allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/management?allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8&serverTimezone=UTC
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: root

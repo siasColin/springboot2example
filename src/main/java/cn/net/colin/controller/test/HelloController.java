@@ -2,11 +2,9 @@ package cn.net.colin.controller.test;
 
 import cn.net.colin.common.exception.entity.ResultInfo;
 import cn.net.colin.common.exception.entity.ResultCode;
-import cn.net.colin.common.util.DynamicDataSourceSwitcher;
-import cn.net.colin.mapper.test.UserMapper;
-import cn.net.colin.model.test.User;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import cn.net.colin.common.util.SnowflakeIdWorker;
+import cn.net.colin.model.sysManage.SysArea;
+import cn.net.colin.service.sysManage.ISysAreaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +28,9 @@ public class HelloController {
     @Autowired
     DataSource dataSource;
 
+    @Autowired
+    ISysAreaService sysAreaService;
+
     @RequestMapping("/hello")
     @ResponseBody
     public Object hello(){
@@ -39,5 +42,28 @@ public class HelloController {
     @ResponseBody
     public ResultInfo helloResult(){
         return ResultInfo.of(ResultCode.SUCCESS);
+    }
+
+    @RequestMapping("/date")
+    @ResponseBody
+    public Object hello(Date date){
+        return date;
+    }
+
+    @RequestMapping("/insertBatch")
+    @ResponseBody
+    public Object insertBatch(){
+        List<SysArea> areaList = new ArrayList<SysArea>();
+        for (int i= 0;i<2;i++) {
+            SysArea sysArea = new SysArea();
+            sysArea.setId(SnowflakeIdWorker.generateId());
+            sysArea.setAreaCode(sysArea.getId()+"");
+            sysArea.setAreaName(sysArea.getId()+"name");
+            sysArea.setParentCode("0");
+            sysArea.setAreaLevel(0);
+            areaList.add(sysArea);
+        }
+        int num = sysAreaService.insertBatch(areaList);
+        return num;
     }
 }

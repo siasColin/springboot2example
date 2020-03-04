@@ -2,8 +2,8 @@ package cn.net.colin.controller.test;
 
 import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.exception.entity.ResultInfo;
-import cn.net.colin.mapper.test.UserMapper;
-import cn.net.colin.model.test.User;
+import cn.net.colin.model.sysManage.SysArea;
+import cn.net.colin.service.sysManage.ISysAreaService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +20,14 @@ import java.util.List;
 public class PageHelperController {
 
     @Autowired
-    private UserMapper userMapper;
+    ISysAreaService sysAreaService;
 
     @GetMapping("/pageHelper")
     @ResponseBody
     public Object pageHelper(){
         PageHelper.startPage(1,1);
-        List<User> list = userMapper.findUserList();
-        PageInfo<User> result = new PageInfo(list);
+        List<SysArea> list = sysAreaService.selectAll();
+        PageInfo<SysArea> result = new PageInfo(list);
         return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,list,result.getTotal());
     }
 }

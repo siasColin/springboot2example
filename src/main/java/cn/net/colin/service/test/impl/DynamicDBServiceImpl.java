@@ -2,8 +2,11 @@ package cn.net.colin.service.test.impl;
 
 import cn.net.colin.common.aop.DataSourceAnnotation;
 import cn.net.colin.common.util.DynamicDataSourceSwitcher;
-import cn.net.colin.mapper.test.UserMapper;
+import cn.net.colin.common.util.SnowflakeIdWorker;
+import cn.net.colin.mapper.sysManage.SysAreaMapper;
+import cn.net.colin.model.sysManage.SysArea;
 import cn.net.colin.service.test.IDynamicDBService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,41 +19,45 @@ import java.util.Map;
 @Service
 public class DynamicDBServiceImpl implements IDynamicDBService {
     @Autowired
-    private UserMapper userMapper;
+    private SysAreaMapper sysAreaMapper;
 
     @Override
     public Object findUserListOnDB1() {
-        return userMapper.findUserList();
+        return sysAreaMapper.selectAll();
     }
     @Override
     @DataSourceAnnotation(DynamicDataSourceSwitcher.db2)
     public Object findUserListOnDB2Auto() {
-        return userMapper.findUserList();
+        return sysAreaMapper.selectAll();
     }
 
     @Override
     public Object findUserListOnDB2() {
-        return userMapper.findUserList();
+        return sysAreaMapper.selectAll();
     }
 
 //    @Transactional(rollbackFor = Exception.class)
     public void testTransactional_db1() {
-        Map<String,Object> userMap = new HashMap<String,Object>();
-        userMap.put("loginId","sxf");
-        userMap.put("loginPwd","123");
-        userMap.put("userName","colin");
-        userMapper.addUser(userMap);
+        SysArea sysArea = new SysArea();
+        sysArea.setId(SnowflakeIdWorker.generateId());
+        sysArea.setAreaCode(sysArea.getId()+"");
+        sysArea.setAreaName(sysArea.getId()+"name");
+        sysArea.setParentCode("0");
+        sysArea.setAreaLevel(0);
+        sysAreaMapper.insert(sysArea);
         int i = 1/0;
     }
 
 //    @Transactional(rollbackFor = Exception.class)
     @DataSourceAnnotation(DynamicDataSourceSwitcher.db2)
     public void testTransactional_db2() {
-        Map<String,Object> userMap = new HashMap<String,Object>();
-        userMap.put("loginId","sxf");
-        userMap.put("loginPwd","123");
-        userMap.put("userName","colin");
-        userMapper.addUser(userMap);
+        SysArea sysArea = new SysArea();
+        sysArea.setId(SnowflakeIdWorker.generateId());
+        sysArea.setAreaCode(sysArea.getId()+"");
+        sysArea.setAreaName(sysArea.getId()+"name");
+        sysArea.setParentCode("0");
+        sysArea.setAreaLevel(0);
+        sysAreaMapper.insert(sysArea);
         int i = 1/0;
     }
 }

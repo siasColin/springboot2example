@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.net.colin.mapper.sysManage.SysOperatetypeMapper">
+  <resultMap id="BaseResultMap" type="cn.net.colin.model.sysManage.SysOperatetype">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="operate_code" jdbcType="VARCHAR" property="operateCode" />
+    <result column="operate_name" jdbcType="VARCHAR" property="operateName" />
+    <result column="operate_describe" jdbcType="VARCHAR" property="operateDescribe" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, operate_code, operate_name, operate_describe, create_user, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_operatetype
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_operatetype
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.net.colin.model.sysManage.SysOperatetype">
+    insert into sys_operatetype (id, operate_code, operate_name, 
+      operate_describe, create_user, create_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{operateCode,jdbcType=VARCHAR}, #{operateName,jdbcType=VARCHAR}, 
+      #{operateDescribe,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.net.colin.model.sysManage.SysOperatetype">
+    insert into sys_operatetype
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="operateCode != null">
+        operate_code,
+      </if>
+      <if test="operateName != null">
+        operate_name,
+      </if>
+      <if test="operateDescribe != null">
+        operate_describe,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="operateCode != null">
+        #{operateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operateName != null">
+        #{operateName,jdbcType=VARCHAR},
+      </if>
+      <if test="operateDescribe != null">
+        #{operateDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into sys_operatetype (id, operate_code, operate_name, 
+      operate_describe, create_user, 
+      create_time)
+    values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.operateCode,jdbcType=VARCHAR}, #{item.operateName,jdbcType=VARCHAR}, 
+        #{item.operateDescribe,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, 
+        #{item.createTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="insertBatchSelective" parameterType="java.util.List">
+    insert into sys_operatetype
+    (id, operate_code, operate_name, operate_describe, create_user, create_time)
+    values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="item.id != null">
+          #{item.id,jdbcType=BIGINT},
+        </if>
+        <if test="item.id == null">
+          NULL,
+        </if>
+        <if test="item.operateCode != null">
+          #{item.operateCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.operateCode == null">
+          NULL,
+        </if>
+        <if test="item.operateName != null">
+          #{item.operateName,jdbcType=VARCHAR},
+        </if>
+        <if test="item.operateName == null">
+          NULL,
+        </if>
+        <if test="item.operateDescribe != null">
+          #{item.operateDescribe,jdbcType=VARCHAR},
+        </if>
+        <if test="item.operateDescribe == null">
+          NULL,
+        </if>
+        <if test="item.createUser != null">
+          #{item.createUser,jdbcType=VARCHAR},
+        </if>
+        <if test="item.createUser == null">
+          NULL,
+        </if>
+        <if test="item.createTime != null">
+          #{item.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.createTime == null">
+          NULL,
+        </if>
+      </trim>
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.net.colin.model.sysManage.SysOperatetype">
+    update sys_operatetype
+    <set>
+      <if test="operateCode != null">
+        operate_code = #{operateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operateName != null">
+        operate_name = #{operateName,jdbcType=VARCHAR},
+      </if>
+      <if test="operateDescribe != null">
+        operate_describe = #{operateDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.net.colin.model.sysManage.SysOperatetype">
+    update sys_operatetype
+    set operate_code = #{operateCode,jdbcType=VARCHAR},
+      operate_name = #{operateName,jdbcType=VARCHAR},
+      operate_describe = #{operateDescribe,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+    update sys_operatetype
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="operate_code =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.operateCode}
+        </foreach>
+      </trim>
+      <trim prefix="operate_name =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.operateName}
+        </foreach>
+      </trim>
+      <trim prefix="operate_describe =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.operateDescribe}
+        </foreach>
+      </trim>
+      <trim prefix="create_user =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.createUser}
+        </foreach>
+      </trim>
+      <trim prefix="create_time =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.createTime}
+        </foreach>
+      </trim>
+    </trim>
+    where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       #{item.id} 
+    </foreach>
+  </update>
+  <update id="updateBatchByPrimaryKeySelective" parameterType="java.util.List">
+    update sys_operatetype
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="operate_code =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.operateCode != null ">
+            when  #{item.id} then #{item.operateCode}
+          </if>
+          <if test="item.operateCode == null ">
+            when  #{item.id} then sys_operatetype.operate_code
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="operate_name =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.operateName != null ">
+            when  #{item.id} then #{item.operateName}
+          </if>
+          <if test="item.operateName == null ">
+            when  #{item.id} then sys_operatetype.operate_name
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="operate_describe =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.operateDescribe != null ">
+            when  #{item.id} then #{item.operateDescribe}
+          </if>
+          <if test="item.operateDescribe == null ">
+            when  #{item.id} then sys_operatetype.operate_describe
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_user =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.createUser != null ">
+            when  #{item.id} then #{item.createUser}
+          </if>
+          <if test="item.createUser == null ">
+            when  #{item.id} then sys_operatetype.create_user
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_time =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.createTime != null ">
+            when  #{item.id} then #{item.createTime}
+          </if>
+          <if test="item.createTime == null ">
+            when  #{item.id} then sys_operatetype.create_time
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       #{item.id} 
+    </foreach>
+  </update>
+</mapper>

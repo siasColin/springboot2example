@@ -8,6 +8,10 @@ spring:
   messages:
     # 指定国际化文件路径
     basename: i18n.login
+  #时间戳统一转换
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 mybatis:
   # 指定全局配置文件位置
   config-location: classpath:mybatis-config.xml

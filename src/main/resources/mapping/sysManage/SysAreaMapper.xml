@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.net.colin.mapper.sysManage.SysAreaMapper">
+  <resultMap id="BaseResultMap" type="cn.net.colin.model.sysManage.SysArea">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    <result column="area_level" jdbcType="INTEGER" property="areaLevel" />
+    <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="sort_num" jdbcType="INTEGER" property="sortNum" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, area_name, area_code, area_level, parent_code, longitude, latitude, create_user, 
+    create_time, sort_num
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_area
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultType="cn.net.colin.model.sysManage.SysArea">
+    select
+    <include refid="Base_Column_List" />
+    from sys_area
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_area
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.net.colin.model.sysManage.SysArea">
+    insert into sys_area (id, area_name, area_code, 
+      area_level, parent_code, longitude, 
+      latitude, create_user, create_time, 
+      sort_num)
+    values (#{id,jdbcType=BIGINT}, #{areaName,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR}, 
+      #{areaLevel,jdbcType=INTEGER}, #{parentCode,jdbcType=VARCHAR}, #{longitude,jdbcType=DECIMAL}, 
+      #{latitude,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{sortNum,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.net.colin.model.sysManage.SysArea">
+    insert into sys_area
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="areaName != null">
+        area_name,
+      </if>
+      <if test="areaCode != null">
+        area_code,
+      </if>
+      <if test="areaLevel != null">
+        area_level,
+      </if>
+      <if test="parentCode != null">
+        parent_code,
+      </if>
+      <if test="longitude != null">
+        longitude,
+      </if>
+      <if test="latitude != null">
+        latitude,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="sortNum != null">
+        sort_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="areaName != null">
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null">
+        #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaLevel != null">
+        #{areaLevel,jdbcType=INTEGER},
+      </if>
+      <if test="parentCode != null">
+        #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null">
+        #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null">
+        #{latitude,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sortNum != null">
+        #{sortNum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into sys_area (id, area_name, area_code, 
+      area_level, parent_code, longitude, 
+      latitude, create_user, create_time, 
+      sort_num)
+    values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.areaName,jdbcType=VARCHAR}, #{item.areaCode,jdbcType=VARCHAR}, 
+        #{item.areaLevel,jdbcType=INTEGER}, #{item.parentCode,jdbcType=VARCHAR}, #{item.longitude,jdbcType=DECIMAL}, 
+        #{item.latitude,jdbcType=DECIMAL}, #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.sortNum,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+  <insert id="insertBatchSelective" parameterType="java.util.List">
+    insert into sys_area
+    (id, area_name, area_code, area_level, parent_code, longitude, latitude, create_user, 
+      create_time, sort_num)
+    values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="item.id != null">
+          #{item.id,jdbcType=BIGINT},
+        </if>
+        <if test="item.id == null">
+          NULL,
+        </if>
+        <if test="item.areaName != null">
+          #{item.areaName,jdbcType=VARCHAR},
+        </if>
+        <if test="item.areaName == null">
+          NULL,
+        </if>
+        <if test="item.areaCode != null">
+          #{item.areaCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.areaCode == null">
+          NULL,
+        </if>
+        <if test="item.areaLevel != null">
+          #{item.areaLevel,jdbcType=INTEGER},
+        </if>
+        <if test="item.areaLevel == null">
+          NULL,
+        </if>
+        <if test="item.parentCode != null">
+          #{item.parentCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.parentCode == null">
+          NULL,
+        </if>
+        <if test="item.longitude != null">
+          #{item.longitude,jdbcType=DECIMAL},
+        </if>
+        <if test="item.longitude == null">
+          NULL,
+        </if>
+        <if test="item.latitude != null">
+          #{item.latitude,jdbcType=DECIMAL},
+        </if>
+        <if test="item.latitude == null">
+          NULL,
+        </if>
+        <if test="item.createUser != null">
+          #{item.createUser,jdbcType=VARCHAR},
+        </if>
+        <if test="item.createUser == null">
+          NULL,
+        </if>
+        <if test="item.createTime != null">
+          #{item.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.createTime == null">
+          NULL,
+        </if>
+        <if test="item.sortNum != null">
+          #{item.sortNum,jdbcType=INTEGER},
+        </if>
+        <if test="item.sortNum == null">
+          NULL,
+        </if>
+      </trim>
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.net.colin.model.sysManage.SysArea">
+    update sys_area
+    <set>
+      <if test="areaName != null">
+        area_name = #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null">
+        area_code = #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaLevel != null">
+        area_level = #{areaLevel,jdbcType=INTEGER},
+      </if>
+      <if test="parentCode != null">
+        parent_code = #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null">
+        longitude = #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null">
+        latitude = #{latitude,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sortNum != null">
+        sort_num = #{sortNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.net.colin.model.sysManage.SysArea">
+    update sys_area
+    set area_name = #{areaName,jdbcType=VARCHAR},
+      area_code = #{areaCode,jdbcType=VARCHAR},
+      area_level = #{areaLevel,jdbcType=INTEGER},
+      parent_code = #{parentCode,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=DECIMAL},
+      latitude = #{latitude,jdbcType=DECIMAL},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      sort_num = #{sortNum,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+    update sys_area
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="area_name =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.areaName}
+        </foreach>
+      </trim>
+      <trim prefix="area_code =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.areaCode}
+        </foreach>
+      </trim>
+      <trim prefix="area_level =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.areaLevel}
+        </foreach>
+      </trim>
+      <trim prefix="parent_code =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.parentCode}
+        </foreach>
+      </trim>
+      <trim prefix="longitude =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.longitude}
+        </foreach>
+      </trim>
+      <trim prefix="latitude =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.latitude}
+        </foreach>
+      </trim>
+      <trim prefix="create_user =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.createUser}
+        </foreach>
+      </trim>
+      <trim prefix="create_time =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.createTime}
+        </foreach>
+      </trim>
+      <trim prefix="sort_num =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.sortNum}
+        </foreach>
+      </trim>
+    </trim>
+    where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       #{item.id} 
+    </foreach>
+  </update>
+  <update id="updateBatchByPrimaryKeySelective" parameterType="java.util.List">
+    update sys_area
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="area_name =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.areaName != null ">
+            when  #{item.id} then #{item.areaName}
+          </if>
+          <if test="item.areaName == null ">
+            when  #{item.id} then sys_area.area_name
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="area_code =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.areaCode != null ">
+            when  #{item.id} then #{item.areaCode}
+          </if>
+          <if test="item.areaCode == null ">
+            when  #{item.id} then sys_area.area_code
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="area_level =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.areaLevel != null ">
+            when  #{item.id} then #{item.areaLevel}
+          </if>
+          <if test="item.areaLevel == null ">
+            when  #{item.id} then sys_area.area_level
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="parent_code =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.parentCode != null ">
+            when  #{item.id} then #{item.parentCode}
+          </if>
+          <if test="item.parentCode == null ">
+            when  #{item.id} then sys_area.parent_code
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="longitude =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.longitude != null ">
+            when  #{item.id} then #{item.longitude}
+          </if>
+          <if test="item.longitude == null ">
+            when  #{item.id} then sys_area.longitude
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="latitude =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.latitude != null ">
+            when  #{item.id} then #{item.latitude}
+          </if>
+          <if test="item.latitude == null ">
+            when  #{item.id} then sys_area.latitude
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_user =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.createUser != null ">
+            when  #{item.id} then #{item.createUser}
+          </if>
+          <if test="item.createUser == null ">
+            when  #{item.id} then sys_area.create_user
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_time =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.createTime != null ">
+            when  #{item.id} then #{item.createTime}
+          </if>
+          <if test="item.createTime == null ">
+            when  #{item.id} then sys_area.create_time
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="sort_num =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.sortNum != null ">
+            when  #{item.id} then #{item.sortNum}
+          </if>
+          <if test="item.sortNum == null ">
+            when  #{item.id} then sys_area.sort_num
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       #{item.id} 
+    </foreach>
+  </update>
+</mapper>

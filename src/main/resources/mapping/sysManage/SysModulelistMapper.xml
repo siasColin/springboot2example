@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.net.colin.mapper.sysManage.SysModullistMapper">
+  <resultMap id="BaseResultMap" type="cn.net.colin.model.sysManage.SysModulelist">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="pid" jdbcType="BIGINT" property="pid" />
+    <result column="module_name" jdbcType="VARCHAR" property="moduleName" />
+    <result column="module_code" jdbcType="VARCHAR" property="moduleCode" />
+    <result column="module_icon" jdbcType="VARCHAR" property="moduleIcon" />
+    <result column="module_url" jdbcType="VARCHAR" property="moduleUrl" />
+    <result column="module_target" jdbcType="VARCHAR" property="moduleTarget" />
+    <result column="module_type" jdbcType="INTEGER" property="moduleType" />
+    <result column="module_status" jdbcType="INTEGER" property="moduleStatus" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, pid, module_name, module_code, module_icon, module_url, module_target, module_type, 
+    module_status, create_user, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_modulelist
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_modulelist
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.net.colin.model.sysManage.SysModulelist">
+    insert into sys_modulelist (id, pid, module_name,
+      module_code, module_icon, module_url, 
+      module_target, module_type, module_status, 
+      create_user, create_time)
+    values (#{id,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT}, #{moduleName,jdbcType=VARCHAR}, 
+      #{moduleCode,jdbcType=VARCHAR}, #{moduleIcon,jdbcType=VARCHAR}, #{moduleUrl,jdbcType=VARCHAR}, 
+      #{moduleTarget,jdbcType=VARCHAR}, #{moduleType,jdbcType=INTEGER}, #{moduleStatus,jdbcType=INTEGER}, 
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.net.colin.model.sysManage.SysModulelist">
+    insert into sys_modulelist
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="pid != null">
+        pid,
+      </if>
+      <if test="moduleName != null">
+        module_name,
+      </if>
+      <if test="moduleCode != null">
+        module_code,
+      </if>
+      <if test="moduleIcon != null">
+        module_icon,
+      </if>
+      <if test="moduleUrl != null">
+        module_url,
+      </if>
+      <if test="moduleTarget != null">
+        module_target,
+      </if>
+      <if test="moduleType != null">
+        module_type,
+      </if>
+      <if test="moduleStatus != null">
+        module_status,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="moduleName != null">
+        #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleCode != null">
+        #{moduleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleIcon != null">
+        #{moduleIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleUrl != null">
+        #{moduleUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleTarget != null">
+        #{moduleTarget,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleType != null">
+        #{moduleType,jdbcType=INTEGER},
+      </if>
+      <if test="moduleStatus != null">
+        #{moduleStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into sys_modulelist (id, pid, module_name,
+      module_code, module_icon, module_url, 
+      module_target, module_type, module_status, 
+      create_user, create_time)
+    values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.pid,jdbcType=BIGINT}, #{item.moduleName,jdbcType=VARCHAR}, 
+        #{item.moduleCode,jdbcType=VARCHAR}, #{item.moduleIcon,jdbcType=VARCHAR}, #{item.moduleUrl,jdbcType=VARCHAR}, 
+        #{item.moduleTarget,jdbcType=VARCHAR}, #{item.moduleType,jdbcType=INTEGER}, #{item.moduleStatus,jdbcType=INTEGER}, 
+        #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="insertBatchSelective" parameterType="java.util.List">
+    insert into sys_modulelist
+    (id, pid, module_name, module_code, module_icon, module_url, module_target, module_type, 
+      module_status, create_user, create_time)
+    values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="item.id != null">
+          #{item.id,jdbcType=BIGINT},
+        </if>
+        <if test="item.id == null">
+          NULL,
+        </if>
+        <if test="item.pid != null">
+          #{item.pid,jdbcType=BIGINT},
+        </if>
+        <if test="item.pid == null">
+          NULL,
+        </if>
+        <if test="item.moduleName != null">
+          #{item.moduleName,jdbcType=VARCHAR},
+        </if>
+        <if test="item.moduleName == null">
+          NULL,
+        </if>
+        <if test="item.moduleCode != null">
+          #{item.moduleCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.moduleCode == null">
+          NULL,
+        </if>
+        <if test="item.moduleIcon != null">
+          #{item.moduleIcon,jdbcType=VARCHAR},
+        </if>
+        <if test="item.moduleIcon == null">
+          NULL,
+        </if>
+        <if test="item.moduleUrl != null">
+          #{item.moduleUrl,jdbcType=VARCHAR},
+        </if>
+        <if test="item.moduleUrl == null">
+          NULL,
+        </if>
+        <if test="item.moduleTarget != null">
+          #{item.moduleTarget,jdbcType=VARCHAR},
+        </if>
+        <if test="item.moduleTarget == null">
+          NULL,
+        </if>
+        <if test="item.moduleType != null">
+          #{item.moduleType,jdbcType=INTEGER},
+        </if>
+        <if test="item.moduleType == null">
+          NULL,
+        </if>
+        <if test="item.moduleStatus != null">
+          #{item.moduleStatus,jdbcType=INTEGER},
+        </if>
+        <if test="item.moduleStatus == null">
+          NULL,
+        </if>
+        <if test="item.createUser != null">
+          #{item.createUser,jdbcType=VARCHAR},
+        </if>
+        <if test="item.createUser == null">
+          NULL,
+        </if>
+        <if test="item.createTime != null">
+          #{item.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.createTime == null">
+          NULL,
+        </if>
+      </trim>
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.net.colin.model.sysManage.SysModulelist">
+    update sys_modulelist
+    <set>
+      <if test="pid != null">
+        pid = #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="moduleName != null">
+        module_name = #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleCode != null">
+        module_code = #{moduleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleIcon != null">
+        module_icon = #{moduleIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleUrl != null">
+        module_url = #{moduleUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleTarget != null">
+        module_target = #{moduleTarget,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleType != null">
+        module_type = #{moduleType,jdbcType=INTEGER},
+      </if>
+      <if test="moduleStatus != null">
+        module_status = #{moduleStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.net.colin.model.sysManage.SysModulelist">
+    update sys_modulelist
+    set pid = #{pid,jdbcType=BIGINT},
+      module_name = #{moduleName,jdbcType=VARCHAR},
+      module_code = #{moduleCode,jdbcType=VARCHAR},
+      module_icon = #{moduleIcon,jdbcType=VARCHAR},
+      module_url = #{moduleUrl,jdbcType=VARCHAR},
+      module_target = #{moduleTarget,jdbcType=VARCHAR},
+      module_type = #{moduleType,jdbcType=INTEGER},
+      module_status = #{moduleStatus,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+    update sys_modulelist
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="pid =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.pid}
+        </foreach>
+      </trim>
+      <trim prefix="module_name =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.moduleName}
+        </foreach>
+      </trim>
+      <trim prefix="module_code =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.moduleCode}
+        </foreach>
+      </trim>
+      <trim prefix="module_icon =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.moduleIcon}
+        </foreach>
+      </trim>
+      <trim prefix="module_url =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.moduleUrl}
+        </foreach>
+      </trim>
+      <trim prefix="module_target =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.moduleTarget}
+        </foreach>
+      </trim>
+      <trim prefix="module_type =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.moduleType}
+        </foreach>
+      </trim>
+      <trim prefix="module_status =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.moduleStatus}
+        </foreach>
+      </trim>
+      <trim prefix="create_user =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.createUser}
+        </foreach>
+      </trim>
+      <trim prefix="create_time =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{item.createTime}
+        </foreach>
+      </trim>
+    </trim>
+    where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       #{item.id} 
+    </foreach>
+  </update>
+  <update id="updateBatchByPrimaryKeySelective" parameterType="java.util.List">
+    update sys_modulelist
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="pid =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.pid != null ">
+            when  #{item.id} then #{item.pid}
+          </if>
+          <if test="item.pid == null ">
+            when  #{item.id} then sys_modulelist.pid
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="module_name =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.moduleName != null ">
+            when  #{item.id} then #{item.moduleName}
+          </if>
+          <if test="item.moduleName == null ">
+            when  #{item.id} then sys_modulelist.module_name
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="module_code =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.moduleCode != null ">
+            when  #{item.id} then #{item.moduleCode}
+          </if>
+          <if test="item.moduleCode == null ">
+            when  #{item.id} then sys_modulelist.module_code
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="module_icon =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.moduleIcon != null ">
+            when  #{item.id} then #{item.moduleIcon}
+          </if>
+          <if test="item.moduleIcon == null ">
+            when  #{item.id} then sys_modulelist.module_icon
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="module_url =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.moduleUrl != null ">
+            when  #{item.id} then #{item.moduleUrl}
+          </if>
+          <if test="item.moduleUrl == null ">
+            when  #{item.id} then sys_modulelist.module_url
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="module_target =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.moduleTarget != null ">
+            when  #{item.id} then #{item.moduleTarget}
+          </if>
+          <if test="item.moduleTarget == null ">
+            when  #{item.id} then sys_modulelist.module_target
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="module_type =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.moduleType != null ">
+            when  #{item.id} then #{item.moduleType}
+          </if>
+          <if test="item.moduleType == null ">
+            when  #{item.id} then sys_modulelist.module_type
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="module_status =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.moduleStatus != null ">
+            when  #{item.id} then #{item.moduleStatus}
+          </if>
+          <if test="item.moduleStatus == null ">
+            when  #{item.id} then sys_modulelist.module_status
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_user =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.createUser != null ">
+            when  #{item.id} then #{item.createUser}
+          </if>
+          <if test="item.createUser == null ">
+            when  #{item.id} then sys_modulelist.create_user
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_time =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.createTime != null ">
+            when  #{item.id} then #{item.createTime}
+          </if>
+          <if test="item.createTime == null ">
+            when  #{item.id} then sys_modulelist.create_time
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       #{item.id} 
+    </foreach>
+  </update>
+</mapper>

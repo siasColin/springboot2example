@@ -1,5 +1,6 @@
 package cn.net.colin;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * 		springboot在TransactionAutoConfiguration已经启用，无需重复开启。
  */
 @SpringBootApplication()
+@MapperScan(value = "cn.net.colin.mapper.*")
 public class Springboot2exampleApplication {
 
 	public static void main(String[] args) {
