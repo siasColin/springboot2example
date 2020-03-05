@@ -111,7 +111,7 @@ public class SysUser implements Serializable {
         this.loginName = loginName == null ? null : loginName.trim();
     }
 
-    /** 
+    /**
      * 获取 登录密码 sys_user.password
      * @return 登录密码
      */

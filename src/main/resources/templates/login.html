@@ -12,7 +12,7 @@
 		<link href="asserts/css/signin.css" th:href="@{/assets/css/signin.css}" rel="stylesheet">
 	</head>
 	<body class="text-center">
-	<form class="form-signin" action="index.html" th:action="@{/user/login}" method="post">
+	<form class="form-signin" action="index.html" th:action="@{/}" method="post">
 		<img class="mb-4" th:src="@{/image/bootstrap-solid.svg}" src="asserts/img/bootstrap-solid.svg" alt="" width="72" height="72">
 		<h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}">Please sign in</h1>
 		<!--判断-->
@@ -23,7 +23,16 @@
 		<input type="password" name="password" class="form-control" placeholder="Password" th:placeholder="#{login.password}" required="">
 		<div class="checkbox mb-3">
 			<label>
-				<input type="checkbox" value="remember-me"/> [[#{login.remember}]]
+				<!--AbstractRememberMeServices
+					private String parameter = "remember-me";
+
+					String paramValue = request.getParameter(parameter);
+					if (paramValue != null && (paramValue.equalsIgnoreCase("true") || paramValue.equalsIgnoreCase("on") || paramValue.equalsIgnoreCase("yes") || paramValue.equals("1"))) {
+					 return true;
+					}
+					根据源码，我们可以看出来要想记住我功能生效，name值必须为“remember-me”，并且值要满足上边if条件判断，这里我们不懈value值默认为“on”也是可以的。
+            	-->
+                <input name="remember-me" type="checkbox" class="form-check-input" id="remember"> [[#{login.remember}]]
 			</label>
 		</div>
 		<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{login.btn}">Sign in</button>

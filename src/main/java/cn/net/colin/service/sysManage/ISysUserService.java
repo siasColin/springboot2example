@@ -1,10 +1,11 @@
 package cn.net.colin.service.sysManage;
 
 import cn.net.colin.model.sysManage.SysUser;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface ISysUserService {
+public interface ISysUserService extends UserDetailsService {
 
     SysUser selectByPrimaryKey(Long id);
 

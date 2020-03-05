@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	<head>
 		<meta charset="utf-8" />
 		<title>首页布局</title>
@@ -10,6 +11,8 @@
 		<link rel="stylesheet" type="text/css" th:href="@{/css/index.css}" href="../static/css/index.css"/>
 	</head>
 	<body>
+		<form th:action="@{/logout}" method="post" id="logout">
+		</form>
 		<div class="navbar navbar-default" id="navbar">
 			<div class="navbar-container" id="navbar-container">
 				<div class="contentBigBox">
@@ -58,9 +61,10 @@
 									<p>星期三</p>
 								</li>
 								<li class="userName">
-									<span>艾美儿，欢迎你！</span>
+									<!--<span>艾美儿，欢迎你！</span>-->
+									<span sec:authentication="name"></span>
 								</li>
-								<li class="exit">
+								<li class="exit" onclick="logout();">
 									<i class=" icon-signout"></i>
 								</li>
 								<li class="list" id="moreMenu">
@@ -70,7 +74,8 @@
 							<div id="userBox">
 								<div class="userHeader">
 									<i class="icon-user"></i>
-									<span>艾美儿，欢迎你！</span>
+									<!--<span>艾美儿，欢迎你！</span>-->
+									<span sec:authentication="name"></span>
 								</div>
 								<div class="userList row">
 									<div class="col-sm-3 leftList">
@@ -532,7 +537,9 @@
 				$('#userBox').fadeToggle(200);
 			});
 			
-			
+			function logout(){
+			    $("#logout").submit();
+			}
 		</script>
 </body>
 </html>
