@@ -1,4 +1,4 @@
-package cn.net.colin.controller.test;
+package cn.net.colin.controller.common;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +15,13 @@ import java.util.Map;
 public class LoginController {
 
     @RequestMapping("/loginerror")
-    public String login(Map<String,Object> modelMap){
+    public String loginerror(Map<String,Object> modelMap){
         modelMap.put("msg","认证失败，请检查用户名或密码是否正确！");
+        return  "login";
+    }
+
+    @RequestMapping("/login")
+    public String login(Map<String,Object> modelMap){
         return  "login";
     }
 

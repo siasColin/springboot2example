@@ -1,5 +1,9 @@
 package cn.net.colin.common.config;
 
+import cn.net.colin.common.component.MyAccessDeniedHandler;
+import cn.net.colin.common.component.MyAuthenticationEntryPoint;
+import cn.net.colin.filter.JwtVerifyFilter;
+import cn.net.colin.filter.JwtLoginFilter;
 import cn.net.colin.service.sysManage.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -7,10 +11,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 
 /**
@@ -27,11 +31,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String KEY="colin";
     @Autowired
     private ISysUserService sysUserService;
+    @Autowired
+    private RsaKeyProperties prop;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public JwtVerifyFilter JwtVerifyFilter(){
+        return new JwtVerifyFilter();
+    }
+
+    @Bean
+    public AccessDeniedHandler myAccessDeniedHandler() {
+        return new MyAccessDeniedHandler();
+    }
+    @Bean
+    public MyAuthenticationEntryPoint myAuthenticationEntryPoint() {
+        return new MyAuthenticationEntryPoint();
+    }
+
     /**
      * 该方法是重写了WebSecurityConfigurerAdapter中的方法
      * 用于：自定义SpringSecurity配置信息
@@ -40,31 +61,61 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http)throws Exception{
-        http.authorizeRequests()
-                //静态文件允许你访问
-                .antMatchers("/assets/**","/bootstrap/**","/css/**","/image/**","/js/**","/webjars/**").permitAll()
-                //所有的请求需要认证即登陆后才能访问
-                .anyRequest().authenticated()
-                .and()
-                //form表单验证
-                .formLogin().loginPage("/").permitAll()
-                //设置默认登陆成功跳转的页面
-                .defaultSuccessUrl("/main")
-                //登陆失败的请求
-                .failureUrl("/loginerror")
-                .and()
-                .logout().logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .and()
-                //                开启cookie保存用户数据
-                .rememberMe()
-                .rememberMeServices(getRememberMeServices()) // 必须提供
-                //设置cookie私钥
-                .key(KEY)
-                //                处理异常，拒绝访问就重定向403页面
-                .and().exceptionHandling().accessDeniedPage("/error");
-//                .and().csrf().disable();
+        http
+            //允许iframe加载同源的资源
+            .headers().frameOptions().sameOrigin()
+            //.headers().frameOptions().disable()
+            .and()
+            //.csrf().disable()
+            //可以针对项目中对外提供的接口（基于jwt+rsa认证的）可在这里设置忽略csrf
+            .csrf().ignoringAntMatchers("/auth/login","/hello").and()
+            .authorizeRequests()
+            //允许访问的路径，但是依然会走spring security内部流程
+            .antMatchers("/","/login","/loginerror","/authException","/error").permitAll()
+            //所有的请求需要认证即登陆后才能访问
+            .anyRequest().authenticated()
+            .and()
+            //form表单验证
+            .formLogin().loginPage("/login").permitAll()
+            //设置默认登陆成功跳转的页面
+            .defaultSuccessUrl("/main")
+            //登陆失败的请求
+            .failureUrl("/loginerror")
+            .and()
+            .logout().logoutUrl("/logout")
+            .logoutSuccessUrl("/")
+            .and()
+            //                开启cookie保存用户数据
+            .rememberMe()
+            .rememberMeServices(getRememberMeServices()) // 必须提供
+            //设置cookie私钥
+            .key(KEY)
+            //处理没有访问权限情况
+            .and().exceptionHandling().accessDeniedHandler(myAccessDeniedHandler()).authenticationEntryPoint(myAuthenticationEntryPoint())
+            .and()
+            .addFilter(new JwtLoginFilter(super.authenticationManager(),prop))
+            .addFilterAfter(JwtVerifyFilter(),JwtLoginFilter.class);
     }
+
+
+    /**
+     * 该方法是重写了WebSecurityConfigurerAdapter中的方法
+     * 用于：让静态资源不走springsecurity的过滤器
+     * @param web
+     * @throws Exception
+     */
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/druid/**");
+        web.ignoring().antMatchers("/favicon.ico");
+        web.ignoring().antMatchers("/assets/**");
+        web.ignoring().antMatchers("/bootstrap/**");
+        web.ignoring().antMatchers("/css/**");
+        web.ignoring().antMatchers("/image/**");
+        web.ignoring().antMatchers("/js/**");
+        web.ignoring().antMatchers("/webjars/**");
+    }
+
 
 
     /**

@@ -1,14 +1,22 @@
 package cn.net.colin.model.sysManage;
 
+import cn.net.colin.model.common.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /** 
  * 用户表 sys_user
+ * 为了整合SpringSecurity，需要实现 UserDetails
  * @author sxf
  * date:2020/03/04 17:48
  */
-public class SysUser implements Serializable {
+public class SysUser implements Serializable, UserDetails {
     /** 
      * 串行版本ID
     */
@@ -79,6 +87,8 @@ public class SysUser implements Serializable {
      */ 
     private Date createTime;
 
+    private List<Role> roles;
+
     /** 
      * 获取 主键ID sys_user.id
      * @return 主键ID
@@ -111,12 +121,64 @@ public class SysUser implements Serializable {
         this.loginName = loginName == null ? null : loginName.trim();
     }
 
+    @Override
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
     /**
      * 获取 登录密码 sys_user.password
      * @return 登录密码
      */
+    @Override
     public final String getPassword() {
         return password;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getUsername() {
+        return loginName;
+    }
+
+    /**
+     * 是否过期
+     * @return
+     */
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    /**
+     * 是否被锁定
+     * @return
+     */
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    /**
+     * 密码是否过期
+     * @return
+     */
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+    /**
+     * 是否可用
+     * @return
+     */
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return true;
     }
 
     /** 
@@ -285,6 +347,14 @@ public class SysUser implements Serializable {
      */
     public final void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     @Override

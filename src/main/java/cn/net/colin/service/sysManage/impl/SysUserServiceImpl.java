@@ -1,6 +1,8 @@
 package cn.net.colin.service.sysManage.impl;
 
+import cn.net.colin.common.util.SnowflakeIdWorker;
 import cn.net.colin.mapper.sysManage.SysUserMapper;
+import cn.net.colin.model.common.Role;
 import cn.net.colin.model.sysManage.SysUser;
 import cn.net.colin.service.sysManage.ISysUserService;
 import org.slf4j.Logger;
@@ -70,10 +72,29 @@ public class SysUserServiceImpl implements ISysUserService {
      * @throws UsernameNotFoundException
      */
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+       /* List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("admin"));
         //admin/123456  ;$2a$10$Jw923tUCmRkkvZ/tv2YdYO3UKLN934VHz1ssADyxyPSM43sUWeAR6
         UserDetails userDetails = new User("admin","$2a$10$Jw923tUCmRkkvZ/tv2YdYO3UKLN934VHz1ssADyxyPSM43sUWeAR6",authorities);
-        return userDetails;
+        return userDetails;*/
+        /**
+         * 1.根据username（loginName）从数据库中查出用户对象
+         * 2.查出用户拥有的角色集合，放到用户对象中。（因为在该系统设计中角色信息需要业务转换，所以单独提取出来）
+         */
+        //先不走数据库
+        SysUser user = new SysUser();
+        user.setId(SnowflakeIdWorker.generateId());
+        user.setUserName("管理员");
+        user.setLoginName("admin");
+        user.setPassword("$2a$10$Jw923tUCmRkkvZ/tv2YdYO3UKLN934VHz1ssADyxyPSM43sUWeAR6");//123456经过加密后的字符
+        List<Role> roles = new ArrayList<Role>();
+        //这里我们可以放一些增、删、改等角色信息
+        Role role = new Role();
+        role.setId(SnowflakeIdWorker.generateId());
+        role.setRoleName("INSERT_ROLE");
+        role.setRoleDesc("拥有新增数据权限");
+        roles.add(role);
+        user.setRoles(roles);
+        return user;
     }
 }

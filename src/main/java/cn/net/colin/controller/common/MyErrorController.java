@@ -2,6 +2,8 @@ package cn.net.colin.controller.common;
 
 import cn.net.colin.common.exception.entity.ResultInfo;
 import cn.net.colin.common.exception.entity.ResultCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 public class MyErrorController implements ErrorController {
+    Logger Logger = LoggerFactory.getLogger(MyErrorController.class);
     @Override
     public String getErrorPath() {
         return "/error";
@@ -66,6 +69,20 @@ public class MyErrorController implements ErrorController {
         ResultInfo result = request.getAttribute("ext") == null ? ResultInfo.of(ResultCode.UNKNOWN_ERROR) :
                 (ResultInfo) request.getAttribute("ext");
         return result;
+    }
+
+    @RequestMapping(value="/authException",produces="text/html")
+    public String authExceptionHtml(HttpServletRequest request) {
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.STATUS_CODE_403);
+        request.setAttribute("returnCode",resultInfo.getReturnCode());
+        request.setAttribute("returnMessage",resultInfo.getReturnMessage());
+        return "error/authException";
+    }
+
+    @RequestMapping("/authException")
+    @ResponseBody
+    public ResultInfo authException(HttpServletRequest request) {
+        return ResultInfo.of(ResultCode.STATUS_CODE_403);
     }
 
 }
