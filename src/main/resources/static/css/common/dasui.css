@@ -1,0 +1,33 @@
+.das-icon-upload{
+    display:inline-block;
+    width:16px;
+    height:16px;
+    background-image: url("../images/upload.ico");
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+.das-icon-download{
+    display:inline-block;
+    width:16px;
+    height:16px;
+    background-image: url("../images/download.ico");
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+/*宽度50%*/
+.width50{
+    width:50% !important;
+}
+
+/*必填标识*/
+.span-red{
+    margin: 5px;
+    color:red;
+}
+
+
+.das-layer-import{
+    text-align: center !important;
+    line-height: 100px !important;
+}

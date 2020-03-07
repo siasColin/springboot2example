@@ -23,10 +23,16 @@
     from sys_area
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <select id="selectAll" resultType="cn.net.colin.model.sysManage.SysArea">
+  <select id="selectAll" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from sys_area
+  </select>
+  <select id="selectByAreaCode" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_area
+    where area_code = #{areaCode,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_area

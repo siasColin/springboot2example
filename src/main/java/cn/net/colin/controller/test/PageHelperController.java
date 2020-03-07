@@ -9,6 +9,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class PageHelperController {
     @Autowired
     ISysAreaService sysAreaService;
 
-    @GetMapping("/pageHelper")
+    @PostMapping("/pageHelper")
     @ResponseBody
     public Object pageHelper(){
         PageHelper.startPage(1,1);

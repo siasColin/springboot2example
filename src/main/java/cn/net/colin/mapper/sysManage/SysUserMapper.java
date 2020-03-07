@@ -78,4 +78,11 @@ public interface SysUserMapper {
      * @return 返回修改成功的数量
      */
     int updateBatchByPrimaryKeySelective(List<SysUser> sysUserList);
+
+    /**
+     * 根据条件查询用户信息
+     * @param user
+     * @return 返回用户集合
+     */
+    List<SysUser> selective(SysUser user);
 }

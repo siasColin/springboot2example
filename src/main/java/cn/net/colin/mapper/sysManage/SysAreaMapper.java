@@ -1,6 +1,7 @@
 package cn.net.colin.mapper.sysManage;
 
 import cn.net.colin.model.sysManage.SysArea;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -84,4 +85,10 @@ public interface SysAreaMapper {
      * @return 返回所有记录集合
      */
     List<SysArea> selectAll();
+
+    /**
+     * 根据地区编码查询地区信息
+     * @param areaCode
+     */
+    SysArea selectByAreaCode(@Param("areaCode") String areaCode);
 }

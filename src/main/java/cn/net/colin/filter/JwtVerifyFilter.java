@@ -42,7 +42,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
     @Autowired
     private RsaKeyProperties prop;
 
-    private List<String> doUrls = new ArrayList<String>(Arrays.asList("/hello"));
+    private List<String> doUrls = new ArrayList<String>(Arrays.asList("/hello/\\S*"));
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -51,9 +51,9 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();//获取访问的url
         boolean doFlag = false;
         for(String oneallowUrl:doUrls){//判断是否拦截
-            Pattern mpattern = Pattern.compile(oneallowUrl);
-            Matcher mmatcher = mpattern.matcher(uri);
-            if(mmatcher.find()){
+//            Pattern mpattern = Pattern.compile(oneallowUrl);
+//            Matcher mmatcher = mpattern.matcher(uri);
+            if(Pattern.matches(oneallowUrl,uri)){
                 doFlag = true;
                 break;
             }

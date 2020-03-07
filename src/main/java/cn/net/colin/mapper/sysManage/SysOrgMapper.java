@@ -1,6 +1,7 @@
 package cn.net.colin.mapper.sysManage;
 
 import cn.net.colin.model.sysManage.SysOrg;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -78,4 +79,11 @@ public interface SysOrgMapper {
      * @return 返回修改成功的数量
      */
     int updateBatchByPrimaryKeySelective(List<SysOrg> sysOrgList);
+
+    /**
+     * 根据机构编码查询机构信息
+     * @param orgCode
+     * @return
+     */
+    SysOrg selectByOrgCode(@Param("orgCode") String orgCode);
 }

@@ -80,7 +80,7 @@ body{
   font-size: 12px;
 	padding-top: 2px;
 }
-.contentBigBox #headerNav .navTime >ul .userName span {
+.contentBigBox #headerNav .navTime >ul .userName .span {
   padding: 0 8px;
   display: inline-block;
   font-size: 12px;

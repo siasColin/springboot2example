@@ -1,3 +1,5 @@
+server:
+  port: 8081
 spring:
   profiles:
     # 使用单数据源环境(default) 需要禁用掉配置类：MultipleDataSourceConfig
@@ -45,4 +47,3 @@ executor:
       size: 200
   queue:
     capacity: 2000
-

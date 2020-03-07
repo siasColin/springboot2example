@@ -46,10 +46,7 @@ public class SysModulelist implements Serializable {
 
     /** 
      * 打开位置navTab（系统内打开）、_blank(新窗口打开) ,默认（navTab）
-            navTab：右侧iframe中打开
-            _blank：新窗口打开
-            
-     */ 
+     */
     private String moduleTarget;
 
     /** 

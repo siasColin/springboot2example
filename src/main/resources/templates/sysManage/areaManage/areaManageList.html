@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>地区管理</title>
+    <link rel="stylesheet" th:href="@{/plugin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/plugin/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/common/dasui.css}">
+    <style>
+        body{margin: 10px;}
+        .demo-carousel{height: 200px; line-height: 200px; text-align: center;}
+
+        @media  screen and (max-width: 1366px) {
+            #area_tree{
+                height:630px;
+            }
+        }
+        .span-red{
+            margin: 5px;
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-row" style="height: 100%;">
+        <div class="layui-col-md3">
+            <div class="layui-inline">
+                <input type="text" class="layui-input" name="oneAreaName" id="oneAreaName" required  lay-verify="required" placeholder="请输入地区名称" autocomplete="off" style="width: 280px;">
+            </div>
+            <ul id="area_tree" class="ztree" style="overflow-y: auto;margin-top:5px;height: 100%;"></ul>
+        </div>
+        <div class="layui-col-md2">
+            <div>　　　</div>
+        </div>
+        <div class="layui-col-md5" style="margin-top: 4%;">
+            <form id="form1" class="layui-form" check="SSD_BIINFO">
+                <input id="id" name="id" type="hidden"/>
+                <!-- 第一行 -->
+                <div class="layui-row">
+                    <div class="layui-col-xs9">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="span-red">*</span>区域编码</label>
+                            <div class="layui-input-block">
+                                <input type="text"  id="areaCode" name="areaCode"  lay-verify="required|dasLength" daslength="30" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 第二行 -->
+                <div class="layui-row">
+                    <div class="layui-col-xs9">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="span-red">*</span>上级区域</label>
+                            <div class="layui-input-block">
+                                <input type="hidden" id="parentCode" name="parentCode">
+                                <input type="text" id="parentName" name="parentName" lay-verify="required|dasLength" daslength="30" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 第三行 -->
+                <div class="layui-row">
+                    <div class="layui-col-xs9">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="span-red">*</span>区域名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="areaName" name="areaName" lay-verify="required|dasLength" daslength="30" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 第四行-->
+                <div class="layui-row">
+                    <div class="layui-col-xs9">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="span-red">*</span>位置经度</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="longitude" name="longitude"     placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 第五行-->
+                <div class="layui-row">
+                    <div class="layui-col-xs9">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="span-red">*</span>位置纬度</label>
+                            <div class="layui-input-block">
+                                <input type="text"  id="latitude" name="latitude"   placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 第六行-->
+                <div class="layui-row">
+                    <div class="layui-col-xs9">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="span-red">*</span>区域等级</label>
+                            <div class="layui-input-block">
+                                <select id="areaLevel" name="areaLevel" lay-verify="required">
+                                    <option value="请选择"></option>
+                                    <option value=0>国家</option>
+                                    <option value=1>省级</option>
+                                    <option value=2>直辖市</option>
+                                    <option value=3>地市</option>
+                                    <option value=4>区/县</option>
+                                    <option value=5>乡/镇/街道</option>
+                                    <option value=6>社区/村</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 第七行-->
+                <div class="layui-row">
+                    <div class="layui-col-xs9">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">创建时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="createTime" name="createTime"  placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 第八行-->
+                <div class="layui-row">
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button  class="layui-btn layui-btn-sm" lay-submit lay-filter="saveOrUpdate" >提交</button>
+                                <button  class="layui-btn layui-btn-sm layui-btn-warm" lay-submit lay-filter="saveOrUpdate">修改</button>
+                                <button  class="layui-btn layui-btn-sm layui-btn-danger" lay-submit lay-filter="deleteOne">删除</button>
+                                <button  class="layui-btn layui-btn-sm" id="chongzhi">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="layui-col-md2">
+            <div>　　　</div>
+        </div>
+    </div>
+<script th:src="@{/js/jquery-2.1.4.min.js}"></script>
+<script th:src="@{/plugin/layui/layui.js}"></script>
+<script th:src="@{/js/common/layuiFromVerify.js}"></script>
+<script th:src="@{/plugin/zTree_v3/js/jquery.ztree.all.js}"></script>
+<script th:src="@{/js/common/common.js}"></script>
+<script th:src="@{/js/sysManage/areaManage/areaManageList.js}"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        form.render();
+    });
+</script>
+</body>
+</html>

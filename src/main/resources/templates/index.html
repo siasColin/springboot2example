@@ -3,8 +3,11 @@
 	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	<head>
 		<meta charset="utf-8" />
+		<meta name="_csrf" th:content="${_csrf.token}"/>
+		<meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
 		<title>首页布局</title>
 				<!-- basic styles -->
+		<link rel="stylesheet" th:href="@{/plugin/layui/css/layui.css}" media="all">
 		<link th:href="@{/bootstrap/css/bootstrap.css}" href="../static/bootstrap/css/bootstrap.css" rel="stylesheet" />
 		<link rel="stylesheet" th:href="@{/assets/css/font-awesome.min.css}" href="../static/assets/css/font-awesome.min.css" />
 		<link rel="stylesheet" th:href="@{/assets/css/ace.min.css}" href="../static/assets/css/ace.min.css" />
@@ -21,35 +24,7 @@
 							<img src="../static/image/logo.png" th:src="@{/image/logo.png}"/>
 						</h1>
 						<ul id="nav">
-							<li class="navActive">
-								<i class="icon-home"></i>
-								<p>首页</p>
-							</li>
-							<li>
-								<i class=" icon-road"></i>
-								<p>预警预测</p>
-							</li>
-							<li>
-								<i class=" icon-warning-sign"></i>
-								<p>发布审批</p>
-							</li>
-							<li>
-								<i class="icon-home"></i>
-								<p>反馈评估</p>
-							</li>
-							<li>
-								<i class="icon-dashboard"></i>
-								<p>运行监控</p>
-							</li>
-							<li>
-								<i class="icon-home"></i>
-								<p>预警管理</p>
-							</li>
-							<li>
-								<i class=" icon-tasks"></i>
-								<p>综合业务</p>
-							</li>
-							<li>
+							<li onclick="showSecondMenu('301951999484624896','','navTab')">
 								<i class="icon-cog"></i>
 								<p>系统管理</p>
 							</li>
@@ -62,7 +37,7 @@
 								</li>
 								<li class="userName">
 									<!--<span>艾美儿，欢迎你！</span>-->
-									<span sec:authentication="name"></span>
+									<span class="span"><span sec:authentication="name"></span>,欢迎你！</span>
 								</li>
 								<li class="exit" onclick="logout();">
 									<i class=" icon-signout"></i>
@@ -75,7 +50,7 @@
 								<div class="userHeader">
 									<i class="icon-user"></i>
 									<!--<span>艾美儿，欢迎你！</span>-->
-									<span sec:authentication="name"></span>
+									<span sec:authentication="name"></span><span>,欢迎你！</span>
 								</div>
 								<div class="userList row">
 									<div class="col-sm-3 leftList">
@@ -236,128 +211,9 @@
 				<a class="menu-toggler" id="menu-toggler" href="javascript:;">
 					<span class="menu-text"></span>
 				</a>
-				<div class="sidebar" id="sidebar">
+				<div class="sidebar menu-hide" id="sidebar" style="display: none">
 					<ul class="nav nav-list" id="secondmenu">
-						<li class="active">
-							<a href="javascript:;">
-								<i class="icon-dashboard"></i>
-								<span class="menu-text"> 控制台 </span>
-							</a>
-						</li>
 
-						<li>
-							<a href="javascript:;">
-								<i class="icon-text-width"></i>
-								<span class="menu-text"> 文字排版 </span>
-							</a>
-						</li>
-						<li>
-							<a href="javascript:;" class="dropdown-toggle">
-								<i class="icon-desktop"></i>
-								<span class="menu-text"> UI 组件 </span>
-								<b class="arrow icon-angle-down"></b>
-							</a>
-
-							<ul class="submenu">
-								<li>
-									<a href="javascript:;">
-										<i class="icon-double-angle-right"></i>组件
-									</a>
-								</li>
-
-								<li>
-									<a href="javascript:;">
-										<i class="icon-double-angle-right"></i>按钮 &amp; 图表
-									</a>
-								</li>
-
-								<li>
-									<a href="javascript:;">
-										<i class="icon-double-angle-right"></i>树菜单
-									</a>
-								</li>
-
-								<li>
-									<a href="javascript:;">
-										<i class="icon-double-angle-right"></i>jQuery UI
-									</a>
-								</li>
-
-								<li>
-									<a href="javascript:;">
-										<i class="icon-double-angle-right"></i>可拖拽列表
-									</a>
-								</li>
-
-								<li>
-									<a href="javascript:;" class="dropdown-toggle">
-										<i class="icon-double-angle-right"></i>三级菜单
-										<b class="arrow icon-angle-down"></b>
-									</a>
-
-									<ul class="submenu">
-										<li>
-											<a href="javascript:;">
-												<i class="icon-leaf"></i>第一级
-											</a>
-										</li>
-
-										<li>
-											<a href="javascript:;" class="dropdown-toggle">
-												<i class="icon-pencil"></i>第四级
-												<b class="arrow icon-angle-down"></b>
-											</a>
-
-											<ul class="submenu">
-												<li>
-													<a href="javascript:;">
-														<i class="icon-plus"></i>添加产品
-													</a>
-												</li>
-
-												<li>
-													<a href="javascript:;">
-														<i class="icon-eye-open"></i>查看商品
-													</a>
-												</li>
-											</ul>
-										</li>
-									</ul>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="javascript:;" class="dropdown-toggle">
-								<i class="icon-list"></i>
-								<span class="menu-text"> 表格 </span>
-								<b class="arrow icon-angle-down"></b>
-							</a>
-							<ul class="submenu">
-								<li>
-									<a href="javascript:;">
-										<i class="icon-double-angle-right"></i>
-										简单 &amp; 动态
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-										<i class="icon-double-angle-right"></i>
-										jqGrid plugin
-									</a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="javascript:;">
-								<i class="icon-calendar"></i>
-								<span class="menu-text">
-									日历
-									<span class="badge badge-transparent tooltip-error">
-										<i class="icon-warning-sign red bigger-130"></i>
-									</span>
-								</span>
-							</a>
-						</li>
 					</ul><!-- /.nav-list -->
 
 					<div class="sidebar-collapse" id="sidebar-collapse">
@@ -367,7 +223,7 @@
 
 				<div class="main-content">
 					<div class="page-content" style="padding:0;" id="iframeBox">
-						<iframe src="http://localhost:8080/" frameborder="0" style="width:100%;height:100%;"></iframe>
+						<iframe id="rightframe" name="rightframe" src="" frameborder="0" style="width:100%;height:100%;"></iframe>
 					</div><!-- /.page-content -->
 				</div><!-- /.main-content -->
 
@@ -479,6 +335,9 @@
 		<script th:src="@{/assets/js/ace.min.js}" src="../static/assets/js/ace.min.js"></script>
 		<script th:src="@{/assets/js/ace-extra.min.js}" src="../static/assets/js/ace-extra.min.js"></script>
 		<script th:src="@{/js/Sortable.min.js}" src="../static/js/Sortable.min.js" type="text/javascript" charset="utf-8"></script>
+		<script th:src="@{/plugin/layui/layui.js}"></script>
+		<script th:src="@{/js/common/common.js}"></script>
+		<script th:src="@{/js/index.js}"></script>
 		<script type="text/javascript">
 			$('#iframeBox').css('height',$(window).height()-55);   // iframe高度
 			

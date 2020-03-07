@@ -13,18 +13,32 @@
     <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
     <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
     <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp" />
+    <result column="user_status" jdbcType="INTEGER" property="userStatus" />
     <result column="create_user" jdbcType="VARCHAR" property="createUser" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
     id, login_name, password, admin_flag, user_name, user_gender, phone_number, user_email, 
-    org_code, last_login_time, last_login_ip, create_user, create_time
+    org_code, last_login_time, last_login_ip,user_status, create_user, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from sys_user
     where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selective" parameterType="cn.net.colin.model.sysManage.SysUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    <where>
+      <if test="loginName != null">
+        and login_name = #{loginName,jdbcType=VARCHAR}
+      </if>
+      <if test="userName != null">
+        and user_name like '%${userName}%'
+      </if>
+    </where>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_user
@@ -34,12 +48,12 @@
     insert into sys_user (id, login_name, password, 
       admin_flag, user_name, user_gender, 
       phone_number, user_email, org_code, 
-      last_login_time, last_login_ip, create_user, 
+      last_login_time, last_login_ip,user_status, create_user,
       create_time)
     values (#{id,jdbcType=BIGINT}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{adminFlag,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userGender,jdbcType=INTEGER}, 
       #{phoneNumber,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
-      #{lastLoginTime,jdbcType=TIMESTAMP}, #{lastLoginIp,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{lastLoginTime,jdbcType=TIMESTAMP}, #{lastLoginIp,jdbcType=VARCHAR},#{userStatus,jdbcType=INTEGER}, #{createUser,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.net.colin.model.sysManage.SysUser">
@@ -77,6 +91,9 @@
       </if>
       <if test="lastLoginIp != null">
         last_login_ip,
+      </if>
+      <if test="userStatus != null">
+        user_status,
       </if>
       <if test="createUser != null">
         create_user,
@@ -119,6 +136,9 @@
       <if test="lastLoginIp != null">
         #{lastLoginIp,jdbcType=VARCHAR},
       </if>
+      <if test="userStatus != null">
+        #{userStatus,jdbcType=INTEGER},
+      </if>
       <if test="createUser != null">
         #{createUser,jdbcType=VARCHAR},
       </if>
@@ -131,21 +151,21 @@
     insert into sys_user (id, login_name, password, 
       admin_flag, user_name, user_gender, 
       phone_number, user_email, org_code, 
-      last_login_time, last_login_ip, 
+      last_login_time, last_login_ip, user_status,
       create_user, create_time)
     values 
     <foreach collection="list" index="index" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.loginName,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, 
         #{item.adminFlag,jdbcType=INTEGER}, #{item.userName,jdbcType=VARCHAR}, #{item.userGender,jdbcType=INTEGER}, 
         #{item.phoneNumber,jdbcType=VARCHAR}, #{item.userEmail,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, 
-        #{item.lastLoginTime,jdbcType=TIMESTAMP}, #{item.lastLoginIp,jdbcType=VARCHAR}, 
+        #{item.lastLoginTime,jdbcType=TIMESTAMP}, #{item.lastLoginIp,jdbcType=VARCHAR}, #{userStatus,jdbcType=INTEGER},
         #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP})
     </foreach>
   </insert>
   <insert id="insertBatchSelective" parameterType="java.util.List">
     insert into sys_user
     (id, login_name, password, admin_flag, user_name, user_gender, phone_number, user_email, 
-      org_code, last_login_time, last_login_ip, create_user, create_time)
+      org_code, last_login_time, last_login_ip,user_status, create_user, create_time)
     values 
     <foreach collection="list" index="index" item="item" separator=",">
       <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -215,6 +235,12 @@
         <if test="item.lastLoginIp == null">
           NULL,
         </if>
+        <if test="item.userStatus != null">
+          #{userStatus,jdbcType=INTEGER},
+        </if>
+        <if test="item.userStatus == null">
+          0,
+        </if>
         <if test="item.createUser != null">
           #{item.createUser,jdbcType=VARCHAR},
         </if>
@@ -263,6 +289,9 @@
       <if test="lastLoginIp != null">
         last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
       </if>
+      <if test="userStatus != null">
+        user_status = #{userStatus,jdbcType=INTEGER},
+      </if>
       <if test="createUser != null">
         create_user = #{createUser,jdbcType=VARCHAR},
       </if>
@@ -284,6 +313,7 @@
       org_code = #{orgCode,jdbcType=VARCHAR},
       last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
       last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+      user_status = #{userStatus,jdbcType=INTEGER},
       create_user = #{createUser,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
@@ -339,6 +369,11 @@
       <trim prefix="last_login_ip =case id" suffix="end,">
         <foreach collection="list" index="index" item="item" separator=" ">
           when  #{item.id} then #{item.lastLoginIp}
+        </foreach>
+      </trim>
+      <trim prefix="user_status =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          when  #{item.id} then #{userStatus}
         </foreach>
       </trim>
       <trim prefix="create_user =case id" suffix="end,">
@@ -457,6 +492,16 @@
           </if>
           <if test="item.lastLoginIp == null ">
             when  #{item.id} then sys_user.last_login_ip
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="user_status =case id" suffix="end,">
+        <foreach collection="list" index="index" item="item" separator=" ">
+          <if test="item.userStatus != null ">
+            when  #{item.id} then #{item.userStatus}
+          </if>
+          <if test="item.userStatus == null ">
+            when  #{item.id} then sys_user.user_status
           </if>
         </foreach>
       </trim>

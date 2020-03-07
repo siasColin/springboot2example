@@ -1,0 +1,31 @@
+{
+  "returnCode":"0",
+  "returnMessage":"操作成功",
+  "total":0,
+  "data":{
+    "allSecondMenu": [
+      {
+        "id": "1603",
+        "pid": "1",
+        "moduleName": "地区管理",
+        "moduleCode": "AREAMANAGE",
+        "moduleType": "",
+        "moduleTarget": "navTab",
+        "moduleIcon": "icon-reorder",
+        "moduleUrl": ""
+      }
+    ],
+    "secondMenu_1603": [
+      {
+        "id": "16030",
+        "pid": "1603",
+        "moduleName": "地区管理",
+        "moduleCode": "AREAMANAGE",
+        "moduleType": "",
+        "moduleTarget": "navTab",
+        "moduleIcon": "icon-reorder",
+        "moduleUrl": "areaManage/arealist"
+      }
+    ]
+  }
+}

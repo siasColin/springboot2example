@@ -77,6 +77,11 @@ public class SysUser implements Serializable, UserDetails {
      */ 
     private String lastLoginIp;
 
+    /**
+     * 用户状态(0 正常，2 禁用， 3 过期， 4 锁定)
+     */
+    private Integer userStatus;
+
     /** 
      * 创建人
      */ 
@@ -87,7 +92,14 @@ public class SysUser implements Serializable, UserDetails {
      */ 
     private Date createTime;
 
+    /**
+     * 存储角色信息
+     */
     private List<Role> roles;
+    /**
+     * 存储所属机构信息
+     */
+    private SysOrg sysOrg;
 
     /** 
      * 获取 主键ID sys_user.id
@@ -309,7 +321,15 @@ public class SysUser implements Serializable, UserDetails {
         return lastLoginIp;
     }
 
-    /** 
+    public Integer getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(Integer userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    /**
      * 设置 最后登录IP sys_user.last_login_ip
      * @param lastLoginIp 最后登录IP
      */
@@ -355,6 +375,14 @@ public class SysUser implements Serializable, UserDetails {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public SysOrg getSysOrg() {
+        return sysOrg;
+    }
+
+    public void setSysOrg(SysOrg sysOrg) {
+        this.sysOrg = sysOrg;
     }
 
     @Override

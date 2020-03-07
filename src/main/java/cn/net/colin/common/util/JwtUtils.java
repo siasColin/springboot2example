@@ -18,6 +18,9 @@ import java.util.UUID;
  */
 public class JwtUtils {
 
+    /**
+     * 载荷中存放用户信息的key
+     */
     private static final String JWT_PAYLOAD_USER_KEY = "user";
 
     /**

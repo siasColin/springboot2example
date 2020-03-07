@@ -69,6 +69,11 @@ public class SysOrg implements Serializable {
      */ 
     private Integer sortNum;
 
+    /**
+     * 存储所属地区信息
+     */
+    private SysArea sysArea;
+
     /** 
      * 获取 主键ID sys_org.id
      * @return 主键ID
@@ -243,6 +248,14 @@ public class SysOrg implements Serializable {
      */
     public final void setSortNum(Integer sortNum) {
         this.sortNum = sortNum;
+    }
+
+    public SysArea getSysArea() {
+        return sysArea;
+    }
+
+    public void setSysArea(SysArea sysArea) {
+        this.sysArea = sysArea;
     }
 
     @Override
