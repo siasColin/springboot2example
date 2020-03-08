@@ -3,14 +3,9 @@ package cn.net.colin.service.sysManage.impl;
 import cn.net.colin.common.exception.BusinessRuntimeException;
 import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.util.SnowflakeIdWorker;
-import cn.net.colin.mapper.sysManage.SysAreaMapper;
-import cn.net.colin.mapper.sysManage.SysOrgMapper;
-import cn.net.colin.mapper.sysManage.SysRoleMapper;
-import cn.net.colin.mapper.sysManage.SysUserMapper;
+import cn.net.colin.mapper.sysManage.*;
 import cn.net.colin.model.common.Role;
-import cn.net.colin.model.sysManage.SysArea;
-import cn.net.colin.model.sysManage.SysOrg;
-import cn.net.colin.model.sysManage.SysUser;
+import cn.net.colin.model.sysManage.*;
 import cn.net.colin.service.sysManage.ISysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +29,8 @@ public class SysUserServiceImpl implements ISysUserService {
     private SysAreaMapper sysAreaMapper;
     @Autowired
     private SysRoleMapper sysRoleMapper;
+    @Autowired
+    private SysOperatetypeMapper sysOperatetypeMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(SysUserServiceImpl.class);
 
@@ -85,31 +82,6 @@ public class SysUserServiceImpl implements ISysUserService {
      * @throws UsernameNotFoundException
      */
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       /* List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("admin"));
-        //admin/123456  ;$2a$10$Jw923tUCmRkkvZ/tv2YdYO3UKLN934VHz1ssADyxyPSM43sUWeAR6
-        UserDetails userDetails = new User("admin","$2a$10$Jw923tUCmRkkvZ/tv2YdYO3UKLN934VHz1ssADyxyPSM43sUWeAR6",authorities);
-        return userDetails;*/
-        /**
-         * 1.根据username（loginName）从数据库中查出用户对象
-         * 2.查出用户拥有的角色集合，放到用户对象中。（因为在该系统设计中角色信息需要业务转换，所以单独提取出来）
-         */
-        //先不走数据库
-        /*SysUser user = new SysUser();
-        user.setId(SnowflakeIdWorker.generateId());
-        //user.setUserName("管理员");
-        user.setLoginName("admin");
-        user.setPassword("$2a$10$Jw923tUCmRkkvZ/tv2YdYO3UKLN934VHz1ssADyxyPSM43sUWeAR6");//123456经过加密后的字符
-        List<Role> roles = new ArrayList<Role>();
-        //这里我们可以放一些增、删、改等角色信息
-        Role role = new Role();
-        role.setId(SnowflakeIdWorker.generateId());
-        role.setRoleName("INSERT_ROLE");
-        role.setRoleDesc("拥有新增数据权限");
-        roles.add(role);
-        user.setRoles(roles);
-        return user;
-        */
         SysUser user = new SysUser();
         user.setLoginName(username);
         List<SysUser> userList = sysUserMapper.selective(user);
@@ -123,14 +95,40 @@ public class SysUserServiceImpl implements ISysUserService {
             SysArea sysArea = sysAreaMapper.selectByAreaCode(areaCode);
             sysOrg.setSysArea(sysArea);
             sysUser.setSysOrg(sysOrg);
-            List<Role> roles = new ArrayList<Role>();
-            //这里我们可以放一些增、删、改等角色信息
-            Role role = new Role();
-            role.setId(SnowflakeIdWorker.generateId());
-            role.setRoleName("INSERT_ROLE");
-            role.setRoleDesc("拥有新增数据权限");
-            roles.add(role);
-            sysUser.setRoles(roles);
+
+            /**
+             * 角色和权限类似。
+             * 	主要区别在于，角色具有特殊的语义-从Spring Security 4开始，“ ROLE_ ”前缀将通过任何与角色相关的方法自动添加（。
+             * 	因此hasAuthority（'ROLE_ADMIN'）与hasRole（'ADMIN'）类似，因为会自动添加' ROLE_ '前缀。
+             * 	但是使用授权的好处是我们完全不必使用ROLE_前缀。
+             */
+            //查询用户的系统角色
+            List<SysRole> sysRoleList = sysRoleMapper.selectByUserId(sysUser.getId());
+            //根据系统角色，查询出角色对应的权限
+            List<SysOperatetype> sysOperatetypeList = sysOperatetypeMapper.selectOperatetypeListByRoleList(sysRoleList);
+            //封装springsecurity 的角色对象
+            if((sysRoleList != null && sysRoleList.size() > 0) ||
+                    (sysOperatetypeList != null && sysOperatetypeList.size() > 0)){
+                List<Role> roles = new ArrayList<Role>();
+                //遍历系统角色
+                for (SysRole sysRole : sysRoleList) {
+                    Role role = new Role();
+                    role.setId(sysRole.getId());
+                    //和springsecurity保持一致系统角色拼接上ROLE_前缀
+                    role.setRoleName("ROLE_"+sysRole.getRoleCode());
+                    role.setRoleDesc(sysRole.getRoleName());
+                    roles.add(role);
+                }
+                //遍历权限
+                for (SysOperatetype sysOperatetype : sysOperatetypeList) {
+                    Role role = new Role();
+                    role.setId(sysOperatetype.getId());
+                    role.setRoleName(sysOperatetype.getOperateCode());
+                    role.setRoleDesc(sysOperatetype.getOperateName());
+                    roles.add(role);
+                }
+                sysUser.setRoles(roles);
+            }
             return sysUser;
         }else{//认证失败
             throw new BusinessRuntimeException(ResultCode.LOGIN_ERROR);

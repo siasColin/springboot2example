@@ -26,7 +26,7 @@ public class PageHelperController {
     @PostMapping("/pageHelper")
     @ResponseBody
     public Object pageHelper(){
-        PageHelper.startPage(1,1);
+        PageHelper.startPage(1,10);
         List<SysArea> list = sysAreaService.selectAll();
         PageInfo<SysArea> result = new PageInfo(list);
         return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,list,result.getTotal());

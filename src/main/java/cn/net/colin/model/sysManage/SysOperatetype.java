@@ -1,12 +1,16 @@
 package cn.net.colin.model.sysManage;
 
+import cn.net.colin.common.helper.LongJsonDeserializer;
+import cn.net.colin.common.helper.LongJsonSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /** 
- * 存储系统通用操作类型 sys_operatetype
- * 例如：INSERT,UPDATE,DELETE sys_operatetype
- * 以此来判断用户是否具有数据 sys_operatetype
+ * 系统权限表实体类
+ *  例如：ADMIN_AUTH（管理员权限），INSERT_AUTH（数据添加权限）
  * @author sxf
  * date:2020/03/04 17:48
  */
@@ -18,7 +22,9 @@ public class SysOperatetype implements Serializable {
 
     /** 
      * 主键ID
-     */ 
+     */
+    @JsonSerialize(using = LongJsonSerializer.class)
+    @JsonDeserialize(using = LongJsonDeserializer.class)
     private Long id;
 
     /** 

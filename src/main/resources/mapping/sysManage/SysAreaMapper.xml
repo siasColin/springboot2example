@@ -13,14 +13,36 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="sort_num" jdbcType="INTEGER" property="sortNum" />
   </resultMap>
+  <resultMap id="BaseResultMapWithPName" type="cn.net.colin.model.sysManage.SysArea">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    <result column="area_level" jdbcType="INTEGER" property="areaLevel" />
+    <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="sort_num" jdbcType="INTEGER" property="sortNum" />
+    <result column="parentName" jdbcType="VARCHAR" property="parentName" />
+  </resultMap>
+  <resultMap type="cn.net.colin.model.common.TreeNode" id="SysAreaTreeNodeResultMap">
+    <result column="area_code" jdbcType="VARCHAR" property="id" />
+    <result column="parent_code" jdbcType="VARCHAR" property="pId" />
+    <result column="area_name" jdbcType="VARCHAR" property="name" />
+    <association property="param"  javaType="java.util.Map">
+      <id column="areaid" property="areaid"/>
+    </association>
+  </resultMap>
   <sql id="Base_Column_List">
     id, area_name, area_code, area_level, parent_code, longitude, latitude, create_user, 
     create_time, sort_num
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMapWithPName">
     select 
     <include refid="Base_Column_List" />
-    from sys_area
+    ,(select sap.area_name from sys_area sap WHERE sap.area_code = sa.parent_code) parentName
+    from sys_area sa
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
@@ -34,7 +56,17 @@
     from sys_area
     where area_code = #{areaCode,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+  <select id="selectAreaTreeNodes" resultMap="SysAreaTreeNodeResultMap">
+      /*select area_code as id,parent_code as pId,area_name as name,id as param.areaid*/
+      select area_code,parent_code,area_name,CONCAT(id,'') as areaid
+      from sys_area
+      <where>
+        <if test="areaName != null">
+          and area_name like '%${areaName}%'
+        </if>
+      </where>
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_area
     where id = #{id,jdbcType=BIGINT}
   </delete>

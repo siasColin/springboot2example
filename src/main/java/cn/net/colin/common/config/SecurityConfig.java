@@ -4,6 +4,7 @@ import cn.net.colin.common.component.MyAccessDeniedHandler;
 import cn.net.colin.common.component.MyAuthenticationEntryPoint;
 import cn.net.colin.filter.JwtVerifyFilter;
 import cn.net.colin.filter.JwtLoginFilter;
+import cn.net.colin.filter.RequestURIFilter;
 import cn.net.colin.service.sysManage.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -23,6 +25,17 @@ import org.springframework.security.web.authentication.rememberme.TokenBasedReme
  * @Date: 2020-3-4
  * @Description: 安全配置
  * 开启方法注解支持，我们设置prePostEnabled = true是为了后面能够使用hasRole()这类表达式
+ *
+ * 基于SpringBoot的spring-boot-starter-security
+ * 我们可以看到自动配置类中导入了WebSecurityEnablerConfiguration，
+ * 而WebSecurityEnablerConfiguration上已经加了 @EnableWebSecurity注解
+ * 所以其实在这里我们是可以不用自己添加的
+ *
+ * @Import({SpringBootWebSecurityConfiguration.class, WebSecurityEnablerConfiguration.class, SecurityDataConfiguration.class})
+ * public class SecurityAutoConfiguration {
+ *
+ * @EnableWebSecurity
+ * public class WebSecurityEnablerConfiguration {
  */
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @Configuration
@@ -40,8 +53,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JwtVerifyFilter JwtVerifyFilter(){
+    public JwtVerifyFilter jwtVerifyFilter(){
         return new JwtVerifyFilter();
+    }
+
+    @Bean
+    public RequestURIFilter requestURIFilter(){
+        return new RequestURIFilter();
     }
 
     @Bean
@@ -66,12 +84,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .headers().frameOptions().sameOrigin()
             //.headers().frameOptions().disable()
             .and()
-            //.csrf().disable()
+//            .csrf().disable()
             //可以针对项目中对外提供的接口（基于jwt+rsa认证的）可在这里设置忽略csrf
-            .csrf().ignoringAntMatchers("/auth/login","/hello").and()
+            .csrf().ignoringAntMatchers("/auth/login","/hello/*","/common/uploadSingle","/common/uploadMany").and()
             .authorizeRequests()
             //允许访问的路径，但是依然会走spring security内部流程
-            .antMatchers("/","/login","/loginerror","/authException","/error").permitAll()
+            .antMatchers("/","/login","/loginerror","/authException","/error","/test/*").permitAll()
             //所有的请求需要认证即登陆后才能访问
             .anyRequest().authenticated()
             .and()
@@ -94,7 +112,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and().exceptionHandling().accessDeniedHandler(myAccessDeniedHandler()).authenticationEntryPoint(myAuthenticationEntryPoint())
             .and()
             .addFilter(new JwtLoginFilter(super.authenticationManager(),prop))
-            .addFilterAfter(JwtVerifyFilter(),JwtLoginFilter.class);
+            .addFilterAfter(jwtVerifyFilter(),JwtLoginFilter.class)
+            .addFilterAfter(requestURIFilter(),JwtVerifyFilter.class);
     }
 
 
@@ -116,6 +135,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/webjars/**");
         web.ignoring().antMatchers("/plugin/**");
         web.ignoring().antMatchers("/json/**");
+        web.ignoring().antMatchers("/uploadfile/**");
     }
 
 

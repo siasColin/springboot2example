@@ -1,5 +1,10 @@
 package cn.net.colin.model.sysManage;
 
+import cn.net.colin.common.helper.LongJsonDeserializer;
+import cn.net.colin.common.helper.LongJsonSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,7 +21,9 @@ public class SysRole implements Serializable {
 
     /** 
      * 主键ID
-     */ 
+     */
+    @JsonSerialize(using = LongJsonSerializer.class)
+    @JsonDeserialize(using = LongJsonDeserializer.class)
     private Long id;
 
     /** 

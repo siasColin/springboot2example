@@ -1,8 +1,10 @@
 package cn.net.colin.service.sysManage;
 
+import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysArea;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ISysAreaService {
 
@@ -51,4 +53,18 @@ public interface ISysAreaService {
      * @return 返回所有记录集合
      */
     List<SysArea> selectAll();
+
+    /**
+     * 查询满足zTree数据结构的地区信息集合
+     * @param paramMap
+     * @return 地区信息集合
+     */
+    List<TreeNode> selectAreaTreeNodes(Map<String, Object> paramMap);
+
+    /**
+     * 根据地区编码查询地区信息
+     * @param areacode
+     * @return 地区信息对象
+     */
+    SysArea selectByAreaCode(String areacode);
 }

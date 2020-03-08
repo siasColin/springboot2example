@@ -75,6 +75,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
                         UserDetails userDetails = sysUserService.loadUserByUsername(user.getLoginName());
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         SecurityContextHolder.getContext().setAuthentication(authentication);
+                        chain.doFilter(request, response);
                     }else{
                         response(response,ResultCode.TOKEN_ERROR);
                     }

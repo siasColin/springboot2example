@@ -20,9 +20,12 @@ import java.util.List;
 
 /**
  * Created by colin on 2020-2-27.
+ * ClassPathResource classPathResource = new ClassPathResource("static/model/pztjmodel.xls");
+ *             InputStream inputStream = classPathResource.getInputStream();
  */
 
 @Controller
+@RequestMapping("/hello")
 public class HelloController {
     Logger logger = LoggerFactory.getLogger(getClass());
 

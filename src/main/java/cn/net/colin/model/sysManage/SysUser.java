@@ -1,7 +1,11 @@
 package cn.net.colin.model.sysManage;
 
+import cn.net.colin.common.helper.LongJsonDeserializer;
+import cn.net.colin.common.helper.LongJsonSerializer;
 import cn.net.colin.model.common.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -24,7 +28,9 @@ public class SysUser implements Serializable, UserDetails {
 
     /** 
      * 主键ID
-     */ 
+     */
+    @JsonSerialize(using = LongJsonSerializer.class)
+    @JsonDeserialize(using = LongJsonDeserializer.class)
     private Long id;
 
     /** 

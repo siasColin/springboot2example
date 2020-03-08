@@ -1,9 +1,11 @@
 package cn.net.colin.mapper.sysManage;
 
+import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysArea;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sxf
@@ -91,4 +93,11 @@ public interface SysAreaMapper {
      * @param areaCode
      */
     SysArea selectByAreaCode(@Param("areaCode") String areaCode);
+
+    /**
+     * 查询满足zTree数据结构的地区信息集合
+     * @param paramMap
+     * @return 地区信息集合
+     */
+    List<TreeNode> selectAreaTreeNodes(Map<String, Object> paramMap);
 }

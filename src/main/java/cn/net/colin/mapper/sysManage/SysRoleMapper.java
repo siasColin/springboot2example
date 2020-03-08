@@ -1,6 +1,7 @@
 package cn.net.colin.mapper.sysManage;
 
 import cn.net.colin.model.sysManage.SysRole;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -78,4 +79,11 @@ public interface SysRoleMapper {
      * @return 返回修改成功的数量
      */
     int updateBatchByPrimaryKeySelective(List<SysRole> sysRoleList);
+
+    /**
+     * 根据用户id，查询出用户关联的角色
+     * @param id
+     * @return
+     */
+    List<SysRole> selectByUserId(@Param("userid") Long id);
 }

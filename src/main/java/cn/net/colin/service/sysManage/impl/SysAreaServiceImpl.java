@@ -1,6 +1,7 @@
 package cn.net.colin.service.sysManage.impl;
 
 import cn.net.colin.mapper.sysManage.SysAreaMapper;
+import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysArea;
 import cn.net.colin.service.sysManage.ISysAreaService;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SysAreaServiceImpl implements ISysAreaService {
@@ -60,5 +62,15 @@ public class SysAreaServiceImpl implements ISysAreaService {
     @Override
     public List<SysArea> selectAll() {
         return  this.sysAreaMapper.selectAll();
+    }
+
+    @Override
+    public List<TreeNode> selectAreaTreeNodes(Map<String, Object> paramMap) {
+        return this.sysAreaMapper.selectAreaTreeNodes(paramMap);
+    }
+
+    @Override
+    public SysArea selectByAreaCode(String areacode) {
+        return this.sysAreaMapper.selectByAreaCode(areacode);
     }
 }

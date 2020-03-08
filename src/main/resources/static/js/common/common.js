@@ -12,9 +12,22 @@ var Common = {
     },
     alert: function (info, iconIndex) {
         layui.use('layer', function() {
+            var layer = layui.layer;
             layer.msg(info, {
                 icon: iconIndex
             });
+        });
+    },
+    load: function(){
+        layui.use('layer', function() {
+            var layer = layui.layer;
+            layer.load();
+        });
+    },
+    closeload: function(){
+        layui.use('layer', function() {
+            var layer = layui.layer;
+            layer.closeAll('loading');
         });
     },
     info: function (info) {

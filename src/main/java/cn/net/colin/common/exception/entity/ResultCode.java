@@ -12,6 +12,7 @@ public enum ResultCode {
     TOKEN_ERROR("002","token验证失败"),
     LOGIN_ERROR("003","用户名或密码错误"),
     CONTENT_TYPE_ERROR("004","请求头Content-Type类型错误"),
+    FILE_NOTFOUND("005","文件接收失败"),
     STATUS_CODE_400("400","请求无效"),
     STATUS_CODE_403("403","禁止访问"),
     STATUS_CODE_404("404","请求的网页不存在"),

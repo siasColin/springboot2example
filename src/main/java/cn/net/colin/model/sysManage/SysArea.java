@@ -1,5 +1,10 @@
 package cn.net.colin.model.sysManage;
 
+import cn.net.colin.common.helper.LongJsonDeserializer;
+import cn.net.colin.common.helper.LongJsonSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -17,7 +22,9 @@ public class SysArea implements Serializable {
 
     /** 
      * 主键ID
-     */ 
+     */
+    @JsonSerialize(using = LongJsonSerializer.class)
+    @JsonDeserialize(using = LongJsonDeserializer.class)
     private Long id;
 
     /** 
@@ -64,6 +71,15 @@ public class SysArea implements Serializable {
      * 排序字段
      */ 
     private Integer sortNum;
+
+    /**
+     * 非持久化属性 start
+     */
+    private String parentName;
+    /**
+     * 非持久化属性 end
+     */
+
 
     /** 
      * 获取 主键ID sys_area.id
@@ -223,6 +239,15 @@ public class SysArea implements Serializable {
      */
     public final void setSortNum(Integer sortNum) {
         this.sortNum = sortNum;
+    }
+
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
     }
 
     @Override

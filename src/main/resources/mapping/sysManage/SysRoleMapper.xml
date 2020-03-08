@@ -23,6 +23,16 @@
     from sys_role
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    select
+      <include refid="Base_Column_List" />
+      from sys_role
+    where id in(
+      select role_id from sys_user_role where user_id = #{userid,jdbcType=BIGINT}
+    )
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_role
     where id = #{id,jdbcType=BIGINT}

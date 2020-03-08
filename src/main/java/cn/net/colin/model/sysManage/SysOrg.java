@@ -1,5 +1,10 @@
 package cn.net.colin.model.sysManage;
 
+import cn.net.colin.common.helper.LongJsonDeserializer;
+import cn.net.colin.common.helper.LongJsonSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,7 +21,9 @@ public class SysOrg implements Serializable {
 
     /** 
      * 主键ID
-     */ 
+     */
+    @JsonSerialize(using = LongJsonSerializer.class)
+    @JsonDeserialize(using = LongJsonDeserializer.class)
     private Long id;
 
     /** 
@@ -41,7 +48,9 @@ public class SysOrg implements Serializable {
 
     /** 
      * 关联行业表（备用）
-     */ 
+     */
+    @JsonSerialize(using = LongJsonSerializer.class)
+    @JsonDeserialize(using = LongJsonDeserializer.class)
     private Long industryid;
 
     /** 

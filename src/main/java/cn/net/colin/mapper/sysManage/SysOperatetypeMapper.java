@@ -1,6 +1,8 @@
 package cn.net.colin.mapper.sysManage;
 
 import cn.net.colin.model.sysManage.SysOperatetype;
+import cn.net.colin.model.sysManage.SysRole;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -78,4 +80,11 @@ public interface SysOperatetypeMapper {
      * @return 返回修改成功的数量
      */
     int updateBatchByPrimaryKeySelective(List<SysOperatetype> operatetypeList);
+
+    /**
+     * 根据系统角色集合查询出对应的系统权限集合
+     * @param sysRoleList
+     * @return
+     */
+    List<SysOperatetype> selectOperatetypeListByRoleList(@Param("list") List<SysRole> sysRoleList);
 }
