@@ -11,7 +11,7 @@
  Target Server Version : 50527
  File Encoding         : 65001
 
- Date: 04/03/2020 19:51:05
+ Date: 10/03/2020 10:32:15
 */
 
 SET NAMES utf8mb4;
@@ -41,6 +41,13 @@ CREATE TABLE `sys_area`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '地区表' ROW_FORMAT = Compact;
 
 -- ----------------------------
+-- Records of sys_area
+-- ----------------------------
+INSERT INTO `sys_area` VALUES (1, '河南省', '410000000000', 1, '41', 113.628962, 34.757272, 'admin', '2020-03-07 15:07:00', 0);
+INSERT INTO `sys_area` VALUES (335383212932988928, '郑州市', '410100000000', 3, '410000000000', 113.628960, 34.757270, 'admin', '2020-03-07 15:08:10', 1);
+INSERT INTO `sys_area` VALUES (396633233466392576, '新郑市', '10000', 4, '410100000000', NULL, NULL, 'admin', '2020-03-08 22:15:40', 2);
+
+-- ----------------------------
 -- Table structure for sys_modulelist
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_modulelist`;
@@ -51,7 +58,7 @@ CREATE TABLE `sys_modulelist`  (
   `module_code` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '菜单编码',
   `module_icon` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单图标（样式）',
   `module_url` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单链接地址',
-  `module_target` varchar(6) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '打开位置navTab（系统内打开）、_blank(新窗口打开) ,默认（navTab）\r\n            navTab：右侧iframe中打开\r\n            _blank：新窗口打开\r\n            ',
+  `module_target` varchar(6) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '打开位置navTab（系统内打开）、_blank(新窗口打开) ,默认（navTab）',
   `module_type` int(11) NOT NULL COMMENT '菜单还是功能点，1菜单，0功能点',
   `module_status` int(11) NOT NULL COMMENT '菜单状态，1启用，0禁用',
   `create_user` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
@@ -69,7 +76,7 @@ CREATE TABLE `sys_modulelist`  (
 DROP TABLE IF EXISTS `sys_operatetype`;
 CREATE TABLE `sys_operatetype`  (
   `id` bigint(20) NOT NULL COMMENT '主键ID',
-  `operate_code` varchar(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '编码',
+  `operate_code` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '编码',
   `operate_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
   `operate_describe` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
   `create_user` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
@@ -77,7 +84,13 @@ CREATE TABLE `sys_operatetype`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `inx_operate_id`(`id`) USING BTREE,
   UNIQUE INDEX `inx_operate_code`(`operate_code`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '存储系统通用操作类型\r\n例如：INSERT,UPDATE,DELETE\r\n以此来判断用户是否具有数据' ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统权限表\r\n例如：ADMIN_AUTH（管理员权限），INSERT_AUTH（数据添加权限）\r\n' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_operatetype
+-- ----------------------------
+INSERT INTO `sys_operatetype` VALUES (1, 'INSERT_AUTH', '数据添加权限', '数据添加权限', 'admin', '2020-03-07 15:34:23');
+INSERT INTO `sys_operatetype` VALUES (2, 'ADMIN_AUTH', '管理员权限', '管理员权限', 'admin', '2020-03-07 21:53:40');
 
 -- ----------------------------
 -- Table structure for sys_org
@@ -103,6 +116,12 @@ CREATE TABLE `sys_org`  (
   INDEX `FK_Reference_area_org`(`area_code`) USING BTREE,
   CONSTRAINT `FK_Reference_area_org` FOREIGN KEY (`area_code`) REFERENCES `sys_area` (`area_code`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '机构表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_org
+-- ----------------------------
+INSERT INTO `sys_org` VALUES (1, '410000000000', '河南省气象局', '41000041600000', '0', 416, NULL, NULL, 'admin', '2020-03-07 15:09:41', 0);
+INSERT INTO `sys_org` VALUES (335386239865716736, '410000000000', '服务中心', '41000041601000', '41000041600000', 416, NULL, NULL, 'admin', '2020-03-07 15:11:46', 1);
 
 -- ----------------------------
 -- Table structure for sys_org_role
@@ -142,6 +161,11 @@ CREATE TABLE `sys_role`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色表' ROW_FORMAT = Compact;
 
 -- ----------------------------
+-- Records of sys_role
+-- ----------------------------
+INSERT INTO `sys_role` VALUES (1, 'ADMIN', '管理员', 0, NULL, '410000000000', 1, 'admin', '2020-03-07 15:36:42', 0);
+
+-- ----------------------------
 -- Table structure for sys_role_modulelist
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role_modulelist`;
@@ -165,7 +189,13 @@ CREATE TABLE `sys_role_operatetype`  (
   INDEX `FK_Reference_operateType_role`(`operateType_id`) USING BTREE,
   CONSTRAINT `FK_Reference_role_operateType` FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `FK_Reference_operateType_role` FOREIGN KEY (`operateType_id`) REFERENCES `sys_operatetype` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和功能操作关联表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和系统权限关联表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_role_operatetype
+-- ----------------------------
+INSERT INTO `sys_role_operatetype` VALUES (1, 1);
+INSERT INTO `sys_role_operatetype` VALUES (1, 2);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -174,7 +204,7 @@ DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`  (
   `id` bigint(20) NOT NULL COMMENT '主键ID',
   `login_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录名',
-  `password` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录密码',
+  `password` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录密码',
   `admin_flag` int(11) NOT NULL COMMENT '是否管理员(0 非管理用户,1管理员)',
   `user_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `user_gender` int(11) NOT NULL COMMENT '性别(0 男，1 女)',
@@ -183,6 +213,7 @@ CREATE TABLE `sys_user`  (
   `org_code` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '关联机构表机构编码',
   `last_login_time` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
   `last_login_ip` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '最后登录IP',
+  `user_status` int(11) NOT NULL DEFAULT 0 COMMENT '用户状态(0 正常，2 禁用， 3 过期， 4 锁定)',
   `create_user` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
@@ -193,6 +224,11 @@ CREATE TABLE `sys_user`  (
   INDEX `inx_sysuser_password`(`password`) USING BTREE,
   CONSTRAINT `FK_Reference_org_user` FOREIGN KEY (`org_code`) REFERENCES `sys_org` (`org_code`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_user
+-- ----------------------------
+INSERT INTO `sys_user` VALUES (1, 'admin', '$2a$10$Jw923tUCmRkkvZ/tv2YdYO3UKLN934VHz1ssADyxyPSM43sUWeAR6', 1, '管理员', 1, '18037570119', '1540247870@qq.com', '41000041601000', '2020-03-07 15:13:43', '192.168.0.135', 0, 'admin', '2020-03-07 15:13:59');
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -206,5 +242,10 @@ CREATE TABLE `sys_user_role`  (
   CONSTRAINT `FK_Reference_user_role` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `FK_Reference_role_user` FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户角色关联表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_user_role
+-- ----------------------------
+INSERT INTO `sys_user_role` VALUES (1, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
