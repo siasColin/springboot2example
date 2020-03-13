@@ -17,7 +17,6 @@ import java.io.IOException;
 public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        System.out.println(httpServletRequest.getRequestURI());
         httpServletRequest.getRequestDispatcher("/authException").forward(httpServletRequest,httpServletResponse);
     }
 }

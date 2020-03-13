@@ -102,7 +102,7 @@ public class AreaManageController {
         int num = sysAreaService.insertSelective(sysArea);
         ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
         if(num > 0){
-            resultInfo = ResultInfo.of(ResultCode.SUCCESS);
+            resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,sysArea);
         }
         return resultInfo;
     }
@@ -117,6 +117,17 @@ public class AreaManageController {
     public ResultInfo updateArea(SysArea sysArea){
         int num = sysAreaService.updateByPrimaryKeySelective(sysArea);
         ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        if(num > 0){
+            resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,sysArea);
+        }
+        return resultInfo;
+    }
+
+    @DeleteMapping("/area/{id}")
+    @ResponseBody
+    public ResultInfo deleteArea(@PathVariable("id") Long id){
+        int num = sysAreaService.deleteByPrimaryKey(id);
+         ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
         if(num > 0){
             resultInfo = ResultInfo.of(ResultCode.SUCCESS);
         }

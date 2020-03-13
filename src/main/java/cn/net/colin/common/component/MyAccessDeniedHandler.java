@@ -18,6 +18,11 @@ public class MyAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
-        httpServletResponse.sendRedirect("/authException");
+        String uri = httpServletRequest.getRequestURI();
+        if(uri != null && uri.equals("/logout")){
+            httpServletResponse.sendRedirect("/");
+        }else{
+            httpServletResponse.sendRedirect("/authException");
+        }
     }
 }

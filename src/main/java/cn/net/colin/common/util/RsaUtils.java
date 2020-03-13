@@ -100,4 +100,11 @@ public class RsaUtils {
         }
         Files.write(dest.toPath(), bytes);
     }
+
+    public static void main(String[] args) throws Exception {
+        String privateFilePath = "D:\\auth_key\\id_key_rsa";String publicFilePath = "D:\\auth_key\\id_key_rsa.pub";
+        RsaUtils.generateKey(publicFilePath, privateFilePath, "colin", 2048);
+        System.out.println(RsaUtils.getPublicKey(publicFilePath));
+        System.out.println(RsaUtils.getPrivateKey(privateFilePath));
+    }
 }

@@ -133,6 +133,7 @@ layui.use(['form','upload'], function(){
         if(data.field.id==null||data.field.id==''){ //保存
             //判断当前添加的地区是否已存在
             $.ajax({
+                type : 'GET',
                 url: Common.ctxPath+"areaManage/areaOnCode/"+data.field.areaCode,//请求的action路径
                 error: function () {//请求失败处理函数
                     Common.error('请求失败!')
@@ -181,11 +182,32 @@ layui.use(['form','upload'], function(){
                     }
                 },
                 error : function(data) {
-                    Common.error("保存失败");
+                    Common.error("修改失败");
                 }
             });
         }
+        //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         return false;
+    });
+    form.on('submit(deleteOne)', function(data){
+        $.ajax({
+            type : 'DELETE',
+            url : Common.ctxPath+'areaManage/area/'+data.field.id,
+            dataType : 'json',
+            beforeSend : function(xhr) {
+                xhr.setRequestHeader(_header, _token);
+            },
+            success : function(data) {
+                if(data.returnCode == '0'){
+                    Common.success(data.returnMessage);
+                }else{
+                    Common.error(data.returnMessage);
+                }
+            },
+            error : function(data) {
+                Common.error("删除失败");
+            }
+        });
     });
     //上传
     /*var uploadInst = upload.render({
