@@ -75,6 +75,10 @@ function loadAreaTree(){
     });
 }
 
+function areaidFilter(node) {
+    return (node.param.areaid == $("#id").val());
+}
+
 function areaNodeOnClick(event, treeId, treeNode) {
     $.ajax({
         async:true,
@@ -151,14 +155,24 @@ layui.use(['form','upload'], function(){
                             beforeSend : function(xhr) {
                                 xhr.setRequestHeader(_header, _token);
                             },
-                            success : function(data) {
-                                if(data.returnCode == '0'){
-                                    Common.success(data.returnMessage);
+                            success : function(rsp) {
+                                if(rsp.returnCode == '0'){
+                                    //将新增地区异步添加到zTree树
+                                    var pNode = treeObj.getNodeByParam("id",data.field.parentCode);
+                                    var newNode = {};
+                                    newNode.id = rsp.data.areaCode;
+                                    newNode.pId = rsp.data.parentCode;
+                                    newNode.name = rsp.data.areaName;
+                                    newNode.param = {"areaid":rsp.data.id};
+                                    newNode = treeObj.addNodes(pNode, newNode);
+                                    Common.openConfirm("添加成功，是否重置表单？",function () {
+                                        $("input").val("");
+                                    })
                                 }else{
-                                    Common.error(data.returnMessage);
+                                    Common.error(rsp.returnMessage);
                                 }
                             },
-                            error : function(data) {
+                            error : function(rsp) {
                                 Common.error("保存失败");
                             }
                         });
@@ -174,14 +188,31 @@ layui.use(['form','upload'], function(){
                 beforeSend : function(xhr) {
                     xhr.setRequestHeader(_header, _token);
                 },
-                success : function(data) {
-                    if(data.returnCode == '0'){
-                        Common.success(data.returnMessage);
+                success : function(rsp) {
+                    if(rsp.returnCode == '0'){
+                        var selectNode = treeObj.getSelectedNodes()[0];
+                        if(selectNode.pId == rsp.data.parentCode){//节点位置不变
+                            selectNode.id = rsp.data.areaCode
+                            selectNode.name = rsp.data.areaName
+                            treeObj.updateNode(selectNode);
+                        }else{//节点位置改变
+                            //先移除
+                            treeObj.removeNode(selectNode);
+                            //再新增
+                            var pNode = treeObj.getNodeByParam("id",data.field.parentCode);
+                            var newNode = {};
+                            newNode.id = rsp.data.areaCode;
+                            newNode.pId = rsp.data.parentCode;
+                            newNode.name = rsp.data.areaName;
+                            newNode.param = {"areaid":rsp.data.id};
+                            newNode = treeObj.addNodes(pNode, newNode);
+                        }
+                        Common.success(rsp.returnMessage);
                     }else{
-                        Common.error(data.returnMessage);
+                        Common.error(rsp.returnMessage);
                     }
                 },
-                error : function(data) {
+                error : function(rsp) {
                     Common.error("修改失败");
                 }
             });
@@ -197,14 +228,16 @@ layui.use(['form','upload'], function(){
             beforeSend : function(xhr) {
                 xhr.setRequestHeader(_header, _token);
             },
-            success : function(data) {
-                if(data.returnCode == '0'){
-                    Common.success(data.returnMessage);
+            success : function(rsp) {
+                if(rsp.returnCode == '0'){
+                    var selectNode = treeObj.getSelectedNodes()[0];
+                    treeObj.removeNode(selectNode);
+                    Common.success(rsp.returnMessage);
                 }else{
-                    Common.error(data.returnMessage);
+                    Common.error(rsp.returnMessage);
                 }
             },
-            error : function(data) {
+            error : function(rsp) {
                 Common.error("删除失败");
             }
         });

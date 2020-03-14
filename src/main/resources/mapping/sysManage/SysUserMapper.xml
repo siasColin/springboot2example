@@ -5,7 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="login_name" jdbcType="VARCHAR" property="loginName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="admin_flag" jdbcType="INTEGER" property="adminFlag" />
+    <!--<result column="admin_flag" jdbcType="INTEGER" property="adminFlag" />-->
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="user_gender" jdbcType="INTEGER" property="userGender" />
     <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
@@ -18,7 +18,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, login_name, password, admin_flag, user_name, user_gender, phone_number, user_email, 
+    id, login_name, password/*, admin_flag*/, user_name, user_gender, phone_number, user_email,
     org_code, last_login_time, last_login_ip,user_status, create_user, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -46,12 +46,12 @@
   </delete>
   <insert id="insert" parameterType="cn.net.colin.model.sysManage.SysUser">
     insert into sys_user (id, login_name, password, 
-      admin_flag, user_name, user_gender, 
+      /*admin_flag, */user_name, user_gender,
       phone_number, user_email, org_code, 
       last_login_time, last_login_ip,user_status, create_user,
       create_time)
     values (#{id,jdbcType=BIGINT}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{adminFlag,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userGender,jdbcType=INTEGER}, 
+      /*#{adminFlag,jdbcType=INTEGER},*/ #{userName,jdbcType=VARCHAR}, #{userGender,jdbcType=INTEGER},
       #{phoneNumber,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
       #{lastLoginTime,jdbcType=TIMESTAMP}, #{lastLoginIp,jdbcType=VARCHAR},#{userStatus,jdbcType=INTEGER}, #{createUser,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP})
@@ -68,9 +68,9 @@
       <if test="password != null">
         password,
       </if>
-      <if test="adminFlag != null">
+      <!--<if test="adminFlag != null">
         admin_flag,
-      </if>
+      </if>-->
       <if test="userName != null">
         user_name,
       </if>
@@ -112,9 +112,9 @@
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
       </if>
-      <if test="adminFlag != null">
+      <!--<if test="adminFlag != null">
         #{adminFlag,jdbcType=INTEGER},
-      </if>
+      </if>-->
       <if test="userName != null">
         #{userName,jdbcType=VARCHAR},
       </if>
@@ -149,14 +149,14 @@
   </insert>
   <insert id="insertBatch" parameterType="java.util.List">
     insert into sys_user (id, login_name, password, 
-      admin_flag, user_name, user_gender, 
+      /*admin_flag,*/ user_name, user_gender,
       phone_number, user_email, org_code, 
       last_login_time, last_login_ip, user_status,
       create_user, create_time)
     values 
     <foreach collection="list" index="index" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.loginName,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, 
-        #{item.adminFlag,jdbcType=INTEGER}, #{item.userName,jdbcType=VARCHAR}, #{item.userGender,jdbcType=INTEGER}, 
+        /*#{item.adminFlag,jdbcType=INTEGER},*/ #{item.userName,jdbcType=VARCHAR}, #{item.userGender,jdbcType=INTEGER},
         #{item.phoneNumber,jdbcType=VARCHAR}, #{item.userEmail,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, 
         #{item.lastLoginTime,jdbcType=TIMESTAMP}, #{item.lastLoginIp,jdbcType=VARCHAR}, #{userStatus,jdbcType=INTEGER},
         #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP})
@@ -164,7 +164,7 @@
   </insert>
   <insert id="insertBatchSelective" parameterType="java.util.List">
     insert into sys_user
-    (id, login_name, password, admin_flag, user_name, user_gender, phone_number, user_email, 
+    (id, login_name, password, /*admin_flag,*/ user_name, user_gender, phone_number, user_email,
       org_code, last_login_time, last_login_ip,user_status, create_user, create_time)
     values 
     <foreach collection="list" index="index" item="item" separator=",">
@@ -187,12 +187,12 @@
         <if test="item.password == null">
           NULL,
         </if>
-        <if test="item.adminFlag != null">
+        <!--<if test="item.adminFlag != null">
           #{item.adminFlag,jdbcType=INTEGER},
         </if>
         <if test="item.adminFlag == null">
           NULL,
-        </if>
+        </if>-->
         <if test="item.userName != null">
           #{item.userName,jdbcType=VARCHAR},
         </if>
@@ -265,9 +265,9 @@
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
       </if>
-      <if test="adminFlag != null">
+<!--      <if test="adminFlag != null">
         admin_flag = #{adminFlag,jdbcType=INTEGER},
-      </if>
+      </if>-->
       <if test="userName != null">
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
@@ -305,7 +305,7 @@
     update sys_user
     set login_name = #{loginName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
-      admin_flag = #{adminFlag,jdbcType=INTEGER},
+      /*admin_flag = #{adminFlag,jdbcType=INTEGER},*/
       user_name = #{userName,jdbcType=VARCHAR},
       user_gender = #{userGender,jdbcType=INTEGER},
       phone_number = #{phoneNumber,jdbcType=VARCHAR},
@@ -331,11 +331,11 @@
           when  #{item.id} then #{item.password}
         </foreach>
       </trim>
-      <trim prefix="admin_flag =case id" suffix="end,">
+<!--      <trim prefix="admin_flag =case id" suffix="end,">
         <foreach collection="list" index="index" item="item" separator=" ">
           when  #{item.id} then #{item.adminFlag}
         </foreach>
-      </trim>
+      </trim>-->
       <trim prefix="user_name =case id" suffix="end,">
         <foreach collection="list" index="index" item="item" separator=" ">
           when  #{item.id} then #{item.userName}
@@ -415,7 +415,7 @@
           </if>
         </foreach>
       </trim>
-      <trim prefix="admin_flag =case id" suffix="end,">
+<!--      <trim prefix="admin_flag =case id" suffix="end,">
         <foreach collection="list" index="index" item="item" separator=" ">
           <if test="item.adminFlag != null ">
             when  #{item.id} then #{item.adminFlag}
@@ -424,7 +424,7 @@
             when  #{item.id} then sys_user.admin_flag
           </if>
         </foreach>
-      </trim>
+      </trim>-->
       <trim prefix="user_name =case id" suffix="end,">
         <foreach collection="list" index="index" item="item" separator=" ">
           <if test="item.userName != null ">

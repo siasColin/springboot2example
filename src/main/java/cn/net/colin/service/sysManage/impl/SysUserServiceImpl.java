@@ -2,7 +2,6 @@ package cn.net.colin.service.sysManage.impl;
 
 import cn.net.colin.common.exception.BusinessRuntimeException;
 import cn.net.colin.common.exception.entity.ResultCode;
-import cn.net.colin.common.util.SnowflakeIdWorker;
 import cn.net.colin.mapper.sysManage.*;
 import cn.net.colin.model.common.Role;
 import cn.net.colin.model.sysManage.*;
@@ -10,8 +9,6 @@ import cn.net.colin.service.sysManage.ISysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

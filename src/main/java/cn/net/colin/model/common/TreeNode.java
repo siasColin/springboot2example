@@ -45,10 +45,6 @@ public class TreeNode implements Serializable {
 		return pId;
 	}
 
-	public void setpId(String pId) {
-		this.pId = pId;
-	}
-
 	public String getIsParent() {
 		return isParent;
 	}

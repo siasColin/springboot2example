@@ -122,9 +122,11 @@
                     <div class="layui-col-xs12">
                         <div class="layui-form-item">
                             <div class="layui-input-block">
-                                <button type="button"  class="layui-btn layui-btn-sm" lay-submit lay-filter="saveOrUpdate" >保存</button>
+                                <button type="button"  class="layui-btn layui-btn-sm" lay-submit lay-filter="saveOrUpdate"
+                                        sec:authorize="hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH','UPDATE_AUTH')">保存</button>
                                 <!--<button  class="layui-btn layui-btn-sm layui-btn-warm" lay-submit lay-filter="saveOrUpdate">修改</button>-->
-                                <button type="button"  class="layui-btn layui-btn-sm layui-btn-danger" lay-submit lay-filter="deleteOne">删除</button>
+                                <button type="button"  class="layui-btn layui-btn-sm layui-btn-danger" lay-submit lay-filter="deleteOne"
+                                        sec:authorize="hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')">删除</button>
                                 <button type="button" class="layui-btn layui-btn-sm" id="chongzhi">重置</button>
                             </div>
                         </div>

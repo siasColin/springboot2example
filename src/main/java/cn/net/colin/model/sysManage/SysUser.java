@@ -45,8 +45,9 @@ public class SysUser implements Serializable, UserDetails {
 
     /** 
      * 是否管理员(0 非管理用户,1管理员)
+     * 从角色权限中判断，这里弃用
      */ 
-    private Integer adminFlag;
+    /*private Integer adminFlag;*/
 
     /** 
      * 姓名
@@ -211,17 +212,17 @@ public class SysUser implements Serializable, UserDetails {
      * 获取 是否管理员(0 非管理用户,1管理员) sys_user.admin_flag
      * @return 是否管理员(0 非管理用户,1管理员)
      */
-    public final Integer getAdminFlag() {
+    /*public final Integer getAdminFlag() {
         return adminFlag;
-    }
+    }*/
 
     /** 
      * 设置 是否管理员(0 非管理用户,1管理员) sys_user.admin_flag
      * @param adminFlag 是否管理员(0 非管理用户,1管理员)
      */
-    public final void setAdminFlag(Integer adminFlag) {
+    /*public final void setAdminFlag(Integer adminFlag) {
         this.adminFlag = adminFlag;
-    }
+    }*/
 
     /** 
      * 获取 姓名 sys_user.user_name
@@ -401,7 +402,7 @@ public class SysUser implements Serializable, UserDetails {
         sb.append(", id=").append(id);
         sb.append(", loginName=").append(loginName);
         sb.append(", password=").append(password);
-        sb.append(", adminFlag=").append(adminFlag);
+        /*sb.append(", adminFlag=").append(adminFlag);*/
         sb.append(", userName=").append(userName);
         sb.append(", userGender=").append(userGender);
         sb.append(", phoneNumber=").append(phoneNumber);
