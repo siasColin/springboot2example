@@ -1,40 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.net.colin.mapper.sysManage.SysOrgMapper">
-  <resultMap id="BaseResultMap" type="cn.net.colin.model.sysManage.SysOrg">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
-    <result column="org_name" jdbcType="VARCHAR" property="orgName" />
-    <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
-    <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
-    <result column="industryid" jdbcType="BIGINT" property="industryid" />
-    <result column="org_address" jdbcType="VARCHAR" property="orgAddress" />
-    <result column="org_logo" jdbcType="VARCHAR" property="orgLogo" />
-    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="sort_num" jdbcType="INTEGER" property="sortNum" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="cn.net.colin.model.sysManage.SysOrg">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+        <result column="org_name" jdbcType="VARCHAR" property="orgName"/>
+        <result column="org_code" jdbcType="VARCHAR" property="orgCode"/>
+        <result column="parent_code" jdbcType="VARCHAR" property="parentCode"/>
+        <result column="industryid" jdbcType="BIGINT" property="industryid"/>
+        <result column="org_address" jdbcType="VARCHAR" property="orgAddress"/>
+        <result column="org_logo" jdbcType="VARCHAR" property="orgLogo"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="sort_num" jdbcType="INTEGER" property="sortNum"/>
+    </resultMap>
+
+    <resultMap type="cn.net.colin.model.common.TreeNode" id="SysOrgTreeNodeResultMap">
+        <result column="org_code" jdbcType="VARCHAR" property="id" />
+        <result column="parent_code" jdbcType="VARCHAR" property="pId" />
+        <result column="org_name" jdbcType="VARCHAR" property="name" />
+        <association property="param"  javaType="java.util.Map">
+            <id column="orgid" property="orgid"/>
+        </association>
+    </resultMap>
+
+    <sql id="Base_Column_List">
     id, area_code, org_name, org_code, parent_code, industryid, org_address, org_logo, 
     create_user, create_time, sort_num
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from sys_org
-    where id = #{id,jdbcType=BIGINT}
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_org
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectByOrgCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_org
+        where org_code = #{orgCode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectOrgNumByAreaCode" resultType="java.lang.Integer">
+      SELECT COUNT(id) orgNum FROM sys_org WHERE area_code = #{areaCode,jdbcType=VARCHAR}
   </select>
-  <select id="selectByOrgCode" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from sys_org
-    where org_code = #{orgCode,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+
+    <select id="selectOrgTreeNodes" resultMap="SysOrgTreeNodeResultMap">
+        select
+        org_code,parent_code,org_name,id as orgid
+        from sys_org
+        <where>
+            <if test="orgName != null and orgName != ''">
+                and org_name like '%${orgName}%'
+            </if>
+            <if test="areaCode != null and areaCode != ''">
+                and area_code = #{areaCode}
+            </if>
+            <if test="areaList != null and areaList.size() > 0">
+                and
+                <foreach collection="areaList" item="areasItem" open="(" separator="or" close=")">
+                    area_code IN
+                    <foreach collection="areasItem" item="treeNode" open="(" separator="," close=")">
+                        #{treeNode.id}
+                    </foreach>
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_org
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="cn.net.colin.model.sysManage.SysOrg">
+    <insert id="insert" parameterType="cn.net.colin.model.sysManage.SysOrg">
     insert into sys_org (id, area_code, org_name, 
       org_code, parent_code, industryid, 
       org_address, org_logo, create_user, 
@@ -44,205 +82,205 @@
       #{orgAddress,jdbcType=VARCHAR}, #{orgLogo,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{sortNum,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="cn.net.colin.model.sysManage.SysOrg">
-    insert into sys_org
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="areaCode != null">
-        area_code,
-      </if>
-      <if test="orgName != null">
-        org_name,
-      </if>
-      <if test="orgCode != null">
-        org_code,
-      </if>
-      <if test="parentCode != null">
-        parent_code,
-      </if>
-      <if test="industryid != null">
-        industryid,
-      </if>
-      <if test="orgAddress != null">
-        org_address,
-      </if>
-      <if test="orgLogo != null">
-        org_logo,
-      </if>
-      <if test="createUser != null">
-        create_user,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="sortNum != null">
-        sort_num,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="areaCode != null">
-        #{areaCode,jdbcType=VARCHAR},
-      </if>
-      <if test="orgName != null">
-        #{orgName,jdbcType=VARCHAR},
-      </if>
-      <if test="orgCode != null">
-        #{orgCode,jdbcType=VARCHAR},
-      </if>
-      <if test="parentCode != null">
-        #{parentCode,jdbcType=VARCHAR},
-      </if>
-      <if test="industryid != null">
-        #{industryid,jdbcType=BIGINT},
-      </if>
-      <if test="orgAddress != null">
-        #{orgAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="orgLogo != null">
-        #{orgLogo,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null">
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="sortNum != null">
-        #{sortNum,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <insert id="insertBatch" parameterType="java.util.List">
-    insert into sys_org (id, area_code, org_name, 
-      org_code, parent_code, industryid, 
-      org_address, org_logo, create_user, 
-      create_time, sort_num)
-    values 
-    <foreach collection="list" index="index" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.areaCode,jdbcType=VARCHAR}, #{item.orgName,jdbcType=VARCHAR}, 
-        #{item.orgCode,jdbcType=VARCHAR}, #{item.parentCode,jdbcType=VARCHAR}, #{item.industryid,jdbcType=BIGINT}, 
-        #{item.orgAddress,jdbcType=VARCHAR}, #{item.orgLogo,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, 
-        #{item.createTime,jdbcType=TIMESTAMP}, #{item.sortNum,jdbcType=INTEGER})
-    </foreach>
-  </insert>
-  <insert id="insertBatchSelective" parameterType="java.util.List">
-    insert into sys_org
-    (id, area_code, org_name, org_code, parent_code, industryid, org_address, org_logo, 
-      create_user, create_time, sort_num)
-    values 
-    <foreach collection="list" index="index" item="item" separator=",">
-      <trim prefix="(" suffix=")" suffixOverrides=",">
-        <if test="item.id != null">
-          #{item.id,jdbcType=BIGINT},
-        </if>
-        <if test="item.id == null">
-          NULL,
-        </if>
-        <if test="item.areaCode != null">
-          #{item.areaCode,jdbcType=VARCHAR},
-        </if>
-        <if test="item.areaCode == null">
-          NULL,
-        </if>
-        <if test="item.orgName != null">
-          #{item.orgName,jdbcType=VARCHAR},
-        </if>
-        <if test="item.orgName == null">
-          NULL,
-        </if>
-        <if test="item.orgCode != null">
-          #{item.orgCode,jdbcType=VARCHAR},
-        </if>
-        <if test="item.orgCode == null">
-          NULL,
-        </if>
-        <if test="item.parentCode != null">
-          #{item.parentCode,jdbcType=VARCHAR},
-        </if>
-        <if test="item.parentCode == null">
-          NULL,
-        </if>
-        <if test="item.industryid != null">
-          #{item.industryid,jdbcType=BIGINT},
-        </if>
-        <if test="item.industryid == null">
-          NULL,
-        </if>
-        <if test="item.orgAddress != null">
-          #{item.orgAddress,jdbcType=VARCHAR},
-        </if>
-        <if test="item.orgAddress == null">
-          NULL,
-        </if>
-        <if test="item.orgLogo != null">
-          #{item.orgLogo,jdbcType=VARCHAR},
-        </if>
-        <if test="item.orgLogo == null">
-          NULL,
-        </if>
-        <if test="item.createUser != null">
-          #{item.createUser,jdbcType=VARCHAR},
-        </if>
-        <if test="item.createUser == null">
-          NULL,
-        </if>
-        <if test="item.createTime != null">
-          #{item.createTime,jdbcType=TIMESTAMP},
-        </if>
-        <if test="item.createTime == null">
-          NULL,
-        </if>
-        <if test="item.sortNum != null">
-          #{item.sortNum,jdbcType=INTEGER},
-        </if>
-        <if test="item.sortNum == null">
-          NULL,
-        </if>
-      </trim>
-    </foreach>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.net.colin.model.sysManage.SysOrg">
-    update sys_org
-    <set>
-      <if test="areaCode != null">
-        area_code = #{areaCode,jdbcType=VARCHAR},
-      </if>
-      <if test="orgName != null">
-        org_name = #{orgName,jdbcType=VARCHAR},
-      </if>
-      <if test="orgCode != null">
-        org_code = #{orgCode,jdbcType=VARCHAR},
-      </if>
-      <if test="parentCode != null">
-        parent_code = #{parentCode,jdbcType=VARCHAR},
-      </if>
-      <if test="industryid != null">
-        industryid = #{industryid,jdbcType=BIGINT},
-      </if>
-      <if test="orgAddress != null">
-        org_address = #{orgAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="orgLogo != null">
-        org_logo = #{orgLogo,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="sortNum != null">
-        sort_num = #{sortNum,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="cn.net.colin.model.sysManage.SysOrg">
+    <insert id="insertSelective" parameterType="cn.net.colin.model.sysManage.SysOrg">
+        insert into sys_org
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="areaCode != null">
+                area_code,
+            </if>
+            <if test="orgName != null">
+                org_name,
+            </if>
+            <if test="orgCode != null">
+                org_code,
+            </if>
+            <if test="parentCode != null">
+                parent_code,
+            </if>
+            <if test="industryid != null">
+                industryid,
+            </if>
+            <if test="orgAddress != null">
+                org_address,
+            </if>
+            <if test="orgLogo != null">
+                org_logo,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="sortNum != null">
+                sort_num,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="areaCode != null">
+                #{areaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="orgName != null">
+                #{orgName,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null">
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="parentCode != null">
+                #{parentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="industryid != null">
+                #{industryid,jdbcType=BIGINT},
+            </if>
+            <if test="orgAddress != null">
+                #{orgAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="orgLogo != null">
+                #{orgLogo,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sortNum != null">
+                #{sortNum,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into sys_org (id, area_code, org_name,
+        org_code, parent_code, industryid,
+        org_address, org_logo, create_user,
+        create_time, sort_num)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.id,jdbcType=BIGINT}, #{item.areaCode,jdbcType=VARCHAR}, #{item.orgName,jdbcType=VARCHAR},
+            #{item.orgCode,jdbcType=VARCHAR}, #{item.parentCode,jdbcType=VARCHAR}, #{item.industryid,jdbcType=BIGINT},
+            #{item.orgAddress,jdbcType=VARCHAR}, #{item.orgLogo,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.sortNum,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+    <insert id="insertBatchSelective" parameterType="java.util.List">
+        insert into sys_org
+        (id, area_code, org_name, org_code, parent_code, industryid, org_address, org_logo,
+        create_user, create_time, sort_num)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.id != null">
+                    #{item.id,jdbcType=BIGINT},
+                </if>
+                <if test="item.id == null">
+                    NULL,
+                </if>
+                <if test="item.areaCode != null">
+                    #{item.areaCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.areaCode == null">
+                    NULL,
+                </if>
+                <if test="item.orgName != null">
+                    #{item.orgName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.orgName == null">
+                    NULL,
+                </if>
+                <if test="item.orgCode != null">
+                    #{item.orgCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.orgCode == null">
+                    NULL,
+                </if>
+                <if test="item.parentCode != null">
+                    #{item.parentCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.parentCode == null">
+                    NULL,
+                </if>
+                <if test="item.industryid != null">
+                    #{item.industryid,jdbcType=BIGINT},
+                </if>
+                <if test="item.industryid == null">
+                    NULL,
+                </if>
+                <if test="item.orgAddress != null">
+                    #{item.orgAddress,jdbcType=VARCHAR},
+                </if>
+                <if test="item.orgAddress == null">
+                    NULL,
+                </if>
+                <if test="item.orgLogo != null">
+                    #{item.orgLogo,jdbcType=VARCHAR},
+                </if>
+                <if test="item.orgLogo == null">
+                    NULL,
+                </if>
+                <if test="item.createUser != null">
+                    #{item.createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="item.createUser == null">
+                    NULL,
+                </if>
+                <if test="item.createTime != null">
+                    #{item.createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.createTime == null">
+                    NULL,
+                </if>
+                <if test="item.sortNum != null">
+                    #{item.sortNum,jdbcType=INTEGER},
+                </if>
+                <if test="item.sortNum == null">
+                    NULL,
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.net.colin.model.sysManage.SysOrg">
+        update sys_org
+        <set>
+            <if test="areaCode != null">
+                area_code = #{areaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="orgName != null">
+                org_name = #{orgName,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null">
+                org_code = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="parentCode != null">
+                parent_code = #{parentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="industryid != null">
+                industryid = #{industryid,jdbcType=BIGINT},
+            </if>
+            <if test="orgAddress != null">
+                org_address = #{orgAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="orgLogo != null">
+                org_logo = #{orgLogo,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sortNum != null">
+                sort_num = #{sortNum,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.net.colin.model.sysManage.SysOrg">
     update sys_org
     set area_code = #{areaCode,jdbcType=VARCHAR},
       org_name = #{orgName,jdbcType=VARCHAR},
@@ -256,172 +294,175 @@
       sort_num = #{sortNum,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
-    update sys_org
-    <trim prefix="set" suffixOverrides=",">
-      <trim prefix="area_code =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          when  #{item.id} then #{item.areaCode}
+    <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+        update sys_org
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="area_code =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    when #{item.id} then #{item.areaCode}
+                </foreach>
+            </trim>
+            <trim prefix="org_name =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    when #{item.id} then #{item.orgName}
+                </foreach>
+            </trim>
+            <trim prefix="org_code =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    when #{item.id} then #{item.orgCode}
+                </foreach>
+            </trim>
+            <trim prefix="parent_code =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    when #{item.id} then #{item.parentCode}
+                </foreach>
+            </trim>
+            <trim prefix="industryid =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    when #{item.id} then #{item.industryid}
+                </foreach>
+            </trim>
+            <trim prefix="org_address =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    when #{item.id} then #{item.orgAddress}
+                </foreach>
+            </trim>
+            <trim prefix="org_logo =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    when #{item.id} then #{item.orgLogo}
+                </foreach>
+            </trim>
+            <trim prefix="create_user =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    when #{item.id} then #{item.createUser}
+                </foreach>
+            </trim>
+            <trim prefix="create_time =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    when #{item.id} then #{item.createTime}
+                </foreach>
+            </trim>
+            <trim prefix="sort_num =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    when #{item.id} then #{item.sortNum}
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+            #{item.id}
         </foreach>
-      </trim>
-      <trim prefix="org_name =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          when  #{item.id} then #{item.orgName}
+    </update>
+    <update id="updateBatchByPrimaryKeySelective" parameterType="java.util.List">
+        update sys_org
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="area_code =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    <if test="item.areaCode != null ">
+                        when #{item.id} then #{item.areaCode}
+                    </if>
+                    <if test="item.areaCode == null ">
+                        when #{item.id} then sys_org.area_code
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="org_name =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    <if test="item.orgName != null ">
+                        when #{item.id} then #{item.orgName}
+                    </if>
+                    <if test="item.orgName == null ">
+                        when #{item.id} then sys_org.org_name
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="org_code =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    <if test="item.orgCode != null ">
+                        when #{item.id} then #{item.orgCode}
+                    </if>
+                    <if test="item.orgCode == null ">
+                        when #{item.id} then sys_org.org_code
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="parent_code =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    <if test="item.parentCode != null ">
+                        when #{item.id} then #{item.parentCode}
+                    </if>
+                    <if test="item.parentCode == null ">
+                        when #{item.id} then sys_org.parent_code
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="industryid =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    <if test="item.industryid != null ">
+                        when #{item.id} then #{item.industryid}
+                    </if>
+                    <if test="item.industryid == null ">
+                        when #{item.id} then sys_org.industryid
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="org_address =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    <if test="item.orgAddress != null ">
+                        when #{item.id} then #{item.orgAddress}
+                    </if>
+                    <if test="item.orgAddress == null ">
+                        when #{item.id} then sys_org.org_address
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="org_logo =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    <if test="item.orgLogo != null ">
+                        when #{item.id} then #{item.orgLogo}
+                    </if>
+                    <if test="item.orgLogo == null ">
+                        when #{item.id} then sys_org.org_logo
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="create_user =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    <if test="item.createUser != null ">
+                        when #{item.id} then #{item.createUser}
+                    </if>
+                    <if test="item.createUser == null ">
+                        when #{item.id} then sys_org.create_user
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="create_time =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    <if test="item.createTime != null ">
+                        when #{item.id} then #{item.createTime}
+                    </if>
+                    <if test="item.createTime == null ">
+                        when #{item.id} then sys_org.create_time
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="sort_num =case id" suffix="end,">
+                <foreach collection="list" index="index" item="item" separator=" ">
+                    <if test="item.sortNum != null ">
+                        when #{item.id} then #{item.sortNum}
+                    </if>
+                    <if test="item.sortNum == null ">
+                        when #{item.id} then sys_org.sort_num
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+            #{item.id}
         </foreach>
-      </trim>
-      <trim prefix="org_code =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          when  #{item.id} then #{item.orgCode}
-        </foreach>
-      </trim>
-      <trim prefix="parent_code =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          when  #{item.id} then #{item.parentCode}
-        </foreach>
-      </trim>
-      <trim prefix="industryid =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          when  #{item.id} then #{item.industryid}
-        </foreach>
-      </trim>
-      <trim prefix="org_address =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          when  #{item.id} then #{item.orgAddress}
-        </foreach>
-      </trim>
-      <trim prefix="org_logo =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          when  #{item.id} then #{item.orgLogo}
-        </foreach>
-      </trim>
-      <trim prefix="create_user =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          when  #{item.id} then #{item.createUser}
-        </foreach>
-      </trim>
-      <trim prefix="create_time =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          when  #{item.id} then #{item.createTime}
-        </foreach>
-      </trim>
-      <trim prefix="sort_num =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          when  #{item.id} then #{item.sortNum}
-        </foreach>
-      </trim>
-    </trim>
-    where id in 
-    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
-       #{item.id} 
-    </foreach>
-  </update>
-  <update id="updateBatchByPrimaryKeySelective" parameterType="java.util.List">
-    update sys_org
-    <trim prefix="set" suffixOverrides=",">
-      <trim prefix="area_code =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          <if test="item.areaCode != null ">
-            when  #{item.id} then #{item.areaCode}
-          </if>
-          <if test="item.areaCode == null ">
-            when  #{item.id} then sys_org.area_code
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="org_name =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          <if test="item.orgName != null ">
-            when  #{item.id} then #{item.orgName}
-          </if>
-          <if test="item.orgName == null ">
-            when  #{item.id} then sys_org.org_name
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="org_code =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          <if test="item.orgCode != null ">
-            when  #{item.id} then #{item.orgCode}
-          </if>
-          <if test="item.orgCode == null ">
-            when  #{item.id} then sys_org.org_code
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="parent_code =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          <if test="item.parentCode != null ">
-            when  #{item.id} then #{item.parentCode}
-          </if>
-          <if test="item.parentCode == null ">
-            when  #{item.id} then sys_org.parent_code
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="industryid =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          <if test="item.industryid != null ">
-            when  #{item.id} then #{item.industryid}
-          </if>
-          <if test="item.industryid == null ">
-            when  #{item.id} then sys_org.industryid
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="org_address =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          <if test="item.orgAddress != null ">
-            when  #{item.id} then #{item.orgAddress}
-          </if>
-          <if test="item.orgAddress == null ">
-            when  #{item.id} then sys_org.org_address
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="org_logo =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          <if test="item.orgLogo != null ">
-            when  #{item.id} then #{item.orgLogo}
-          </if>
-          <if test="item.orgLogo == null ">
-            when  #{item.id} then sys_org.org_logo
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="create_user =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          <if test="item.createUser != null ">
-            when  #{item.id} then #{item.createUser}
-          </if>
-          <if test="item.createUser == null ">
-            when  #{item.id} then sys_org.create_user
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="create_time =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          <if test="item.createTime != null ">
-            when  #{item.id} then #{item.createTime}
-          </if>
-          <if test="item.createTime == null ">
-            when  #{item.id} then sys_org.create_time
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="sort_num =case id" suffix="end,">
-        <foreach collection="list" index="index" item="item" separator=" ">
-          <if test="item.sortNum != null ">
-            when  #{item.id} then #{item.sortNum}
-          </if>
-          <if test="item.sortNum == null ">
-            when  #{item.id} then sys_org.sort_num
-          </if>
-        </foreach>
-      </trim>
-    </trim>
-    where id in 
-    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
-       #{item.id} 
-    </foreach>
+    </update>
+    <update id="updateAreaCode">
+    UPDATE sys_role SET area_code = #{newCode,jdbcType=VARCHAR} WHERE area_code = #{areaCode,jdbcType=VARCHAR}
   </update>
 </mapper>

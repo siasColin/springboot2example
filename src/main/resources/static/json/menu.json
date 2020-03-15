@@ -13,6 +13,15 @@
         "moduleTarget": "navTab",
         "moduleIcon": "icon-reorder",
         "moduleUrl": ""
+      },{
+        "id": "1604",
+        "pid": "1",
+        "moduleName": "机构管理",
+        "moduleCode": "ORGMANAGE",
+        "moduleType": "",
+        "moduleTarget": "navTab",
+        "moduleIcon": "icon-reorder",
+        "moduleUrl": "orgManage/orglist"
       }
     ],
     "secondMenu_1603": [

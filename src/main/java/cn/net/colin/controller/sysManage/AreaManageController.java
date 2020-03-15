@@ -8,17 +8,13 @@ import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysArea;
 import cn.net.colin.model.sysManage.SysUser;
 import cn.net.colin.service.sysManage.ISysAreaService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.awt.geom.Area;
 import java.io.IOException;
 import java.util.*;
 
@@ -34,13 +30,18 @@ public class AreaManageController {
     Logger logger = LoggerFactory.getLogger(AreaManageController.class);
 
     @Autowired
-    ISysAreaService sysAreaService;
+    private ISysAreaService sysAreaService;
 
     @GetMapping("/arealist")
     public String arealist(){
         return "sysManage/areaManage/areaManageList";
     }
 
+    /**
+     * 跳转到地区树页面
+     * @param type
+     * @return
+     */
     @GetMapping("/areatree/{type}")
     public String arealist(@PathVariable("type") String type){
         /**
@@ -81,27 +82,6 @@ public class AreaManageController {
             paramMap.put("minAreaLevel",Integer.parseInt(minAreaLevel));
         }
         List<TreeNode> treeNodeList = sysAreaService.selectAreaTreeNodes(paramMap);
-        /**
-         * 判断是否拥有管理员权限
-         *      有则不做过滤，返回全部地区信息；
-         *      无则只返回当前登录用户及其子地区信息
-         */
-        if(!SpringSecurityUtil.hasRole("ADMIN_AUTH")){
-            SysUser sysUser = SpringSecurityUtil.getPrincipal();
-            SysArea sysArea = sysUser.getSysOrg().getSysArea();
-            if(sysUser != null && sysArea != null){
-                List<TreeNode> childList = new ArrayList<TreeNode>();
-                TreeNode pTreeNode = new TreeNode();
-                pTreeNode.setId(sysArea.getAreaCode());
-                pTreeNode.setName(sysArea.getAreaName());
-                pTreeNode.setPId(sysArea.getParentCode());
-                pTreeNode.setIsParent("true");
-                pTreeNode.setOpen("true");
-                childList.add(pTreeNode);
-                areaTreeChildRecursive(sysArea.getAreaCode(),treeNodeList,childList);
-                return ResultInfo.ofData(ResultCode.SUCCESS,childList);
-            }
-        }
         return ResultInfo.ofData(ResultCode.SUCCESS,treeNodeList);
     }
 
@@ -128,7 +108,11 @@ public class AreaManageController {
     @PostMapping("/area")
     @ResponseBody
     public ResultInfo saveArea(SysArea sysArea){
-        SysUser sysUser = (SysUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SysUser sysUser = SpringSecurityUtil.getPrincipal();
+        //父级ID为空，默认去当前登录用户所属地区的父级地区
+        if(sysArea.getParentCode() == null && (sysArea.getParentCode() != null && sysArea.getParentCode().trim().equals(""))){
+            sysArea.setParentCode(sysUser.getSysOrg().getSysArea().getParentCode());
+        }
         sysArea.setId(SnowflakeIdWorker.generateId());
         sysArea.setCreateTime(new Date());
         sysArea.setCreateUser(sysUser.getLoginName());
@@ -149,10 +133,48 @@ public class AreaManageController {
     @PutMapping("/area")
     @ResponseBody
     public ResultInfo updateArea(SysArea sysArea){
+        //父级ID为空，默认去当前登录用户所属地区的父级地区
+        if(sysArea.getParentCode() == null && (sysArea.getParentCode() != null && sysArea.getParentCode().trim().equals(""))){
+            SysUser sysUser = SpringSecurityUtil.getPrincipal();
+            sysArea.setParentCode(sysUser.getSysOrg().getSysArea().getParentCode());
+        }
         int num = sysAreaService.updateByPrimaryKeySelective(sysArea);
         ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
         if(num > 0){
             resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,sysArea);
+        }
+        return resultInfo;
+    }
+    /**
+     * 更新地区信息，同时更新关联表中AreaCode信息
+     * @param sysArea
+     * @return
+     */
+    @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','UPDATE_AUTH')")
+    @PutMapping("/area/{areaCode}")
+    @ResponseBody
+    public ResultInfo updateAreaWithFK(SysArea sysArea,@PathVariable("areaCode") String areaCode){
+        SysUser sysUser = SpringSecurityUtil.getPrincipal();
+        //父级ID为空，默认去当前登录用户所属地区的父级地区
+        if(sysArea.getParentCode() == null && (sysArea.getParentCode() != null && sysArea.getParentCode().trim().equals(""))){
+            sysArea.setParentCode(sysUser.getSysOrg().getSysArea().getParentCode());
+        }
+        int num = sysAreaService.updatAreaWithFK(sysArea,areaCode);
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        if(num > 0){
+            resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,sysArea);
+        }
+        /**
+         * 相等，则更新的是当前登录人所属地区信息。
+         *      提示登录人重新登录
+         *      或者更新securitycontext中的用户信息
+         */
+        if(sysUser.getSysOrg().getSysArea().getAreaCode().equals(areaCode)){
+            //提示用户重新登录
+//            resultInfo = ResultInfo.ofData(ResultCode.RELOGIN,sysArea);
+            //更新用户信息中的地区信息，重新放入securitycontext中
+            sysUser.getSysOrg().setSysArea(sysArea);
+            SpringSecurityUtil.setAuthentication(sysUser);
         }
         return resultInfo;
     }
@@ -169,21 +191,25 @@ public class AreaManageController {
         return resultInfo;
     }
 
-
     /**
-     * 递归筛选所有子地区
-     * @param pAreaCode 父级地区编码
-     * @param treeNodeList 所有地区节点集合
-     * @param childList 子地区集合
+     * 验证一个地区编码是否被其他表引用
+     * @param areaCode
      * @return
      */
-    private void areaTreeChildRecursive(String pAreaCode, List<TreeNode> treeNodeList, List<TreeNode> childList) {
-        for (TreeNode treeNode : treeNodeList) {
-            if(treeNode.getPId().equals(pAreaCode)){
-                childList.add(treeNode);
-                areaTreeChildRecursive(treeNode.getId(),treeNodeList,childList);
-            }
+    @GetMapping("/areaRelation/{areaCode}")
+    @ResponseBody
+    public ResultInfo areaRelation(@PathVariable("areaCode") String areaCode){
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        Map<String,Object> resultMap = sysAreaService.areaRelation(areaCode);
+        //是否被引用
+        boolean isQuote = false;
+        if(resultMap.get("isQuote") != null){
+            isQuote = (boolean) resultMap.get("isQuote");
         }
+        if(isQuote){
+            resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,resultMap);
+        }
+        return  resultInfo;
     }
 
 }

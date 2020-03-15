@@ -86,4 +86,19 @@ public interface SysRoleMapper {
      * @return
      */
     List<SysRole> selectByUserId(@Param("userid") Long id);
+
+    /**
+     * 查询指定地区编码下角色数量
+     * @param areaCode
+     * @return
+     */
+    int selectRoleNumByAreaCode(String areaCode);
+
+    /**
+     * 更新角色表中的area_code字段
+     * @param areaCode  原始地区编码
+     * @param newCode   更新后的地区编码
+     * @return
+     */
+    int updateAreaCode(String areaCode, String newCode);
 }

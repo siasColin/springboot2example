@@ -1,8 +1,10 @@
 package cn.net.colin.service.sysManage;
 
+import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysOrg;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ISysOrgService {
 
@@ -45,4 +47,11 @@ public interface ISysOrgService {
      * @return 返回修改成功的数量
      */
     int updateBatchByPrimaryKeySelective(List<SysOrg> sysOrgList);
+
+    /**
+     *  获取ztree结构的机构信息
+     * @param paramMap
+     * @return
+     */
+    List<TreeNode> selectOrgTreeNodes(Map<String, Object> paramMap);
 }

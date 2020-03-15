@@ -31,9 +31,9 @@
     <div class="layui-row" style="height: 100%;">
         <div class="layui-col-md3">
             <div class="layui-inline">
-                <input type="text" class="layui-input" name="oneAreaName" id="oneAreaName" required  lay-verify="required" placeholder="请输入地区名称" autocomplete="off" style="width: 280px;">
+                <input type="text" class="layui-input" name="oneOrgName" id="oneOrgName" placeholder="请输入机构名称" autocomplete="off" style="width: 280px;">
             </div>
-            <ul id="area_tree" class="ztree" style="overflow-y: auto;margin-top:5px;height: 100%;"></ul>
+            <ul id="org_tree" class="ztree" style="overflow-y: auto;margin-top:5px;height: 100%;"></ul>
         </div>
         <div class="layui-col-md2">
             <div>　　　</div>
@@ -41,25 +41,24 @@
         <div class="layui-col-md5" style="margin-top: 4%;">
             <form id="form1" class="layui-form">
                 <input id="id" name="id" type="hidden"/>
-                <!-- 第一行 -->
-                <div class="layui-row">
+                <!--第一行 -->
+                <div - class="layui-row">
                     <div class="layui-col-xs9">
                         <div class="layui-form-item">
-                            <label class="layui-form-label"><span class="span-red">*</span>区域编码</label>
+                            <label class="layui-form-label"><span class="span-red">*</span>机构名称</label>
                             <div class="layui-input-block">
-                                <input type="text"  id="areaCode" name="areaCode"  lay-verify="required|dasLength" daslength="30" placeholder="请输入" autocomplete="off" class="layui-input">
+                                <input type="text" id="orgName"  name="orgName"  lay-verify="required|dasLength" daslength="30" placeholder="请输入" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- 第二行 -->
+                <!--第二行 -->
                 <div class="layui-row">
                     <div class="layui-col-xs9">
                         <div class="layui-form-item">
-                            <label class="layui-form-label">上级区域</label>
+                            <label class="layui-form-label"><span class="span-red">*</span>机构编码</label>
                             <div class="layui-input-block">
-                                <input type="hidden" id="parentCode" name="parentCode">
-                                <input type="text" readonly id="parentName" name="parentName" placeholder="请选择" autocomplete="off" class="layui-input">
+                                <input type="text"  id="orgCode" name="orgCode"  lay-verify="required|dasLength" daslength="30" placeholder="请输入" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                     </div>
@@ -68,51 +67,75 @@
                 <div class="layui-row">
                     <div class="layui-col-xs9">
                         <div class="layui-form-item">
-                            <label class="layui-form-label"><span class="span-red">*</span>区域名称</label>
+                            <label class="layui-form-label">父级机构</label>
                             <div class="layui-input-block">
-                                <input type="text" id="areaName" name="areaName" lay-verify="required|dasLength" daslength="30" placeholder="请输入" autocomplete="off" class="layui-input">
+                                <input type="hidden" id="parentCode" name="parentCode">
+                                <input type="text" id="parentName"readonly  placeholder="请选择" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 第四行 -->
+                <div class="layui-row">
+                    <div class="layui-col-xs9">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="span-red">*</span>所属地区</label>
+                            <div class="layui-input-block">
+                                <input type="hidden" id="areaCode" name="areaCode" >
+                                <input type="text" id="areaName" readonly placeholder="请选择" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- 第四行-->
-                <div class="layui-row">
+                <!--<div class="layui-row">
                     <div class="layui-col-xs9">
                         <div class="layui-form-item">
-                            <label class="layui-form-label">位置经度</label>
+                            <label class="layui-form-label"><span class="span-red">*</span>所属行业</label>
                             <div class="layui-input-block">
-                                <input type="text" id="longitude" name="longitude"     placeholder="请输入" autocomplete="off" class="layui-input">
+                                <select id="industryid" name="industryid">
+                                </select>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!-- 第五行-->
-                <div class="layui-row">
+                <div - class="layui-row">
                     <div class="layui-col-xs9">
                         <div class="layui-form-item">
-                            <label class="layui-form-label">位置纬度</label>
+                            <label class="layui-form-label">机构地址</label>
                             <div class="layui-input-block">
-                                <input type="text"  id="latitude" name="latitude"   placeholder="请输入" autocomplete="off" class="layui-input">
+                                <input type="text" id="orgAddress"  name="orgAddress"  lay-verify="dasLength" daslength="200" placeholder="请输入机构地址" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <!-- 第六行-->
                 <div class="layui-row">
                     <div class="layui-col-xs9">
                         <div class="layui-form-item">
-                            <label class="layui-form-label"><span class="span-red">*</span>区域等级</label>
+                            <label class="layui-form-label">序号</label>
                             <div class="layui-input-block">
-                                <select id="areaLevel" name="areaLevel" lay-verify="required">
-                                    <option value="请选择"></option>
-                                    <option value=0>国家</option>
-                                    <option value=1>省级</option>
-                                    <option value=2>直辖市</option>
-                                    <option value=3>地市</option>
-                                    <option value=4>区/县</option>
-                                    <option value=5>乡/镇/街道</option>
-                                    <option value=6>社区/村</option>
-                                </select>
+                                <input type="number"  id="sortNum" name="sortNum" placeholder="请输入序号" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 第七行-->
+                <div class="layui-row">
+                    <div class="layui-col-xs9">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">机构LOGO</label>
+                            <div class="layui-input-block">
+                                <input type="hidden" id="orgLogo" name="orgLogo">
+                                <button type="button" class="layui-btn layui-btn-sm" id="orgLogoPlugin">
+                                    <i class="layui-icon">&#xe67c;</i>上传图片
+                                </button>
+                                <div class="layui-upload-list">
+                                    <img class="layui-upload-img" style="width: 92px;height: 92px;margin: 0 10px 10px 0;" id="orglogoImg">
+                                    <p id="demoText"></p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -122,7 +145,7 @@
                     <div class="layui-col-xs12">
                         <div class="layui-form-item">
                             <div class="layui-input-block">
-                                <button type="button"  class="layui-btn layui-btn-sm" lay-submit lay-filter="saveOrUpdate"
+                                 <button type="button"  class="layui-btn layui-btn-sm" lay-submit lay-filter="saveOrUpdate"
                                         sec:authorize="hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH','UPDATE_AUTH')">保存</button>
                                 <button type="button"  class="layui-btn layui-btn-sm layui-btn-danger" lay-submit lay-filter="deleteOne"
                                         sec:authorize="hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')">删除</button>
@@ -132,21 +155,6 @@
                     </div>
                 </div>
 
-                <!-- 第九行-->
-                <!--<div class="layui-row">
-                    <div class="layui-col-xs9">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label"><span class="span-red">*</span>logo</label>
-                            <div class="layui-input-block">
-                                <input type="hidden" id="orglogo" name="orglogo">
-                                <button type="button" class="layui-btn layui-btn-sm" id="imageName">
-                                    <i class="layui-icon">&#xe67c;</i>上传图片
-                                </button>
-                                <img src="" id="orglogoImg" style="width: 100px;height: 100px;display: none">
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
             </form>
         </div>
         <div class="layui-col-md2">
@@ -158,7 +166,7 @@
 <script th:src="@{/js/common/layuiFromVerify.js}"></script>
 <script th:src="@{/plugin/zTree_v3/js/jquery.ztree.all.js}"></script>
 <script th:src="@{/js/common/common.js}"></script>
-<script th:src="@{/js/sysManage/areaManage/areaManageList.js}"></script>
+<script th:src="@{/js/sysManage/orgManage/orgManageList.js}"></script>
 <script>
     layui.use('form', function(){
         var form = layui.form;

@@ -64,8 +64,16 @@ public class CommonController {
             result.put("fileName", file.getOriginalFilename());
             result.put("fileSize", file.getSize() + "");
             result.put("fileUrl", "uploadfile/"+prefixPath+"/"+file.getOriginalFilename());
+            File targetFile = new File(upload.getAbsolutePath() +separator+ file.getOriginalFilename());
+            if(targetFile.exists()) {//如果文件存在，重命名文件
+                String fileName =file.getOriginalFilename();
+                fileName = fileName.substring(0,fileName.lastIndexOf("."))+
+                        "_"+DateUtils.date2Str(DateUtils.yyyymmddhhmmss)+
+                        fileName.substring(fileName.lastIndexOf("."));
+                targetFile = new File(upload.getAbsolutePath() +separator+ fileName);
+            }
             // TODO Spring Mvc 提供的写入方式
-            file.transferTo(new File(upload.getAbsolutePath() +separator+ file.getOriginalFilename()));
+            file.transferTo(targetFile);
             resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,result);
         }catch (Exception e){
             e.printStackTrace();

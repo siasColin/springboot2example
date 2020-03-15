@@ -100,4 +100,19 @@ public interface SysAreaMapper {
      * @return 地区信息集合
      */
     List<TreeNode> selectAreaTreeNodes(Map<String, Object> paramMap);
+
+    /**
+     * 查询子地区数量
+     * @param areaCode
+     * @return
+     */
+    int selectChildNumByAreaCode(@Param("areaCode") String areaCode);
+
+    /**
+     * 更新地区表中parent_code等于指定areacode的parent_code值
+     * @param areaCode  原始地区编码
+     * @param newCode   更新后的地区编码
+     * @return
+     */
+    int updateParentCodeByAreaCode(@Param("areaCode") String areaCode, @Param("newCode") String newCode);
 }

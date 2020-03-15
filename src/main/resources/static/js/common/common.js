@@ -10,11 +10,20 @@ var Common = {
     log: function (info) {
         console.log(info);
     },
-    alert: function (info, iconIndex) {
+    msg: function (info, iconIndex) {
         layui.use('layer', function() {
             var layer = layui.layer;
             layer.msg(info, {
                 icon: iconIndex
+            });
+        });
+    },
+    alert: function (info, iconIndex) {
+        layui.use('layer', function() {
+            var layer = layui.layer;
+            layer.alert(info, {
+                icon: iconIndex,
+                skin: 'layui-layer-molv'
             });
         });
     },
@@ -31,10 +40,10 @@ var Common = {
         });
     },
     info: function (info) {
-        Common.alert(info, 0);
+        Common.msg(info, 0);
     },
     success: function (info) {
-        Common.alert(info, 1);
+        Common.msg(info, 1);
     },
     error: function (info) {
     		Common.openConfirm(info)

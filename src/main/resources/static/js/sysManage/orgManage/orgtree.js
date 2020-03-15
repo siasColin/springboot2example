@@ -22,19 +22,18 @@ var setting = {
 };
 
 $(function(){
-    loadAreaTree();
+    loadOrgTree();
 });
 
 /**
  * 加载地区树
  */
-function loadAreaTree(){
+function loadOrgTree(){
     var param = {};
-    // param.areaName = "河南省";
     $.ajax({
         async:true,
         type: "GET",
-        url: Common.ctxPath+'areaManage/areaListTree',
+        url: Common.ctxPath+'orgManage/orgListTree',
         data:param,
         dataType: "json",
         beforeSend : function(xhr) {
@@ -42,7 +41,7 @@ function loadAreaTree(){
         },
         success: function(rsp){
             if(rsp.returnCode == '0'){
-                treeObj = $.fn.zTree.init($("#area_tree"), setting, rsp.data);
+                treeObj = $.fn.zTree.init($("#org_tree"), setting, rsp.data);
                 expandRoot();
             }else{
                 Common.error(rsp.returnMessage);
@@ -71,7 +70,7 @@ function expandRoot(){
 
 function zTreeOnclick(event, treeId, treeNode) {
     if (treeNode.id != null) {
-        parent.iframeAreaNodeClick(treeNode);
+        parent.iframeOrgNodeClick(treeNode);
     }
     //关闭此页面
     var index = parent.layer.getFrameIndex(window.name);

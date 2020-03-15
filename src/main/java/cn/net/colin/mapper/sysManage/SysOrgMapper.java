@@ -1,9 +1,11 @@
 package cn.net.colin.mapper.sysManage;
 
+import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysOrg;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sxf
@@ -86,4 +88,26 @@ public interface SysOrgMapper {
      * @return
      */
     SysOrg selectByOrgCode(@Param("orgCode") String orgCode);
+
+    /**
+     * 查询指定地区编码下机构数量
+     * @param areaCode
+     * @return
+     */
+    int selectOrgNumByAreaCode(@Param("areaCode") String areaCode);
+
+    /**
+     * 更新机构表中的area_code字段
+     * @param areaCode  原始地区编码
+     * @param newCode   更新后的地区编码
+     * @return
+     */
+    int updateAreaCode(@Param("areaCode") String areaCode, @Param("newCode") String newCode);
+
+    /**
+     * 查询ztree结构的机构信息
+     * @param paramMap
+     * @return
+     */
+    List<TreeNode> selectOrgTreeNodes(Map<String, Object> paramMap);
 }

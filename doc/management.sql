@@ -11,7 +11,7 @@
  Target Server Version : 50527
  File Encoding         : 65001
 
- Date: 14/03/2020 19:16:32
+ Date: 14/03/2020 21:43:26
 */
 
 SET NAMES utf8mb4;
@@ -43,8 +43,8 @@ CREATE TABLE `sys_area`  (
 -- ----------------------------
 -- Records of sys_area
 -- ----------------------------
-INSERT INTO `sys_area` VALUES (1, '河南省', '410000000000', 1, '41', 113.628962, 34.757272, 'admin', '2020-03-07 15:07:00', 0);
-INSERT INTO `sys_area` VALUES (335383212932988928, '郑州市', '410100000000', 3, '410000000000', 113.628960, 34.757270, 'admin', '2020-03-07 15:08:10', 1);
+INSERT INTO `sys_area` VALUES (1, '河南省', '410000000001', 1, '41', 113.628962, 34.757272, 'admin', '2020-03-07 15:07:00', 0);
+INSERT INTO `sys_area` VALUES (335383212932988928, '郑州市', '410100000000', 3, '410000000001', 113.628960, 34.757270, 'admin', '2020-03-07 15:08:10', 1);
 
 -- ----------------------------
 -- Table structure for sys_modulelist
@@ -115,14 +115,14 @@ CREATE TABLE `sys_org`  (
   INDEX `inx_sysorg_parentcode`(`parent_code`) USING BTREE,
   INDEX `inx_sysorg_orgname`(`org_name`) USING BTREE,
   INDEX `FK_Reference_area_org`(`area_code`) USING BTREE,
-  CONSTRAINT `FK_Reference_area_org` FOREIGN KEY (`area_code`) REFERENCES `sys_area` (`area_code`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FK_Reference_area_org` FOREIGN KEY (`area_code`) REFERENCES `sys_area` (`area_code`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '机构表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_org
 -- ----------------------------
-INSERT INTO `sys_org` VALUES (1, '410000000000', '河南省气象局', '41000041600000', '0', 416, NULL, NULL, 'admin', '2020-03-07 15:09:41', 0);
-INSERT INTO `sys_org` VALUES (335386239865716736, '410000000000', '服务中心', '41000041601000', '41000041600000', 416, NULL, NULL, 'admin', '2020-03-07 15:11:46', 1);
+INSERT INTO `sys_org` VALUES (1, '410000000001', '河南省气象局', '41000041600000', '0', 416, NULL, NULL, 'admin', '2020-03-07 15:09:41', 0);
+INSERT INTO `sys_org` VALUES (335386239865716736, '410000000001', '服务中心', '41000041601000', '41000041600000', 416, NULL, NULL, 'admin', '2020-03-07 15:11:46', 1);
 
 -- ----------------------------
 -- Table structure for sys_org_role
@@ -133,8 +133,8 @@ CREATE TABLE `sys_org_role`  (
   `role_id` bigint(20) NOT NULL COMMENT '角色id',
   PRIMARY KEY (`org_id`, `role_id`) USING BTREE,
   INDEX `FK_Reference_role_org`(`role_id`) USING BTREE,
-  CONSTRAINT `FK_Reference_org_role` FOREIGN KEY (`org_id`) REFERENCES `sys_org` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FK_Reference_role_org` FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FK_Reference_org_role` FOREIGN KEY (`org_id`) REFERENCES `sys_org` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_Reference_role_org` FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '机构角色关联表' ROW_FORMAT = Compact;
 
 -- ----------------------------
@@ -158,13 +158,13 @@ CREATE TABLE `sys_role`  (
   INDEX `inx_sysrole_status`(`role_status`) USING BTREE,
   INDEX `inx_sysrole_name`(`role_name`) USING BTREE,
   INDEX `inx_sysrole_areacode`(`area_code`) USING BTREE,
-  CONSTRAINT `FK_Reference_area_role` FOREIGN KEY (`area_code`) REFERENCES `sys_area` (`area_code`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FK_Reference_area_role` FOREIGN KEY (`area_code`) REFERENCES `sys_area` (`area_code`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES (1, 'ADMIN', '管理员', 0, NULL, '410000000000', 1, 'admin', '2020-03-07 15:36:42', 0);
+INSERT INTO `sys_role` VALUES (1, 'ADMIN', '管理员', 0, NULL, '410000000001', 1, 'admin', '2020-03-07 15:36:42', 0);
 
 -- ----------------------------
 -- Table structure for sys_role_modulelist
@@ -175,8 +175,8 @@ CREATE TABLE `sys_role_modulelist`  (
   `modulelist_id` bigint(20) NOT NULL COMMENT '菜单ID',
   PRIMARY KEY (`role_id`, `modulelist_id`) USING BTREE,
   INDEX `FK_Reference_modulelist_role`(`modulelist_id`) USING BTREE,
-  CONSTRAINT `FK_Reference_modulelist_role` FOREIGN KEY (`modulelist_id`) REFERENCES `sys_modulelist` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FK_Reference_role_modulelist` FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FK_Reference_modulelist_role` FOREIGN KEY (`modulelist_id`) REFERENCES `sys_modulelist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_Reference_role_modulelist` FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色菜单关联表' ROW_FORMAT = Compact;
 
 -- ----------------------------
@@ -188,8 +188,8 @@ CREATE TABLE `sys_role_operatetype`  (
   `operateType_id` bigint(20) NOT NULL COMMENT '功能操作表ID',
   PRIMARY KEY (`role_id`, `operateType_id`) USING BTREE,
   INDEX `FK_Reference_operateType_role`(`operateType_id`) USING BTREE,
-  CONSTRAINT `FK_Reference_operateType_role` FOREIGN KEY (`operateType_id`) REFERENCES `sys_operatetype` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FK_Reference_role_operateType` FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FK_Reference_operateType_role` FOREIGN KEY (`operateType_id`) REFERENCES `sys_operatetype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_Reference_role_operateType` FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和系统权限关联表' ROW_FORMAT = Compact;
 
 -- ----------------------------
@@ -222,7 +222,7 @@ CREATE TABLE `sys_user`  (
   UNIQUE INDEX `inx_sysuser_phonenumber`(`phone_number`) USING BTREE,
   INDEX `inx_sysuser_orgcode`(`org_code`) USING BTREE,
   INDEX `inx_sysuser_password`(`password`) USING BTREE,
-  CONSTRAINT `FK_Reference_org_user` FOREIGN KEY (`org_code`) REFERENCES `sys_org` (`org_code`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FK_Reference_org_user` FOREIGN KEY (`org_code`) REFERENCES `sys_org` (`org_code`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = Compact;
 
 -- ----------------------------
@@ -239,8 +239,8 @@ CREATE TABLE `sys_user_role`  (
   `role_id` bigint(20) NOT NULL COMMENT '角色表id',
   PRIMARY KEY (`user_id`, `role_id`) USING BTREE,
   INDEX `FK_Reference_role_user`(`role_id`) USING BTREE,
-  CONSTRAINT `FK_Reference_role_user` FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FK_Reference_user_role` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FK_Reference_role_user` FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_Reference_user_role` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户角色关联表' ROW_FORMAT = Compact;
 
 -- ----------------------------

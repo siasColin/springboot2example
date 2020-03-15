@@ -2,7 +2,9 @@ package cn.net.colin.common.util;
 
 import cn.net.colin.model.common.Role;
 import cn.net.colin.model.sysManage.SysUser;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -51,6 +53,16 @@ public class SpringSecurityUtil {
             e.printStackTrace();
         }
         return hasRole;
+    }
+
+    /**
+     * 将用户信息存入SecurityContext中
+     *      可用于用户信息的更新
+     * @param userDetails
+     */
+    public static void setAuthentication(UserDetails userDetails){
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
 }

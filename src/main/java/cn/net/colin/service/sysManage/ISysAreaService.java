@@ -6,6 +6,7 @@ import cn.net.colin.model.sysManage.SysArea;
 import java.util.List;
 import java.util.Map;
 
+
 public interface ISysAreaService {
 
     SysArea selectByPrimaryKey(Long id);
@@ -67,4 +68,19 @@ public interface ISysAreaService {
      * @return 地区信息对象
      */
     SysArea selectByAreaCode(String areacode);
+
+    /**
+     * 验证一个地区编码是否被引用
+     * @param areaCode
+     * @return
+     */
+    Map<String,Object> areaRelation(String areaCode);
+
+    /**
+     * 更新地区信息，同时更新关联表中AreaCode信息
+     * @param sysArea 待更新的地区信息
+     * @param areaCode 更新之前的areaCode
+     * @return
+     */
+    int updatAreaWithFK(SysArea sysArea,String areaCode);
 }
