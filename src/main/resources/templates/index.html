@@ -12,6 +12,7 @@
 		<link rel="stylesheet" th:href="@{/assets/css/font-awesome.min.css}" href="../static/assets/css/font-awesome.min.css" />
 		<link rel="stylesheet" th:href="@{/assets/css/ace.min.css}" href="../static/assets/css/ace.min.css" />
 		<link rel="stylesheet" type="text/css" th:href="@{/css/index.css}" href="../static/css/index.css"/>
+        <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
 	</head>
 	<body>
 		<form th:action="@{/logout}" method="post" id="logout">
@@ -20,9 +21,13 @@
 			<div class="navbar-container" id="navbar-container">
 				<div class="contentBigBox">
 					<div id="headerNav">
-						<h1>
+						<!--<h1>
 							<img src="../static/image/logo.png" th:src="@{/image/logo.png}"/>
-						</h1>
+						</h1>-->
+                        <h1>
+                            <img th:src="@{/image/logo.png}" src="logo.png" style="width: 40px;margin-top: 0px;">
+                            <span style="display: inline-block;vertical-align: middle;font-size: 26px;font-family: '时尚中黑简体';line-height: 58px;color: white;">基于springboot+springsecurity的权限管理系统</span>
+                        </h1>
 						<ul id="nav">
 							<li onclick="showSecondMenu('301951999484624896','','navTab')">
 								<i class="icon-cog"></i>
