@@ -41,6 +41,13 @@
         where org_code = #{orgCode,jdbcType=VARCHAR}
     </select>
 
+    <select id="selectByParentCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_org
+        where parent_code = #{parentCode,jdbcType=VARCHAR}
+    </select>
+
     <select id="selectOrgNumByAreaCode" resultType="java.lang.Integer">
       SELECT COUNT(id) orgNum FROM sys_org WHERE area_code = #{areaCode,jdbcType=VARCHAR}
   </select>

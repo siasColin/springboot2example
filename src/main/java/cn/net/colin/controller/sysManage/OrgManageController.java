@@ -2,22 +2,21 @@ package cn.net.colin.controller.sysManage;
 
 import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.exception.entity.ResultInfo;
+import cn.net.colin.common.util.SnowflakeIdWorker;
+import cn.net.colin.common.util.SpringSecurityUtil;
 import cn.net.colin.model.common.TreeNode;
+import cn.net.colin.model.sysManage.SysOrg;
+import cn.net.colin.model.sysManage.SysUser;
 import cn.net.colin.service.sysManage.ISysOrgService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Package: cn.net.colin.controller.sysManage
@@ -81,5 +80,47 @@ public class OrgManageController {
             targetPage = "sysManage/orgManage/orgtreeCheck";
         }
         return targetPage;
+    }
+
+    /**
+     * 根据机构编码查询机构信息
+     * @param orgcode
+     * @return
+     */
+    @GetMapping("/orgOnCode/{orgcode}")
+    @ResponseBody
+    public ResultInfo areaOnCode(@PathVariable("orgcode") String orgcode){
+        SysOrg sysOrg = sysOrgService.selectByOrgCode(orgcode);
+        return ResultInfo.ofData(ResultCode.SUCCESS,sysOrg);
+    }
+
+    /**
+     * 保存机构信息
+     * @param sysOrg
+     * @return
+     */
+    @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH')")
+    @PostMapping("/org")
+    @ResponseBody
+    public ResultInfo saveArea(SysOrg sysOrg){
+        SysUser sysUser = SpringSecurityUtil.getPrincipal();
+        //父级ID为空，查询parentcode=-1的记录，默认parentcode=-1为根节点。如果没有记录那么新增节点作为根节点
+        if(sysOrg.getParentCode() == null && (sysOrg.getParentCode() != null && sysOrg.getParentCode().trim().equals(""))){
+            List<SysOrg> orgList = sysOrgService.selectByParentCode("-1");
+            if(orgList != null && orgList.size() > 0){
+                sysOrg.setParentCode(orgList.get(0).getOrgCode());
+            }else{
+                sysOrg.setParentCode("-1");
+            }
+        }
+        sysOrg.setId(SnowflakeIdWorker.generateId());
+        sysOrg.setCreateTime(new Date());
+        sysOrg.setCreateUser(sysUser.getLoginName());
+        int num = sysOrgService.insertSelective(sysOrg);
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        if(num > 0){
+            resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,sysOrg);
+        }
+        return resultInfo;
     }
 }

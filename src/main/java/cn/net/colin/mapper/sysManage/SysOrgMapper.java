@@ -110,4 +110,11 @@ public interface SysOrgMapper {
      * @return
      */
     List<TreeNode> selectOrgTreeNodes(Map<String, Object> paramMap);
+
+    /**
+     * 根据父级机构编码，查询子机构
+     * @param parentCode 父机构编码
+     * @return
+     */
+    List<SysOrg> selectByParentCode(@Param("parentCode") String parentCode);
 }

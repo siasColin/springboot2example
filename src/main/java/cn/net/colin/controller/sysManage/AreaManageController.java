@@ -109,7 +109,7 @@ public class AreaManageController {
     @ResponseBody
     public ResultInfo saveArea(SysArea sysArea){
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
-        //父级ID为空，默认去当前登录用户所属地区的父级地区
+        //父级ID为空，默认取当前登录用户所属地区的父级地区
         if(sysArea.getParentCode() == null && (sysArea.getParentCode() != null && sysArea.getParentCode().trim().equals(""))){
             sysArea.setParentCode(sysUser.getSysOrg().getSysArea().getParentCode());
         }

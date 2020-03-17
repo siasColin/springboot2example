@@ -283,6 +283,8 @@ layui.use(['form','upload','layer'], function(){
                 }
             });
         }
+        //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        return false;
     });
 
     /**

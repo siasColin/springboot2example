@@ -54,4 +54,18 @@ public interface ISysOrgService {
      * @return
      */
     List<TreeNode> selectOrgTreeNodes(Map<String, Object> paramMap);
+
+    /**
+     * 根据机构编码查询机构信息
+     * @param orgcode 机构编码
+     * @return
+     */
+    SysOrg selectByOrgCode(String orgcode);
+
+    /**
+     * 根据父级机构编码，查询子机构
+     * @param parentCode 父机构编码
+     * @return
+     */
+    List<SysOrg> selectByParentCode(String parentCode);
 }

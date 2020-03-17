@@ -112,4 +112,14 @@ public class SysOrgServiceImpl implements ISysOrgService {
         }
         return orgNodeList;
     }
+
+    @Override
+    public SysOrg selectByOrgCode(String orgcode) {
+        return sysOrgMapper.selectByOrgCode(orgcode);
+    }
+
+    @Override
+    public List<SysOrg> selectByParentCode(String parentCode) {
+        return sysOrgMapper.selectByParentCode(parentCode);
+    }
 }
