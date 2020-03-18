@@ -11,7 +11,7 @@
  Target Server Version : 50527
  File Encoding         : 65001
 
- Date: 14/03/2020 21:43:26
+ Date: 18/03/2020 10:50:41
 */
 
 SET NAMES utf8mb4;
@@ -43,8 +43,8 @@ CREATE TABLE `sys_area`  (
 -- ----------------------------
 -- Records of sys_area
 -- ----------------------------
-INSERT INTO `sys_area` VALUES (1, '河南省', '410000000001', 1, '41', 113.628962, 34.757272, 'admin', '2020-03-07 15:07:00', 0);
-INSERT INTO `sys_area` VALUES (335383212932988928, '郑州市', '410100000000', 3, '410000000001', 113.628960, 34.757270, 'admin', '2020-03-07 15:08:10', 1);
+INSERT INTO `sys_area` VALUES (1, '河南省', '410000000000', 1, '41', 113.628962, 34.757272, 'admin', '2020-03-07 15:07:00', 0);
+INSERT INTO `sys_area` VALUES (335383212932988928, '郑州市', '410100000000', 3, '410000000000', 113.628960, 34.757270, 'admin', '2020-03-07 15:08:10', 1);
 
 -- ----------------------------
 -- Table structure for sys_modulelist
@@ -121,8 +121,9 @@ CREATE TABLE `sys_org`  (
 -- ----------------------------
 -- Records of sys_org
 -- ----------------------------
-INSERT INTO `sys_org` VALUES (1, '410000000001', '河南省气象局', '41000041600000', '0', 416, NULL, NULL, 'admin', '2020-03-07 15:09:41', 0);
-INSERT INTO `sys_org` VALUES (335386239865716736, '410000000001', '服务中心', '41000041601000', '41000041600000', 416, NULL, NULL, 'admin', '2020-03-07 15:11:46', 1);
+INSERT INTO `sys_org` VALUES (0, '410000000000', '河南省', '41000000000000', '-1', 0, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_org` VALUES (1, '410000000000', '河南省气象局', '41000041600000', '41000000000000', 416, NULL, NULL, 'admin', '2020-03-07 15:09:41', 0);
+INSERT INTO `sys_org` VALUES (335386239865716736, '410000000000', '服务中心', '41000041601000', '41000041600000', 416, NULL, NULL, 'admin', '2020-03-07 15:11:46', 1);
 
 -- ----------------------------
 -- Table structure for sys_org_role
@@ -164,7 +165,7 @@ CREATE TABLE `sys_role`  (
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES (1, 'ADMIN', '管理员', 0, NULL, '410000000001', 1, 'admin', '2020-03-07 15:36:42', 0);
+INSERT INTO `sys_role` VALUES (1, 'ADMIN', '管理员', 0, NULL, '410000000000', 1, 'admin', '2020-03-07 15:36:42', 0);
 
 -- ----------------------------
 -- Table structure for sys_role_modulelist
