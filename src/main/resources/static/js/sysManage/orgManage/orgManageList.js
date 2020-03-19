@@ -14,7 +14,7 @@ var setting = {
         }
     },
     callback: {
-        // onClick: areaNodeOnClick
+        onClick: orgNodeOnClick
     }
 };
 
@@ -68,11 +68,16 @@ $(function(){
             });
         });
     });
+
+    $("#chongzhi").click(function () {
+        $("input").val("");
+        $("img").removeAttr("src");
+    });
 });
 
 
 /**
- * 加载地区树
+ * 加载机构树
  */
 function loadOrgTree(){
     var param = {};
@@ -122,7 +127,7 @@ layui.use(['form','upload','layer'], function(){
 
     form.on('submit(saveOrUpdate)', function(data){
         if(data.field.id==null||data.field.id==''){ //保存
-            //判断当前添加的地区是否已存在
+            //判断当前添加的机构编码是否已存在
             $.ajax({
                 type : 'GET',
                 url: Common.ctxPath+"orgManage/orgOnCode/"+data.field.orgCode,//请求的action路径
@@ -144,7 +149,7 @@ layui.use(['form','upload','layer'], function(){
                             },
                             success : function(rsp) {
                                 if(rsp.returnCode == '0'){
-                                    //将新增地区异步添加到zTree树
+                                    //将新增机构异步添加到zTree树
                                     var pNode = treeObj.getNodeByParam("id",data.field.parentCode);
                                     var newNode = {};
                                     newNode.id = rsp.data.orgCode;
@@ -154,6 +159,7 @@ layui.use(['form','upload','layer'], function(){
                                     newNode = treeObj.addNodes(pNode, newNode);
                                     Common.openConfirm("添加成功，是否重置表单？",function () {
                                         $("input").val("");
+                                        $("img").removeAttr("src");
                                     })
                                 }else{
                                     Common.error(rsp.returnMessage);
@@ -168,67 +174,82 @@ layui.use(['form','upload','layer'], function(){
             });
         }else{
             var selectNode = treeObj.getSelectedNodes()[0];
-            if(selectNode.id != data.field.areaCode){//areaCode被修改
-                //由于areaCode作为和其他表的关联字段，如果修改areaCode则需要提醒用户是否同步修改关联表
-                //首先判断该地区编码是否被其他表引用
-                var isQuote = checkRelation(selectNode.id).isQuote;
-                if(isQuote){//如果被引用提示用户将同时更新被引用的地方
-                    Common.openConfirm("地区编码存在外键引用，需要同步更新，是否继续？",function(){
-                        $.ajax({
-                            type : 'PUT',
-                            url : Common.ctxPath+'areaManage/area/'+selectNode.id,
-                            data :$("#form1").serialize(),
-                            dataType : 'json',
-                            beforeSend : function(xhr) {
-                                xhr.setRequestHeader(_header, _token);
-                            },
-                            success : function(rsp) {
-                                if(rsp.returnCode == '0'){
-                                    //如果修改的节点是父节点（存在子节点）则影响相对较大，这里重新初始化ztree树
-                                    if(selectNode.isParent){
-                                        //更新地区编码,影响ztree的整体结构。所以这里重新初始化ztree树
-                                        treeObj.destroy();
-                                        loadAreaTree();
-                                    }else{
-                                        if(selectNode.pId == rsp.data.parentCode){//节点位置不变
-                                            selectNode.id = rsp.data.areaCode
-                                            selectNode.name = rsp.data.areaName
-                                            treeObj.updateNode(selectNode);
-                                        }else{//节点位置改变
-                                            //先移除
-                                            treeObj.removeNode(selectNode);
-                                            //再新增
-                                            var pNode = treeObj.getNodeByParam("id",data.field.parentCode);
-                                            var newNode = {};
-                                            newNode.id = rsp.data.areaCode;
-                                            newNode.pId = rsp.data.parentCode;
-                                            newNode.name = rsp.data.areaName;
-                                            newNode.param = {"areaid":rsp.data.id};
-                                            newNode = treeObj.addNodes(pNode, newNode);
+            if(selectNode.id != data.field.orgCode){//orgCode被修改
+                //判断当前添加的机构编码是否已存在
+                $.ajax({
+                    type : 'GET',
+                    url: Common.ctxPath+"orgManage/orgOnCode/"+data.field.orgCode,//请求的action路径
+                    error: function () {//请求失败处理函数
+                        Common.error('请求失败!')
+                    },
+                    success:function(obj) {
+                        if(obj.data !=null && obj.data != '' && obj.data.orgCode != null && obj.data.orgCode != ''){
+                            Common.info("机构编码已经存在");
+                            return;
+                        }else{
+                            //由于orgCode作为和其他表的关联字段，如果修改orgCode则需要提醒用户是否同步修改关联表
+                            //首先判断该机构编码是否被其他表引用
+                            var isQuote = checkRelation(selectNode.id).isQuote;
+                            if(isQuote){//如果被引用提示用户将同时更新被引用的地方
+                                Common.openConfirm("机构编码存在外键引用，需要同步更新，是否继续？",function(){
+                                    $.ajax({
+                                        type : 'PUT',
+                                        url : Common.ctxPath+'orgManage/org/'+selectNode.id,
+                                        data :$("#form1").serialize(),
+                                        dataType : 'json',
+                                        beforeSend : function(xhr) {
+                                            xhr.setRequestHeader(_header, _token);
+                                        },
+                                        success : function(rsp) {
+                                            if(rsp.returnCode == '0'){
+                                                //如果修改的节点是父节点（存在子节点）则影响相对较大，这里重新初始化ztree树
+                                                if(selectNode.isParent){
+                                                    //更新机构编码,影响ztree的整体结构。所以这里重新初始化ztree树
+                                                    treeObj.destroy();
+                                                    loadOrgTree();
+                                                }else{
+                                                    if(selectNode.pId == rsp.data.parentCode){//节点位置不变
+                                                        selectNode.id = rsp.data.orgCode
+                                                        selectNode.name = rsp.data.orgName
+                                                        treeObj.updateNode(selectNode);
+                                                    }else{//节点位置改变
+                                                        //先移除
+                                                        treeObj.removeNode(selectNode);
+                                                        //再新增
+                                                        var pNode = treeObj.getNodeByParam("id",data.field.parentCode);
+                                                        var newNode = {};
+                                                        newNode.id = rsp.data.orgCode;
+                                                        newNode.pId = rsp.data.parentCode;
+                                                        newNode.name = rsp.data.orgName;
+                                                        newNode.param = {"orgid":rsp.data.id};
+                                                        newNode = treeObj.addNodes(pNode, newNode);
+                                                    }
+                                                }
+                                                Common.success(rsp.returnMessage);
+                                            }else if(rsp.returnCode == '006'){//当前登录用户关联信息已更细，提示用户重新登录
+                                                layer.confirm(rsp.returnMessage, {
+                                                    btn: ['确定'], //按钮
+                                                    shade:0.5
+                                                }, function(){
+                                                    $("#logout",parent.document).submit();
+                                                });
+                                            }else{
+                                                Common.error(rsp.returnMessage);
+                                            }
+                                        },
+                                        error : function(rsp) {
+                                            Common.error("修改失败");
                                         }
-                                    }
-                                    Common.success(rsp.returnMessage);
-                                }else if(rsp.returnCode == '006'){//当前登录用户关联信息已更细，提示用户重新登录
-                                    layer.confirm(rsp.returnMessage, {
-                                        btn: ['确定'], //按钮
-                                        shade:0.5
-                                    }, function(){
-                                        $("#logout",parent.document).submit();
                                     });
-                                }else{
-                                    Common.error(rsp.returnMessage);
-                                }
-                            },
-                            error : function(rsp) {
-                                Common.error("修改失败");
+                                })
+                            }else{//没有被引用，则可以直接更新
+                                updateOrg(selectNode,data);
                             }
-                        });
-                    })
-                }else{//没有被引用，则可以直接更新
-                    updateArea(selectNode,data);
-                }
+                        }
+                    }
+                });
             }else{
-                updateArea(selectNode,data);
+                updateOrg(selectNode,data);
             }
 
         }
@@ -236,6 +257,35 @@ layui.use(['form','upload','layer'], function(){
         return false;
     });
 
+    form.on('submit(deleteOne)', function(data){
+        var checkObj = checkRelation(data.field.orgCode);
+        if(checkObj.isQuote){//存在引用，不允许删除
+            Common.info(checkObj.msg);
+        }else{
+            $.ajax({
+                type : 'DELETE',
+                url : Common.ctxPath+'orgManage/org/'+data.field.id,
+                dataType : 'json',
+                beforeSend : function(xhr) {
+                    xhr.setRequestHeader(_header, _token);
+                },
+                success : function(rsp) {
+                    if(rsp.returnCode == '0'){
+                        var selectNode = treeObj.getSelectedNodes()[0];
+                        treeObj.removeNode(selectNode);
+                        Common.success(rsp.returnMessage);
+                    }else{
+                        Common.error(rsp.returnMessage);
+                    }
+                },
+                error : function(rsp) {
+                    Common.error("删除失败");
+                }
+            });
+        }
+        //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        return false;
+    });
 
 
     //上传
@@ -265,3 +315,132 @@ layui.use(['form','upload','layer'], function(){
         }
     });
 });
+
+
+function orgNodeOnClick(event, treeId, treeNode) {
+    $("input").val("");
+    $("img").removeAttr("src");
+    $.ajax({
+        async:true,
+        type: "GET",
+        url: Common.ctxPath+'orgManage/org/'+treeNode.param.orgid,
+        dataType: "json",
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader(_header, _token);
+        },
+        success: function(rsp){
+            if(rsp.returnCode == '0'){
+                var data = rsp.data;
+                layui.use(['form'], function(){
+                    var form = layui.form;
+                    $("#orgName").val(data.orgName);
+                    $("#orgCode").val(data.orgCode);
+                    $("#id").val(data.id);
+                    $("#parentCode").val(data.parentCode);
+                    $("#parentName").val(data.parentName);
+                    $("#areaCode").val(data.areaCode);
+                    $("#areaName").val(data.areaName);
+                    $("#orgAddress").val(data.orgAddress);
+                    $("#sortNum").val(data.sortNum);
+                    if(!$.isEmpty(data.orgLogo)){
+                        $("#orgLogo").val(data.orgLogo);
+                        $("#orglogoImg").attr("src",Common.ctxPath+data.orgLogo);
+                    }
+                    form.render();
+                });
+            }else{
+                Common.error(rsp.returnMessage);
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            var sessionstatus = XMLHttpRequest.getResponseHeader("sessionstatus");
+            // 通过XMLHttpRequest取得响应头，sessionstatus，
+            if(sessionstatus == "sessionTimeOut"){
+                window.location.replace("/");
+            }else {
+                Common.error("请求异常")
+            }
+        }
+    });
+};
+
+/**
+ * 检查orgCode和其他表的关联关系
+ * @param orgCode
+ */
+function checkRelation(orgCode){
+    var resultobj = {};
+    //是否和其他表存在关联关系
+    resultobj.isQuote = true;
+    $.ajax({
+        async:false,
+        type : 'GET',
+        url : Common.ctxPath+'orgManage/orgRelation/'+orgCode,
+        dataType : 'json',
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader(_header, _token);
+        },
+        success : function(rsp) {
+            if(rsp.returnCode == '0'){
+                resultobj.isQuote = true;
+                resultobj.msg = rsp.data.msg;
+            }else{
+                resultobj.isQuote = false;
+            }
+        },
+        error : function(rsp) {
+            Common.error("验证机构编码关联关系失败！！！");
+        }
+    });
+    return resultobj;
+}
+
+
+/**
+ * 更新机构信息
+ * @param selectNode
+ * @param data
+ */
+function updateOrg(selectNode,data){
+    $.ajax({
+        type : 'PUT',
+        url : Common.ctxPath+'orgManage/org',
+        data :$("#form1").serialize(),
+        dataType : 'json',
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader(_header, _token);
+        },
+        success : function(rsp) {
+            if(rsp.returnCode == '0'){
+                if(selectNode.pId == rsp.data.parentCode){//节点位置不变
+                    selectNode.id = rsp.data.orgCode
+                    selectNode.name = rsp.data.orgName
+                    treeObj.updateNode(selectNode);
+                }else{//节点位置改变
+                    if(selectNode.isParent){
+                        //重新初始化ztree树
+                        treeObj.destroy();
+                        loadOrgTree();
+                    }else{
+                        //先移除
+                        treeObj.removeNode(selectNode);
+                        //再新增
+                        var pNode = treeObj.getNodeByParam("id",data.field.parentCode);
+                        var newNode = {};
+                        newNode.id = rsp.data.orgCode;
+                        newNode.pId = rsp.data.parentCode;
+                        newNode.name = rsp.data.orgName;
+                        newNode.param = {"orgid":rsp.data.id};
+                        newNode = treeObj.addNodes(pNode, newNode);
+                    }
+                }
+                Common.success(rsp.returnMessage);
+            }else{
+                Common.error(rsp.returnMessage);
+            }
+        },
+        error : function(rsp) {
+            Common.error("修改失败");
+        }
+    });
+}

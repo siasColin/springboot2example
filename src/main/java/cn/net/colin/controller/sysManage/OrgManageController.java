@@ -123,4 +123,120 @@ public class OrgManageController {
         }
         return resultInfo;
     }
+
+    /**
+     * 根据机构id查询机构信息
+     * @param orgid
+     * @return
+     */
+    @GetMapping("/org/{orgid}")
+    @ResponseBody
+    public ResultInfo area(@PathVariable("orgid") String orgid){
+        SysOrg sysOrg = sysOrgService.selectByPrimaryKey(Long.parseLong(orgid));
+        return ResultInfo.ofData(ResultCode.SUCCESS,sysOrg);
+    }
+
+    /**
+     * 验证一个机构编码是否被其他表引用
+     * @param orgCode
+     * @return
+     */
+    @GetMapping("/orgRelation/{orgCode}")
+    @ResponseBody
+    public ResultInfo orgRelation(@PathVariable("orgCode") String orgCode){
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        Map<String,Object> resultMap = sysOrgService.orgRelation(orgCode);
+        //是否被引用
+        boolean isQuote = false;
+        if(resultMap.get("isQuote") != null){
+            isQuote = (boolean) resultMap.get("isQuote");
+        }
+        if(isQuote){
+            resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,resultMap);
+        }
+        return  resultInfo;
+    }
+
+    /**
+     * 更新地区信息
+     * @param sysOrg
+     * @return
+     */
+    @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','UPDATE_AUTH')")
+    @PutMapping("/org")
+    @ResponseBody
+    public ResultInfo updateOrg(SysOrg sysOrg){
+        //父级ID为空，查询parentcode=-1的记录，默认parentcode=-1为根节点。如果没有记录那么新增节点作为根节点
+        if(sysOrg.getParentCode() == null && (sysOrg.getParentCode() != null && sysOrg.getParentCode().trim().equals(""))){
+            List<SysOrg> orgList = sysOrgService.selectByParentCode("-1");
+            if(orgList != null && orgList.size() > 0){
+                sysOrg.setParentCode(orgList.get(0).getOrgCode());
+            }else{
+                sysOrg.setParentCode("-1");
+            }
+        }
+        int num = sysOrgService.updateByPrimaryKeySelective(sysOrg);
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        if(num > 0){
+            resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,sysOrg);
+        }
+        return resultInfo;
+    }
+
+    /**
+     * 更新机构信息，同时更新关联表中orgCode信息
+     * @param sysOrg
+     * @return
+     */
+    @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','UPDATE_AUTH')")
+    @PutMapping("/org/{orgCode}")
+    @ResponseBody
+    public ResultInfo updateAreaWithFK(SysOrg sysOrg,@PathVariable("orgCode") String orgCode){
+        SysUser sysUser = SpringSecurityUtil.getPrincipal();
+        //父级ID为空，查询parentcode=-1的记录，默认parentcode=-1为根节点。如果没有记录那么新增节点作为根节点
+        if(sysOrg.getParentCode() == null && (sysOrg.getParentCode() != null && sysOrg.getParentCode().trim().equals(""))){
+            List<SysOrg> orgList = sysOrgService.selectByParentCode("-1");
+            if(orgList != null && orgList.size() > 0){
+                sysOrg.setParentCode(orgList.get(0).getOrgCode());
+            }else{
+                sysOrg.setParentCode("-1");
+            }
+        }
+        int num = sysOrgService.updatOrgWithFK(sysOrg,orgCode);
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        if(num > 0){
+            resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,sysOrg);
+        }
+        /**
+         * 相等，则更新的是当前登录人所属机构信息。
+         *      提示登录人重新登录
+         *      或者更新securitycontext中的用户信息
+         */
+        if(sysUser.getSysOrg().getOrgCode().equals(orgCode)){
+            //提示用户重新登录
+//            resultInfo = ResultInfo.ofData(ResultCode.RELOGIN,sysArea);
+            //更新用户信息中的地区信息，重新放入securitycontext中
+            sysOrg.setSysArea(sysUser.getSysOrg().getSysArea());
+            sysUser.setSysOrg(sysOrg);
+            SpringSecurityUtil.setAuthentication(sysUser);
+        }
+        return resultInfo;
+    }
+
+    /**
+     * 根据机构id删除机构记录
+     * @param id
+     * @return
+     */
+    @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')")
+    @DeleteMapping("/org/{id}")
+    @ResponseBody
+    public ResultInfo deleteOrg(@PathVariable("id") Long id){
+        int num = sysOrgService.deleteByPrimaryKey(id);
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        if(num > 0){
+            resultInfo = ResultInfo.of(ResultCode.SUCCESS);
+        }
+        return resultInfo;
+    }
 }

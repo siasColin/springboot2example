@@ -101,4 +101,19 @@ public interface SysRoleMapper {
      * @return
      */
     int updateAreaCode(String areaCode, String newCode);
+
+    /**
+     * 查询该地区编码是否被角色表引用
+     * @param orgCode
+     * @return
+     */
+    int selectRoleNumByOrgCode(String orgCode);
+
+    /**
+     *
+     * @param orgCode 原始机构编码
+     * @param newCode 更新后的机构编码
+     * @return
+     */
+    int updateOrgCode(@Param("orgCode") String orgCode, @Param("newCode") String newCode);
 }

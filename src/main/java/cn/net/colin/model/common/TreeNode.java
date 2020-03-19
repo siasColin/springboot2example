@@ -1,5 +1,8 @@
 package cn.net.colin.model.common;
 
+import cn.net.colin.common.helper.LongJsonDeserializer;
+import cn.net.colin.common.helper.LongJsonSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.Serializable;

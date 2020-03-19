@@ -15,11 +15,27 @@
         <result column="sort_num" jdbcType="INTEGER" property="sortNum"/>
     </resultMap>
 
+    <resultMap id="BaseResultMapWithPName" type="cn.net.colin.model.sysManage.SysOrg">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+        <result column="org_name" jdbcType="VARCHAR" property="orgName"/>
+        <result column="org_code" jdbcType="VARCHAR" property="orgCode"/>
+        <result column="parent_code" jdbcType="VARCHAR" property="parentCode"/>
+        <result column="industryid" jdbcType="BIGINT" property="industryid"/>
+        <result column="org_address" jdbcType="VARCHAR" property="orgAddress"/>
+        <result column="org_logo" jdbcType="VARCHAR" property="orgLogo"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="sort_num" jdbcType="INTEGER" property="sortNum"/>
+        <result column="parentName" jdbcType="VARCHAR" property="parentName"/>
+        <result column="areaName" jdbcType="VARCHAR" property="areaName"/>
+    </resultMap>
+
     <resultMap type="cn.net.colin.model.common.TreeNode" id="SysOrgTreeNodeResultMap">
-        <result column="org_code" jdbcType="VARCHAR" property="id" />
-        <result column="parent_code" jdbcType="VARCHAR" property="pId" />
-        <result column="org_name" jdbcType="VARCHAR" property="name" />
-        <association property="param"  javaType="java.util.Map">
+        <result column="org_code" jdbcType="VARCHAR" property="id"/>
+        <result column="parent_code" jdbcType="VARCHAR" property="pId"/>
+        <result column="org_name" jdbcType="VARCHAR" property="name"/>
+        <association property="param" javaType="java.util.Map">
             <id column="orgid" property="orgid"/>
         </association>
     </resultMap>
@@ -31,7 +47,9 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from sys_org
+        ,(select sop.org_name from sys_org sop WHERE sop.org_code = so.parent_code) parentName
+        ,(select sa.area_name from sys_area sa WHERE sa.area_code = so.area_code) areaName
+        from sys_org so
         where id = #{id,jdbcType=BIGINT}
     </select>
     <select id="selectByOrgCode" resultMap="BaseResultMap">
@@ -54,7 +72,7 @@
 
     <select id="selectOrgTreeNodes" resultMap="SysOrgTreeNodeResultMap">
         select
-        org_code,parent_code,org_name,id as orgid
+        org_code,parent_code,org_name,CONCAT(id,'') as orgid
         from sys_org
         <where>
             <if test="orgName != null and orgName != ''">
@@ -73,6 +91,9 @@
                 </foreach>
             </if>
         </where>
+    </select>
+    <select id="selectChildNumByOrgCode" resultType="java.lang.Integer">
+        SELECT COUNT(id) childNum FROM sys_org WHERE parent_code = #{orgCode,jdbcType=VARCHAR}
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -469,7 +490,10 @@
             #{item.id}
         </foreach>
     </update>
-    <update id="updateAreaCode">
-    UPDATE sys_role SET area_code = #{newCode,jdbcType=VARCHAR} WHERE area_code = #{areaCode,jdbcType=VARCHAR}
+  <update id="updateAreaCode">
+    UPDATE sys_org SET area_code = #{newCode,jdbcType=VARCHAR} WHERE area_code = #{areaCode,jdbcType=VARCHAR}
   </update>
+    <update id="updateParentCodeByOrgCode">
+        update sys_org SET parent_code = #{newCode,jdbcType=VARCHAR} where parent_code = #{orgCode,jdbcType=VARCHAR}
+    </update>
 </mapper>

@@ -88,6 +88,7 @@ function areaidFilter(node) {
 }
 
 function areaNodeOnClick(event, treeId, treeNode) {
+    $("input").val("");
     $.ajax({
         async:true,
         type: "GET",
@@ -191,64 +192,79 @@ layui.use(['form','upload','layer'], function(){
         }else{
             var selectNode = treeObj.getSelectedNodes()[0];
             if(selectNode.id != data.field.areaCode){//areaCode被修改
-                //由于areaCode作为和其他表的关联字段，如果修改areaCode则需要提醒用户是否同步修改关联表
-                //首先判断该地区编码是否被其他表引用
-                var isQuote = checkRelation(selectNode.id).isQuote;
-                if(isQuote){//如果被引用提示用户将同时更新被引用的地方
-                    Common.openConfirm("地区编码存在外键引用，需要同步更新，是否继续？",function(){
-                        $.ajax({
-                            type : 'PUT',
-                            url : Common.ctxPath+'areaManage/area/'+selectNode.id,
-                            data :$("#form1").serialize(),
-                            dataType : 'json',
-                            beforeSend : function(xhr) {
-                                xhr.setRequestHeader(_header, _token);
-                            },
-                            success : function(rsp) {
-                                if(rsp.returnCode == '0'){
-                                    //如果修改的节点是父节点（存在子节点）则影响相对较大，这里重新初始化ztree树
-                                    if(selectNode.isParent){
-                                        //更新地区编码,影响ztree的整体结构。所以这里重新初始化ztree树
-                                        treeObj.destroy();
-                                        loadAreaTree();
-                                    }else{
-                                        if(selectNode.pId == rsp.data.parentCode){//节点位置不变
-                                            selectNode.id = rsp.data.areaCode
-                                            selectNode.name = rsp.data.areaName
-                                            treeObj.updateNode(selectNode);
-                                        }else{//节点位置改变
-                                            //先移除
-                                            treeObj.removeNode(selectNode);
-                                            //再新增
-                                            var pNode = treeObj.getNodeByParam("id",data.field.parentCode);
-                                            var newNode = {};
-                                            newNode.id = rsp.data.areaCode;
-                                            newNode.pId = rsp.data.parentCode;
-                                            newNode.name = rsp.data.areaName;
-                                            newNode.param = {"areaid":rsp.data.id};
-                                            newNode = treeObj.addNodes(pNode, newNode);
+                //判断当前添加的地区是否已存在
+                $.ajax({
+                    type : 'GET',
+                    url: Common.ctxPath+"areaManage/areaOnCode/"+data.field.areaCode,//请求的action路径
+                    error: function () {//请求失败处理函数
+                        Common.error('请求失败!')
+                    },
+                    success:function(obj) {
+                        if(obj.data !=null && obj.data != '' && obj.data.areaCode != null && obj.data.areaCode != ''){
+                            Common.info("地区编码已经存在");
+                            return;
+                        }else{
+                            //由于areaCode作为和其他表的关联字段，如果修改areaCode则需要提醒用户是否同步修改关联表
+                            //首先判断该地区编码是否被其他表引用
+                            var isQuote = checkRelation(selectNode.id).isQuote;
+                            if(isQuote){//如果被引用提示用户将同时更新被引用的地方
+                                Common.openConfirm("地区编码存在外键引用，需要同步更新，是否继续？",function(){
+                                    $.ajax({
+                                        type : 'PUT',
+                                        url : Common.ctxPath+'areaManage/area/'+selectNode.id,
+                                        data :$("#form1").serialize(),
+                                        dataType : 'json',
+                                        beforeSend : function(xhr) {
+                                            xhr.setRequestHeader(_header, _token);
+                                        },
+                                        success : function(rsp) {
+                                            if(rsp.returnCode == '0'){
+                                                //如果修改的节点是父节点（存在子节点）则影响相对较大，这里重新初始化ztree树
+                                                if(selectNode.isParent){
+                                                    //更新地区编码,影响ztree的整体结构。所以这里重新初始化ztree树
+                                                    treeObj.destroy();
+                                                    loadAreaTree();
+                                                }else{
+                                                    if(selectNode.pId == rsp.data.parentCode){//节点位置不变
+                                                        selectNode.id = rsp.data.areaCode
+                                                        selectNode.name = rsp.data.areaName
+                                                        treeObj.updateNode(selectNode);
+                                                    }else{//节点位置改变
+                                                        //先移除
+                                                        treeObj.removeNode(selectNode);
+                                                        //再新增
+                                                        var pNode = treeObj.getNodeByParam("id",data.field.parentCode);
+                                                        var newNode = {};
+                                                        newNode.id = rsp.data.areaCode;
+                                                        newNode.pId = rsp.data.parentCode;
+                                                        newNode.name = rsp.data.areaName;
+                                                        newNode.param = {"areaid":rsp.data.id};
+                                                        newNode = treeObj.addNodes(pNode, newNode);
+                                                    }
+                                                }
+                                                Common.success(rsp.returnMessage);
+                                            }else if(rsp.returnCode == '006'){//当前登录用户关联信息已更细，提示用户重新登录
+                                                layer.confirm(rsp.returnMessage, {
+                                                    btn: ['确定'], //按钮
+                                                    shade:0.5
+                                                }, function(){
+                                                    $("#logout",parent.document).submit();
+                                                });
+                                            }else{
+                                                Common.error(rsp.returnMessage);
+                                            }
+                                        },
+                                        error : function(rsp) {
+                                            Common.error("修改失败");
                                         }
-                                    }
-                                    Common.success(rsp.returnMessage);
-                                }else if(rsp.returnCode == '006'){//当前登录用户关联信息已更细，提示用户重新登录
-                                    layer.confirm(rsp.returnMessage, {
-                                        btn: ['确定'], //按钮
-                                        shade:0.5
-                                    }, function(){
-                                        $("#logout",parent.document).submit();
                                     });
-                                }else{
-                                    Common.error(rsp.returnMessage);
-                                }
-                            },
-                            error : function(rsp) {
-                                Common.error("修改失败");
+                                })
+                            }else{//没有被引用，则可以直接更新
+                                updateArea(selectNode,data);
                             }
-                        });
-                    })
-                }else{//没有被引用，则可以直接更新
-                    updateArea(selectNode,data);
-                }
+                        }
+                    }
+                });
             }else{
                 updateArea(selectNode,data);
             }

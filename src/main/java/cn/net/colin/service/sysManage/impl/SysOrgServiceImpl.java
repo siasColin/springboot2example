@@ -5,6 +5,8 @@ import cn.net.colin.common.util.SQLUtil;
 import cn.net.colin.common.util.SpringSecurityUtil;
 import cn.net.colin.mapper.sysManage.SysAreaMapper;
 import cn.net.colin.mapper.sysManage.SysOrgMapper;
+import cn.net.colin.mapper.sysManage.SysRoleMapper;
+import cn.net.colin.mapper.sysManage.SysUserMapper;
 import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysArea;
 import cn.net.colin.model.sysManage.SysOrg;
@@ -14,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +30,10 @@ public class SysOrgServiceImpl implements ISysOrgService {
     private SysOrgMapper sysOrgMapper;
     @Autowired
     private SysAreaMapper sysAreaMapper;
+    @Autowired
+    private SysUserMapper sysUserMapper;
+    @Autowired
+    private SysRoleMapper sysRoleMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(SysOrgServiceImpl.class);
 
@@ -121,5 +128,42 @@ public class SysOrgServiceImpl implements ISysOrgService {
     @Override
     public List<SysOrg> selectByParentCode(String parentCode) {
         return sysOrgMapper.selectByParentCode(parentCode);
+    }
+
+    @Override
+    public Map<String, Object> orgRelation(String orgCode) {
+        Map<String,Object> resultMap = new HashMap<String,Object>();
+        resultMap.put("isQuote",false);
+        //1.查询该机构编码下是否存在子机构，如果存在则证明被引用
+        int childNum = this.sysOrgMapper.selectChildNumByOrgCode(orgCode);
+        if(childNum > 0){
+            resultMap.put("isQuote",true);
+            resultMap.put("msg","存在子机构，不允许删除！");
+        }
+        //2.查询该机构编码是否被用户表引用
+        int userNum = this.sysUserMapper.selectUserNumByOrgCode(orgCode);
+        if(userNum > 0){
+            resultMap.put("isQuote",true);
+            resultMap.put("msg","用户表中存在外键引用，不允许删除！");
+        }
+        //3.查询该地区编码是否被角色表引用
+        int roleNum = this.sysRoleMapper.selectRoleNumByOrgCode(orgCode);
+        if(roleNum > 0){
+            resultMap.put("isQuote",true);
+            resultMap.put("msg","角色表中存在外键引用，不允许删除！");
+        }
+        return resultMap;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updatOrgWithFK(SysOrg sysOrg, String orgCode) {
+        //1.更新机构表中parent_code等于指定orgCode的parent_code值
+        int childNum = this.sysOrgMapper.updateParentCodeByOrgCode(orgCode,sysOrg.getOrgCode());
+        //2.更新角色表中的 org_code
+        int roleNum = this.sysRoleMapper.updateOrgCode(orgCode,sysOrg.getOrgCode());
+
+        //最后更新机构信息
+        return this.sysOrgMapper.updateByPrimaryKeySelective(sysOrg);
     }
 }

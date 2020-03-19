@@ -68,4 +68,19 @@ public interface ISysOrgService {
      * @return
      */
     List<SysOrg> selectByParentCode(String parentCode);
+
+    /**
+     * 验证一个机构编码是否被其他表引用
+     * @param orgCode
+     * @return
+     */
+    Map<String, Object> orgRelation(String orgCode);
+
+    /**
+     * 更新机构信息，同时更新关联表中orgCode信息
+     * @param sysOrg 待更新的机构信息
+     * @param orgCode 更新之前的orgCode
+     * @return
+     */
+    int updatOrgWithFK(SysOrg sysOrg, String orgCode);
 }

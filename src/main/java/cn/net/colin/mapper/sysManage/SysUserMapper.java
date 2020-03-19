@@ -1,6 +1,7 @@
 package cn.net.colin.mapper.sysManage;
 
 import cn.net.colin.model.sysManage.SysUser;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -85,4 +86,11 @@ public interface SysUserMapper {
      * @return 返回用户集合
      */
     List<SysUser> selective(SysUser user);
+
+    /**
+     * 查询该机构编码是否被用户表引用
+     * @param orgCode
+     * @return
+     */
+    int selectUserNumByOrgCode(@Param("orgCode") String orgCode);
 }

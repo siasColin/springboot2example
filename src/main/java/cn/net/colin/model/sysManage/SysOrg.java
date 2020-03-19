@@ -83,6 +83,16 @@ public class SysOrg implements Serializable {
      */
     private SysArea sysArea;
 
+
+    /**
+     * 非持久化属性 start
+     */
+    private String parentName;
+    private String areaName;
+    /**
+     * 非持久化属性 end
+     */
+
     /** 
      * 获取 主键ID sys_org.id
      * @return 主键ID
@@ -265,6 +275,22 @@ public class SysOrg implements Serializable {
 
     public void setSysArea(SysArea sysArea) {
         this.sysArea = sysArea;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 
     @Override

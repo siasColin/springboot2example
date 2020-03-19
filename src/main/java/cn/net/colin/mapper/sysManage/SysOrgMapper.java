@@ -117,4 +117,19 @@ public interface SysOrgMapper {
      * @return
      */
     List<SysOrg> selectByParentCode(@Param("parentCode") String parentCode);
+
+    /**
+     * 验证一个机构编码是否被其他表引用
+     * @param orgCode
+     * @return
+     */
+    int selectChildNumByOrgCode(@Param("orgCode") String orgCode);
+
+    /**
+     * 更新机构表中parent_code等于指定orgCode的parent_code值
+     * @param orgCode 原始机构编码
+     * @param newCode 更新后的机构编码
+     * @return
+     */
+    int updateParentCodeByOrgCode(@Param("orgCode") String orgCode, @Param("newCode") String newCode);
 }
