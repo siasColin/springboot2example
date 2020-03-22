@@ -31,6 +31,15 @@
         "moduleTarget": "navTab",
         "moduleIcon": "icon-reorder",
         "moduleUrl": "menuManage/menulist"
+      },{
+        "id": "1606",
+        "pid": "1",
+        "moduleName": "角色管理",
+        "moduleCode": "ROLEMANAGE",
+        "moduleType": "",
+        "moduleTarget": "navTab",
+        "moduleIcon": "icon-reorder",
+        "moduleUrl": "roleManage/roleManageList"
       }
     ],
     "secondMenu_1603": [

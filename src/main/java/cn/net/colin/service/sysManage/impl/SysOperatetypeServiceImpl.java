@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SysOperatetypeServiceImpl implements ISysOperatetypeService {
@@ -55,5 +56,15 @@ public class SysOperatetypeServiceImpl implements ISysOperatetypeService {
 
     public int updateBatchByPrimaryKeySelective(List<SysOperatetype> operatetypeList) {
         return this.sysOperatetypeMapper.updateBatchByPrimaryKeySelective(operatetypeList);
+    }
+
+    @Override
+    public List<SysOperatetype> selectByParams(Map<String, Object> paramMap) {
+        return this.sysOperatetypeMapper.selectByParams(paramMap);
+    }
+
+    @Override
+    public List<Long> selectOperatetypeidListByRoleid(Map<String, Object> paramMap) {
+        return this.sysOperatetypeMapper.selectOperatetypeidListByRoleid(paramMap);
     }
 }

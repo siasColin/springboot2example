@@ -4,6 +4,7 @@ import cn.net.colin.model.sysManage.SysRole;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sxf
@@ -116,4 +117,37 @@ public interface SysRoleMapper {
      * @return
      */
     int updateOrgCode(@Param("orgCode") String orgCode, @Param("newCode") String newCode);
+
+    /**
+     * 根据传入参数，查询角色信息
+     * @param paramMap
+     * @return
+     */
+    List<SysRole> selectByParams(Map<String, Object> paramMap);
+
+    /**
+     * 保存角色和权限关联关系
+     * @param roleOperatetypeList
+     */
+    void saveRoleOperatetypeList(List<Map<String, Object>> roleOperatetypeList);
+
+    /**
+     * 根据角色id，删除角色和权限关联关系
+     * @param id
+     * @return
+     */
+    int deleteRoleOperatetypeByRoleid(@Param("roleid") Long id);
+
+    /**
+     * 批量删除角色
+     * @param ids
+     * @return
+     */
+    int deleteBatchByPrimaryKey(Long[] ids);
+
+    /**
+     * 删除角色和权限关联关系
+     * @param ids
+     */
+    void deleteRoleAndPermissions(Long[] ids);
 }

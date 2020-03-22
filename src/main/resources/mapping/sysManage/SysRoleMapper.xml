@@ -13,14 +13,34 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="sort_num" jdbcType="INTEGER" property="sortNum"/>
     </resultMap>
+    <resultMap id="BaseResultMapExt" type="cn.net.colin.model.sysManage.SysRole">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="role_code" jdbcType="VARCHAR" property="roleCode"/>
+        <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+        <result column="role_attr" jdbcType="INTEGER" property="roleAttr"/>
+        <result column="org_code" jdbcType="VARCHAR" property="orgCode"/>
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+        <result column="role_status" jdbcType="INTEGER" property="roleStatus"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="sort_num" jdbcType="INTEGER" property="sortNum"/>
+        <result column="orgName" jdbcType="VARCHAR" property="orgName"/>
+        <result column="areaName" jdbcType="VARCHAR" property="areaName"/>
+    </resultMap>
     <sql id="Base_Column_List">
     id, role_code, role_name, role_attr, org_code, area_code, role_status, create_user, 
     create_time, sort_num
   </sql>
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMapExt">
         select
         <include refid="Base_Column_List"/>
-        from sys_role
+        ,CASE role_attr
+        WHEN 0 THEN ''
+        ELSE
+          (select sog.org_name from sys_org sog where sog.org_code = sr.org_code)
+        END as orgName,
+        (select sa.area_name from sys_area sa where sa.area_code = sr.area_code) as areaName
+        from sys_role sr
         where id = #{id,jdbcType=BIGINT}
     </select>
 
@@ -41,10 +61,57 @@
       SELECT COUNT(id) roleNum FROM sys_role WHERE org_code = #{orgCode,jdbcType=VARCHAR}
     </select>
 
+    <select id="selectByParams" resultMap="BaseResultMapExt">
+        select
+        <include refid="Base_Column_List"/>
+        ,CASE role_attr
+        WHEN 0 THEN ''
+        ELSE
+          (select sog.org_name from sys_org sog where sog.org_code = sr.org_code)
+        END as orgName,
+        (select sa.area_name from sys_area sa where sa.area_code = sr.area_code) as areaName
+        from sys_role sr
+        <where>
+            <if test="roleName != null and roleName != ''">
+                and role_name like '%${roleName}%'
+            </if>
+            <if test="areaCode != null and areaCode != ''">
+                and area_code = #{areaCode,jdbcType=VARCHAR}
+            </if>
+            <if test="orgCode != null and orgCode != ''">
+                and ((org_code = #{orgCode,jdbcType=VARCHAR} and role_attr = 1) or role_attr = 0)
+            </if>
+            <if test="areaList != null and areaList.size() > 0">
+                and
+                <foreach collection="areaList" item="areasItem" open="(" separator="or" close=")">
+                    area_code IN
+                    <foreach collection="areasItem" item="treeNode" open="(" separator="," close=")">
+                        #{treeNode.id}
+                    </foreach>
+                </foreach>
+            </if>
+        </where>
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_role
     where id = #{id,jdbcType=BIGINT}
   </delete>
+    <delete id="deleteRoleOperatetypeByRoleid">
+        delete from sys_role_operatetype where role_id = #{roleid,jdbcType=BIGINT}
+    </delete>
+    <delete id="deleteBatchByPrimaryKey">
+        delete from sys_role where id in
+        <foreach collection="array" open="(" separator="," close=")" item="id">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+    <delete id="deleteRoleAndPermissions">
+        delete from sys_role_operatetype where role_id in
+        <foreach collection="array" open="(" separator="," close=")" item="id">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
     <insert id="insert" parameterType="cn.net.colin.model.sysManage.SysRole">
     insert into sys_role (id, role_code, role_name, 
       role_attr, org_code, area_code, 
@@ -204,6 +271,13 @@
                     NULL,
                 </if>
             </trim>
+        </foreach>
+    </insert>
+    <insert id="saveRoleOperatetypeList">
+        insert into sys_role_operatetype (role_id, operateType_id)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.roleId,jdbcType=BIGINT}, #{item.operateTypeId,jdbcType=BIGINT})
         </foreach>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="cn.net.colin.model.sysManage.SysRole">

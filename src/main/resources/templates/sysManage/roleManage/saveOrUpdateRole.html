@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
+    <title>地区管理</title>
+    <link rel="stylesheet" th:href="@{/plugin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/plugin/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/common/dasui.css}">
+    <style>
+        body{margin: 10px;}
+        .demo-carousel{height: 200px; line-height: 200px; text-align: center;}
+
+        @media  screen and (max-width: 1366px) {
+            #area_tree{
+                height:630px;
+            }
+        }
+        .span-red{
+            margin: 5px;
+            color:red;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-container">
+    <form id="form1" class="layui-form" style="margin-top: 4%">
+        <input id="id" name="id" type="hidden" th:if="${sysRole!=null}" th:value="${sysRole.id}"/>
+        <div class="layui-form-item" hidden>
+            <div class="layui-input-block">
+                <button id="permissionSubmit" class="layui-btn" lay-submit lay-filter="save">
+                    保存
+                </button>
+            </div>
+        </div>
+        <!-- 第一行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>角色名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="roleName" name="roleName" th:value="${sysRole!=null}?${sysRole.roleName}" lay-verify="required|dasLength|repeatCheck" daslength="30" placeholder="请输入角色名" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第二行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>角色编码</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="roleCode" name="roleCode" th:value="${sysRole!=null}?${sysRole.roleCode}" lay-verify="required|dasLength|repeatCheck" daslength="30" placeholder="请输入角色编码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第三行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>所属地区</label>
+                    <div class="layui-input-block">
+                        <input type="hidden" id="areaCode" name="areaCode" th:value="${sysRole!=null}?${sysRole.areaCode}">
+                        <input readonly type="text" id="areaName" name="areaName" th:value="${sysRole!=null}?${sysRole.areaName}" lay-verify="required|repeatCheck" daslength="30" placeholder="请选择" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+
+        <!-- 第四行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>角色属性</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="roleAttr" value="0" title="共享" th:checked="${sysRole ==null}?true : ${sysRole.roleAttr == 0}">
+                        <input type="radio" name="roleAttr" value="1" title="私有" th:checked="${sysRole!=null}?${sysRole.roleAttr==1}">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第五行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>角色状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="roleStatus" value="1" title="启用" th:checked="${sysRole ==null}?true : ${sysRole.roleStatus == 1}">
+                        <input type="radio" name="roleStatus" value="0" title="禁用" th:checked="${sysRole!=null}?${sysRole.roleStatus==0}">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第六行-->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">序号</label>
+                    <div class="layui-input-block">
+                        <input type="number"  id="sortNum" name="sortNum" th:value="${sysRole!=null}?${sysRole.sortNum}" placeholder="请输入序号" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第七行-->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">绑定权限</label>
+                    <div class="layui-input-block">
+                        <div id="systemPermissions" class="xm-select-demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/jquery-2.1.4.min.js}"></script>
+<script th:src="@{/plugin/layui/layui.js}"></script>
+<script th:src="@{/plugin/layui/xm-select.js}"></script>
+<script th:src="@{/plugin/layui/xm-select.js}"></script>
+<script th:src="@{/js/common/layuiFromVerify.js}"></script>
+<script th:src="@{/plugin/zTree_v3/js/jquery.ztree.all.js}"></script>
+<script th:src="@{/js/common/common.js}"></script>
+<script th:src="@{/js/sysManage/roleManage/saveOrUpdateRole.js}"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        form.render();
+    });
+</script>
+</body>
+</html>

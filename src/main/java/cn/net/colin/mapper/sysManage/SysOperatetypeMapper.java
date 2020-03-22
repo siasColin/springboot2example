@@ -5,6 +5,7 @@ import cn.net.colin.model.sysManage.SysRole;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sxf
@@ -87,4 +88,18 @@ public interface SysOperatetypeMapper {
      * @return
      */
     List<SysOperatetype> selectOperatetypeListByRoleList(@Param("list") List<SysRole> sysRoleList);
+
+    /**
+     * 返回系统权限集合
+     * @param paramMap
+     * @return
+     */
+    List<SysOperatetype> selectByParams(Map<String, Object> paramMap);
+
+    /**
+     * 根据角色id，查询角色对应的系统权限id集合
+     * @param paramMap
+     * @return
+     */
+    List<Long> selectOperatetypeidListByRoleid(Map<String, Object> paramMap);
 }

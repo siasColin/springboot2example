@@ -3,6 +3,7 @@ package cn.net.colin.service.sysManage;
 import cn.net.colin.model.sysManage.SysRole;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ISysRoleService {
 
@@ -45,4 +46,34 @@ public interface ISysRoleService {
      * @return 返回修改成功的数量
      */
     int updateBatchByPrimaryKeySelective(List<SysRole> sysRoleList);
+
+    /**
+     * 根据传入参数，查询角色信息
+     * @param paramMap
+     * @return
+     */
+    List<SysRole> selectByParams(Map<String, Object> paramMap);
+
+    /**
+     * 保存角色，并保存角色和系统权限关联关系
+     * @param sysRole
+     * @param systemPermissions
+     * @return
+     */
+    int saveRoleAndPermissions(SysRole sysRole, String[] systemPermissions);
+
+    /**
+     * 更新角色信息，同时更新角色和系统权限关联关系
+     * @param sysRole
+     * @param systemPermissions
+     * @return
+     */
+    int updateRoleAndPermissions(SysRole sysRole, String[] systemPermissions);
+
+    /**
+     * 批量删除角色
+     * @param ids
+     * @return
+     */
+    int deleteBatchByPrimaryKey(Long[] ids);
 }

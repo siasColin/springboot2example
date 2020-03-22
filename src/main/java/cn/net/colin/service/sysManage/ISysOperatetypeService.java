@@ -3,6 +3,7 @@ package cn.net.colin.service.sysManage;
 import cn.net.colin.model.sysManage.SysOperatetype;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ISysOperatetypeService {
 
@@ -45,4 +46,18 @@ public interface ISysOperatetypeService {
      * @return 返回修改成功的数量
      */
     int updateBatchByPrimaryKeySelective(List<SysOperatetype> operatetypeList);
+
+    /**
+     * 返回系统权限集合
+     * @param paramMap
+     * @return
+     */
+    List<SysOperatetype> selectByParams(Map<String, Object> paramMap);
+
+    /**
+     * 根据角色id，查询角色对应的系统权限id集合
+     * @param paramMap
+     * @return
+     */
+    List<Long> selectOperatetypeidListByRoleid(Map<String, Object> paramMap);
 }

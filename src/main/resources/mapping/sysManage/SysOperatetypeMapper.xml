@@ -33,7 +33,16 @@
       </if>
     </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <select id="selectByParams" resultMap="BaseResultMap">
+      select
+      <include refid="Base_Column_List" />
+      from sys_operatetype
+    </select>
+  <select id="selectOperatetypeidListByRoleid" resultType="java.lang.Long">
+    select operateType_id from sys_role_operatetype where role_id = #{roleid,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_operatetype
     where id = #{id,jdbcType=BIGINT}
   </delete>

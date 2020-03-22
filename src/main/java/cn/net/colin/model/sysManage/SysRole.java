@@ -71,11 +71,20 @@ public class SysRole implements Serializable {
      */ 
     private Integer sortNum;
 
+    /**
+     * 非持久化属性 start
+     */
+    private  String orgName;
+    private  String areaName;
+    /**
+     * 非持久化属性 end
+     */
+
     /** 
      * 获取 主键ID sys_role.id
      * @return 主键ID
      */
-    public final Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -83,7 +92,7 @@ public class SysRole implements Serializable {
      * 设置 主键ID sys_role.id
      * @param id 主键ID
      */
-    public final void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -91,7 +100,7 @@ public class SysRole implements Serializable {
      * 获取 角色编码 sys_role.role_code
      * @return 角色编码
      */
-    public final String getRoleCode() {
+    public String getRoleCode() {
         return roleCode;
     }
 
@@ -99,7 +108,7 @@ public class SysRole implements Serializable {
      * 设置 角色编码 sys_role.role_code
      * @param roleCode 角色编码
      */
-    public final void setRoleCode(String roleCode) {
+    public void setRoleCode(String roleCode) {
         this.roleCode = roleCode == null ? null : roleCode.trim();
     }
 
@@ -107,7 +116,7 @@ public class SysRole implements Serializable {
      * 获取 角色名称 sys_role.role_name
      * @return 角色名称
      */
-    public final String getRoleName() {
+    public String getRoleName() {
         return roleName;
     }
 
@@ -115,7 +124,7 @@ public class SysRole implements Serializable {
      * 设置 角色名称 sys_role.role_name
      * @param roleName 角色名称
      */
-    public final void setRoleName(String roleName) {
+    public void setRoleName(String roleName) {
         this.roleName = roleName == null ? null : roleName.trim();
     }
 
@@ -123,7 +132,7 @@ public class SysRole implements Serializable {
      * 获取 角色属性(0 共享，1 私有) sys_role.role_attr
      * @return 角色属性(0 共享，1 私有)
      */
-    public final Integer getRoleAttr() {
+    public Integer getRoleAttr() {
         return roleAttr;
     }
 
@@ -131,7 +140,7 @@ public class SysRole implements Serializable {
      * 设置 角色属性(0 共享，1 私有) sys_role.role_attr
      * @param roleAttr 角色属性(0 共享，1 私有)
      */
-    public final void setRoleAttr(Integer roleAttr) {
+    public void setRoleAttr(Integer roleAttr) {
         this.roleAttr = roleAttr;
     }
 
@@ -139,7 +148,7 @@ public class SysRole implements Serializable {
      * 获取 机构编码（role_attr为1时该字段不能为空） sys_role.org_code
      * @return 机构编码（role_attr为1时该字段不能为空）
      */
-    public final String getOrgCode() {
+    public String getOrgCode() {
         return orgCode;
     }
 
@@ -147,7 +156,7 @@ public class SysRole implements Serializable {
      * 设置 机构编码（role_attr为1时该字段不能为空） sys_role.org_code
      * @param orgCode 机构编码（role_attr为1时该字段不能为空）
      */
-    public final void setOrgCode(String orgCode) {
+    public void setOrgCode(String orgCode) {
         this.orgCode = orgCode == null ? null : orgCode.trim();
     }
 
@@ -155,7 +164,7 @@ public class SysRole implements Serializable {
      * 获取 关联地区表地区编码 sys_role.area_code
      * @return 关联地区表地区编码
      */
-    public final String getAreaCode() {
+    public String getAreaCode() {
         return areaCode;
     }
 
@@ -163,7 +172,7 @@ public class SysRole implements Serializable {
      * 设置 关联地区表地区编码 sys_role.area_code
      * @param areaCode 关联地区表地区编码
      */
-    public final void setAreaCode(String areaCode) {
+    public void setAreaCode(String areaCode) {
         this.areaCode = areaCode == null ? null : areaCode.trim();
     }
 
@@ -171,7 +180,7 @@ public class SysRole implements Serializable {
      * 获取 状态，1启用，0禁用 sys_role.role_status
      * @return 状态，1启用，0禁用
      */
-    public final Integer getRoleStatus() {
+    public Integer getRoleStatus() {
         return roleStatus;
     }
 
@@ -179,7 +188,7 @@ public class SysRole implements Serializable {
      * 设置 状态，1启用，0禁用 sys_role.role_status
      * @param roleStatus 状态，1启用，0禁用
      */
-    public final void setRoleStatus(Integer roleStatus) {
+    public void setRoleStatus(Integer roleStatus) {
         this.roleStatus = roleStatus;
     }
 
@@ -187,7 +196,7 @@ public class SysRole implements Serializable {
      * 获取 创建人 sys_role.create_user
      * @return 创建人
      */
-    public final String getCreateUser() {
+    public String getCreateUser() {
         return createUser;
     }
 
@@ -195,7 +204,7 @@ public class SysRole implements Serializable {
      * 设置 创建人 sys_role.create_user
      * @param createUser 创建人
      */
-    public final void setCreateUser(String createUser) {
+    public void setCreateUser(String createUser) {
         this.createUser = createUser == null ? null : createUser.trim();
     }
 
@@ -203,7 +212,7 @@ public class SysRole implements Serializable {
      * 获取 创建时间 sys_role.create_time
      * @return 创建时间
      */
-    public final Date getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
@@ -211,7 +220,7 @@ public class SysRole implements Serializable {
      * 设置 创建时间 sys_role.create_time
      * @param createTime 创建时间
      */
-    public final void setCreateTime(Date createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -219,7 +228,7 @@ public class SysRole implements Serializable {
      * 获取 排序字段 sys_role.sort_num
      * @return 排序字段
      */
-    public final Integer getSortNum() {
+    public Integer getSortNum() {
         return sortNum;
     }
 
@@ -227,12 +236,28 @@ public class SysRole implements Serializable {
      * 设置 排序字段 sys_role.sort_num
      * @param sortNum 排序字段
      */
-    public final void setSortNum(Integer sortNum) {
+    public void setSortNum(Integer sortNum) {
         this.sortNum = sortNum;
     }
 
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
+
     @Override
-    public final String toString() {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());
         sb.append(" [");
