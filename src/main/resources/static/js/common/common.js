@@ -7,6 +7,9 @@ var Common = {
     //当前项目名称
     ctxPath: "/",
     version:"",
+    //会话超时状态码
+    sessionInvalidCode:"888",
+    sessionInvalidURL:"common/sessionInvalid",
     log: function (info) {
         console.log(info);
     },
@@ -48,27 +51,31 @@ var Common = {
     error: function (info) {
     		Common.openConfirm(info)
     },
-    post: function (url, paras,sy,next) {
+    ajax: function (url, paras,sy,tp,next) {
     		$.ajax({
                 async:sy,
     			url:Common.ctxPath+url,
-    			type:"POST",
+    			type:tp,
     			data:paras,
+                dataType: "json",
                 beforeSend : function(xhr) {
                     xhr.setRequestHeader(_header, _token);
                 },
     			success:function(rsp){
-    				if(rsp.returnCode!='0'){
-    					Common.error(rsp.returnMessage);
-    				}else{
-    					//成功
-    					if(next!=null){
-        					next(rsp.data);
-        				}else{
-        					Common.success(rsp.returnMessage);
-        				}
+    				if(rsp.returnCode == '0'){
+                        //成功
+                        if(next!=null){
+                            next(rsp.data);
+                        }else{
+                            Common.success(rsp.returnMessage);
+                        }
+    				}else if(rsp.returnCode == Common.sessionInvalidCode){//会话超时
+                        Common.openConfirm(rsp.returnMessage,function () {
+                            window.location.replace(Common.ctxPath+Common.sessionInvalidURL);
+                        });
+                    }else{
+                        Common.error(rsp.returnMessage);
     				}
-
     			},
     			error:function(rsp){
     				Common.error(rsp.returnMessage);

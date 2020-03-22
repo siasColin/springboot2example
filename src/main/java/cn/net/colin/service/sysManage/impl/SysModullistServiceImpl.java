@@ -1,6 +1,7 @@
 package cn.net.colin.service.sysManage.impl;
 
 import cn.net.colin.mapper.sysManage.SysModullistMapper;
+import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysModulelist;
 import cn.net.colin.service.sysManage.ISysModullistService;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SysModullistServiceImpl implements ISysModullistService {
@@ -56,5 +58,15 @@ public class SysModullistServiceImpl implements ISysModullistService {
 
     public int updateBatchByPrimaryKeySelective(List<SysModulelist> modulelists) {
         return this.sysModullistMapper.updateBatchByPrimaryKeySelective(modulelists);
+    }
+
+    @Override
+    public List<TreeNode> selectMenuTreeNodes(Map<String, Object> paramMap) {
+        return this.sysModullistMapper.selectMenuTreeNodes(paramMap);
+    }
+
+    @Override
+    public List<SysModulelist> selectByPid(long pid) {
+        return this.sysModullistMapper.selectByPid(pid);
     }
 }

@@ -22,6 +22,15 @@
         "moduleTarget": "navTab",
         "moduleIcon": "icon-reorder",
         "moduleUrl": "orgManage/orglist"
+      },{
+        "id": "1605",
+        "pid": "1",
+        "moduleName": "菜单管理",
+        "moduleCode": "MENUMANAGE",
+        "moduleType": "",
+        "moduleTarget": "navTab",
+        "moduleIcon": "icon-reorder",
+        "moduleUrl": "menuManage/menulist"
       }
     ],
     "secondMenu_1603": [

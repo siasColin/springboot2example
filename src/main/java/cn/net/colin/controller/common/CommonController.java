@@ -167,4 +167,26 @@ public class CommonController {
             return ResultInfo.of(ResultCode.UNKNOWN_ERROR);
         }
     }
+
+    /**
+     * 处理session超时
+     * @param request
+     * @return
+     */
+    @RequestMapping("/sessionInvalid")
+    @ResponseBody
+    public ResultInfo handleError(HttpServletRequest request) {
+        ResultInfo result = ResultInfo.of(ResultCode.SESSIONINVALID);
+        return result;
+    }
+    /**
+     * 处理session超时
+     * @param request
+     * @return
+     */
+    @RequestMapping(value="/sessionInvalid",produces="text/html")
+    public String handleError(HttpServletRequest request,Map<String,Object> modelMap) {
+        modelMap.put("msg","登录状态已过期，请重新登录！");
+        return  "login";
+    }
 }

@@ -78,11 +78,24 @@ public class SysModulelist implements Serializable {
      */ 
     private Date createTime;
 
+    /**
+     * 排序字段
+     */
+    private Integer sortNum;
+
+    /**
+     * 非持久化属性 start
+     */
+    private String parentName;
+    /**
+     * 非持久化属性 end
+     */
+
     /** 
      * 获取 主键ID sys_modullist.id
      * @return 主键ID
      */
-    public final Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -90,7 +103,7 @@ public class SysModulelist implements Serializable {
      * 设置 主键ID sys_modullist.id
      * @param id 主键ID
      */
-    public final void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -98,7 +111,7 @@ public class SysModulelist implements Serializable {
      * 获取 父级菜单ID sys_modullist.pid
      * @return 父级菜单ID
      */
-    public final Long getPid() {
+    public Long getPid() {
         return pid;
     }
 
@@ -106,7 +119,7 @@ public class SysModulelist implements Serializable {
      * 设置 父级菜单ID sys_modullist.pid
      * @param pid 父级菜单ID
      */
-    public final void setPid(Long pid) {
+    public void setPid(Long pid) {
         this.pid = pid;
     }
 
@@ -114,7 +127,7 @@ public class SysModulelist implements Serializable {
      * 获取 菜单名称 sys_modullist.module_name
      * @return 菜单名称
      */
-    public final String getModuleName() {
+    public String getModuleName() {
         return moduleName;
     }
 
@@ -122,7 +135,7 @@ public class SysModulelist implements Serializable {
      * 设置 菜单名称 sys_modullist.module_name
      * @param moduleName 菜单名称
      */
-    public final void setModuleName(String moduleName) {
+    public void setModuleName(String moduleName) {
         this.moduleName = moduleName == null ? null : moduleName.trim();
     }
 
@@ -130,7 +143,7 @@ public class SysModulelist implements Serializable {
      * 获取 菜单编码 sys_modullist.module_code
      * @return 菜单编码
      */
-    public final String getModuleCode() {
+    public String getModuleCode() {
         return moduleCode;
     }
 
@@ -138,7 +151,7 @@ public class SysModulelist implements Serializable {
      * 设置 菜单编码 sys_modullist.module_code
      * @param moduleCode 菜单编码
      */
-    public final void setModuleCode(String moduleCode) {
+    public void setModuleCode(String moduleCode) {
         this.moduleCode = moduleCode == null ? null : moduleCode.trim();
     }
 
@@ -146,7 +159,7 @@ public class SysModulelist implements Serializable {
      * 获取 菜单图标（样式） sys_modullist.module_icon
      * @return 菜单图标（样式）
      */
-    public final String getModuleIcon() {
+    public String getModuleIcon() {
         return moduleIcon;
     }
 
@@ -154,7 +167,7 @@ public class SysModulelist implements Serializable {
      * 设置 菜单图标（样式） sys_modullist.module_icon
      * @param moduleIcon 菜单图标（样式）
      */
-    public final void setModuleIcon(String moduleIcon) {
+    public void setModuleIcon(String moduleIcon) {
         this.moduleIcon = moduleIcon == null ? null : moduleIcon.trim();
     }
 
@@ -162,7 +175,7 @@ public class SysModulelist implements Serializable {
      * 获取 菜单链接地址 sys_modullist.module_url
      * @return 菜单链接地址
      */
-    public final String getModuleUrl() {
+    public String getModuleUrl() {
         return moduleUrl;
     }
 
@@ -170,7 +183,7 @@ public class SysModulelist implements Serializable {
      * 设置 菜单链接地址 sys_modullist.module_url
      * @param moduleUrl 菜单链接地址
      */
-    public final void setModuleUrl(String moduleUrl) {
+    public void setModuleUrl(String moduleUrl) {
         this.moduleUrl = moduleUrl == null ? null : moduleUrl.trim();
     }
 
@@ -184,7 +197,7 @@ public class SysModulelist implements Serializable {
             _blank：新窗口打开
             
      */
-    public final String getModuleTarget() {
+    public String getModuleTarget() {
         return moduleTarget;
     }
 
@@ -198,7 +211,7 @@ public class SysModulelist implements Serializable {
             _blank：新窗口打开
             
      */
-    public final void setModuleTarget(String moduleTarget) {
+    public void setModuleTarget(String moduleTarget) {
         this.moduleTarget = moduleTarget == null ? null : moduleTarget.trim();
     }
 
@@ -206,7 +219,7 @@ public class SysModulelist implements Serializable {
      * 获取 菜单还是功能点，1菜单，0功能点 sys_modullist.module_type
      * @return 菜单还是功能点，1菜单，0功能点
      */
-    public final Integer getModuleType() {
+    public Integer getModuleType() {
         return moduleType;
     }
 
@@ -214,7 +227,7 @@ public class SysModulelist implements Serializable {
      * 设置 菜单还是功能点，1菜单，0功能点 sys_modullist.module_type
      * @param moduleType 菜单还是功能点，1菜单，0功能点
      */
-    public final void setModuleType(Integer moduleType) {
+    public void setModuleType(Integer moduleType) {
         this.moduleType = moduleType;
     }
 
@@ -222,7 +235,7 @@ public class SysModulelist implements Serializable {
      * 获取 菜单状态，1启用，0禁用 sys_modullist.module_status
      * @return 菜单状态，1启用，0禁用
      */
-    public final Integer getModuleStatus() {
+    public Integer getModuleStatus() {
         return moduleStatus;
     }
 
@@ -230,7 +243,7 @@ public class SysModulelist implements Serializable {
      * 设置 菜单状态，1启用，0禁用 sys_modullist.module_status
      * @param moduleStatus 菜单状态，1启用，0禁用
      */
-    public final void setModuleStatus(Integer moduleStatus) {
+    public void setModuleStatus(Integer moduleStatus) {
         this.moduleStatus = moduleStatus;
     }
 
@@ -238,7 +251,7 @@ public class SysModulelist implements Serializable {
      * 获取 创建人 sys_modullist.create_user
      * @return 创建人
      */
-    public final String getCreateUser() {
+    public String getCreateUser() {
         return createUser;
     }
 
@@ -246,7 +259,7 @@ public class SysModulelist implements Serializable {
      * 设置 创建人 sys_modullist.create_user
      * @param createUser 创建人
      */
-    public final void setCreateUser(String createUser) {
+    public void setCreateUser(String createUser) {
         this.createUser = createUser == null ? null : createUser.trim();
     }
 
@@ -254,7 +267,7 @@ public class SysModulelist implements Serializable {
      * 获取 创建时间 sys_modullist.create_time
      * @return 创建时间
      */
-    public final Date getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
@@ -262,12 +275,28 @@ public class SysModulelist implements Serializable {
      * 设置 创建时间 sys_modullist.create_time
      * @param createTime 创建时间
      */
-    public final void setCreateTime(Date createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
+    public Integer getSortNum() {
+        return sortNum;
+    }
+
+    public void setSortNum(Integer sortNum) {
+        this.sortNum = sortNum;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
     @Override
-    public final String toString() {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());
         sb.append(" [");

@@ -97,7 +97,7 @@ public class SysOrg implements Serializable {
      * 获取 主键ID sys_org.id
      * @return 主键ID
      */
-    public final Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -105,7 +105,7 @@ public class SysOrg implements Serializable {
      * 设置 主键ID sys_org.id
      * @param id 主键ID
      */
-    public final void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -113,7 +113,7 @@ public class SysOrg implements Serializable {
      * 获取 关联地区表 sys_org.area_code
      * @return 关联地区表
      */
-    public final String getAreaCode() {
+    public String getAreaCode() {
         return areaCode;
     }
 
@@ -121,7 +121,7 @@ public class SysOrg implements Serializable {
      * 设置 关联地区表 sys_org.area_code
      * @param areaCode 关联地区表
      */
-    public final void setAreaCode(String areaCode) {
+    public void setAreaCode(String areaCode) {
         this.areaCode = areaCode == null ? null : areaCode.trim();
     }
 
@@ -129,7 +129,7 @@ public class SysOrg implements Serializable {
      * 获取 机构名称 sys_org.org_name
      * @return 机构名称
      */
-    public final String getOrgName() {
+    public String getOrgName() {
         return orgName;
     }
 
@@ -137,7 +137,7 @@ public class SysOrg implements Serializable {
      * 设置 机构名称 sys_org.org_name
      * @param orgName 机构名称
      */
-    public final void setOrgName(String orgName) {
+    public void setOrgName(String orgName) {
         this.orgName = orgName == null ? null : orgName.trim();
     }
 
@@ -145,7 +145,7 @@ public class SysOrg implements Serializable {
      * 获取 机构编码 sys_org.org_code
      * @return 机构编码
      */
-    public final String getOrgCode() {
+    public String getOrgCode() {
         return orgCode;
     }
 
@@ -153,7 +153,7 @@ public class SysOrg implements Serializable {
      * 设置 机构编码 sys_org.org_code
      * @param orgCode 机构编码
      */
-    public final void setOrgCode(String orgCode) {
+    public void setOrgCode(String orgCode) {
         this.orgCode = orgCode == null ? null : orgCode.trim();
     }
 
@@ -161,7 +161,7 @@ public class SysOrg implements Serializable {
      * 获取 父级机构编码 sys_org.parent_code
      * @return 父级机构编码
      */
-    public final String getParentCode() {
+    public String getParentCode() {
         return parentCode;
     }
 
@@ -169,7 +169,7 @@ public class SysOrg implements Serializable {
      * 设置 父级机构编码 sys_org.parent_code
      * @param parentCode 父级机构编码
      */
-    public final void setParentCode(String parentCode) {
+    public void setParentCode(String parentCode) {
         this.parentCode = parentCode == null ? null : parentCode.trim();
     }
 
@@ -177,7 +177,7 @@ public class SysOrg implements Serializable {
      * 获取 关联行业表（备用） sys_org.industryid
      * @return 关联行业表（备用）
      */
-    public final Long getIndustryid() {
+    public Long getIndustryid() {
         return industryid;
     }
 
@@ -185,7 +185,7 @@ public class SysOrg implements Serializable {
      * 设置 关联行业表（备用） sys_org.industryid
      * @param industryid 关联行业表（备用）
      */
-    public final void setIndustryid(Long industryid) {
+    public void setIndustryid(Long industryid) {
         this.industryid = industryid;
     }
 
@@ -193,7 +193,7 @@ public class SysOrg implements Serializable {
      * 获取 机构地址 sys_org.org_address
      * @return 机构地址
      */
-    public final String getOrgAddress() {
+    public String getOrgAddress() {
         return orgAddress;
     }
 
@@ -201,7 +201,7 @@ public class SysOrg implements Serializable {
      * 设置 机构地址 sys_org.org_address
      * @param orgAddress 机构地址
      */
-    public final void setOrgAddress(String orgAddress) {
+    public void setOrgAddress(String orgAddress) {
         this.orgAddress = orgAddress == null ? null : orgAddress.trim();
     }
 
@@ -209,7 +209,7 @@ public class SysOrg implements Serializable {
      * 获取 机构logo sys_org.org_logo
      * @return 机构logo
      */
-    public final String getOrgLogo() {
+    public String getOrgLogo() {
         return orgLogo;
     }
 
@@ -217,7 +217,7 @@ public class SysOrg implements Serializable {
      * 设置 机构logo sys_org.org_logo
      * @param orgLogo 机构logo
      */
-    public final void setOrgLogo(String orgLogo) {
+    public void setOrgLogo(String orgLogo) {
         this.orgLogo = orgLogo == null ? null : orgLogo.trim();
     }
 
@@ -225,7 +225,7 @@ public class SysOrg implements Serializable {
      * 获取 创建人 sys_org.create_user
      * @return 创建人
      */
-    public final String getCreateUser() {
+    public String getCreateUser() {
         return createUser;
     }
 
@@ -233,7 +233,7 @@ public class SysOrg implements Serializable {
      * 设置 创建人 sys_org.create_user
      * @param createUser 创建人
      */
-    public final void setCreateUser(String createUser) {
+    public void setCreateUser(String createUser) {
         this.createUser = createUser == null ? null : createUser.trim();
     }
 
@@ -241,7 +241,7 @@ public class SysOrg implements Serializable {
      * 获取 创建时间 sys_org.create_time
      * @return 创建时间
      */
-    public final Date getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
@@ -249,7 +249,7 @@ public class SysOrg implements Serializable {
      * 设置 创建时间 sys_org.create_time
      * @param createTime 创建时间
      */
-    public final void setCreateTime(Date createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -257,7 +257,7 @@ public class SysOrg implements Serializable {
      * 获取 排序字段 sys_org.sort_num
      * @return 排序字段
      */
-    public final Integer getSortNum() {
+    public Integer getSortNum() {
         return sortNum;
     }
 
@@ -265,7 +265,7 @@ public class SysOrg implements Serializable {
      * 设置 排序字段 sys_org.sort_num
      * @param sortNum 排序字段
      */
-    public final void setSortNum(Integer sortNum) {
+    public void setSortNum(Integer sortNum) {
         this.sortNum = sortNum;
     }
 
@@ -294,7 +294,7 @@ public class SysOrg implements Serializable {
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());
         sb.append(" [");

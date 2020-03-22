@@ -1,8 +1,10 @@
 package cn.net.colin.mapper.sysManage;
 
+import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysModulelist;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sxf
@@ -78,4 +80,18 @@ public interface SysModullistMapper {
      * @return 返回修改成功的数量
      */
     int updateBatchByPrimaryKeySelective(List<SysModulelist> modulelists);
+
+    /**
+     * 查询满足zTree数据结构的菜单信息集合
+     * @param paramMap
+     * @return 单信息集合
+     */
+    List<TreeNode> selectMenuTreeNodes(Map<String, Object> paramMap);
+
+    /**
+     * 查询指定pid的子菜单
+     * @param pid
+     * @return
+     */
+    List<SysModulelist> selectByPid(long pid);
 }

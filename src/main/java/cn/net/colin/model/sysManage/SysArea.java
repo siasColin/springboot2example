@@ -85,7 +85,7 @@ public class SysArea implements Serializable {
      * 获取 主键ID sys_area.id
      * @return 主键ID
      */
-    public final Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -93,7 +93,7 @@ public class SysArea implements Serializable {
      * 设置 主键ID sys_area.id
      * @param id 主键ID
      */
-    public final void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -101,7 +101,7 @@ public class SysArea implements Serializable {
      * 获取 地区名称 sys_area.area_name
      * @return 地区名称
      */
-    public final String getAreaName() {
+    public String getAreaName() {
         return areaName;
     }
 
@@ -109,7 +109,7 @@ public class SysArea implements Serializable {
      * 设置 地区名称 sys_area.area_name
      * @param areaName 地区名称
      */
-    public final void setAreaName(String areaName) {
+    public void setAreaName(String areaName) {
         this.areaName = areaName == null ? null : areaName.trim();
     }
 
@@ -117,7 +117,7 @@ public class SysArea implements Serializable {
      * 获取 地区编码 sys_area.area_code
      * @return 地区编码
      */
-    public final String getAreaCode() {
+    public String getAreaCode() {
         return areaCode;
     }
 
@@ -125,7 +125,7 @@ public class SysArea implements Serializable {
      * 设置 地区编码 sys_area.area_code
      * @param areaCode 地区编码
      */
-    public final void setAreaCode(String areaCode) {
+    public void setAreaCode(String areaCode) {
         this.areaCode = areaCode == null ? null : areaCode.trim();
     }
 
@@ -133,7 +133,7 @@ public class SysArea implements Serializable {
      * 获取 地区等级(0 国家 1 省 2 直辖市 3 地级市 4 县 5 乡/镇 6 村) sys_area.area_level
      * @return 地区等级(0 国家 1 省 2 直辖市 3 地级市 4 县 5 乡/镇 6 村)
      */
-    public final Integer getAreaLevel() {
+    public Integer getAreaLevel() {
         return areaLevel;
     }
 
@@ -141,7 +141,7 @@ public class SysArea implements Serializable {
      * 设置 地区等级(0 国家 1 省 2 直辖市 3 地级市 4 县 5 乡/镇 6 村) sys_area.area_level
      * @param areaLevel 地区等级(0 国家 1 省 2 直辖市 3 地级市 4 县 5 乡/镇 6 村)
      */
-    public final void setAreaLevel(Integer areaLevel) {
+    public void setAreaLevel(Integer areaLevel) {
         this.areaLevel = areaLevel;
     }
 
@@ -149,7 +149,7 @@ public class SysArea implements Serializable {
      * 获取 父地区编码 sys_area.parent_code
      * @return 父地区编码
      */
-    public final String getParentCode() {
+    public String getParentCode() {
         return parentCode;
     }
 
@@ -157,7 +157,7 @@ public class SysArea implements Serializable {
      * 设置 父地区编码 sys_area.parent_code
      * @param parentCode 父地区编码
      */
-    public final void setParentCode(String parentCode) {
+    public void setParentCode(String parentCode) {
         this.parentCode = parentCode == null ? null : parentCode.trim();
     }
 
@@ -165,7 +165,7 @@ public class SysArea implements Serializable {
      * 获取 经度 sys_area.longitude
      * @return 经度
      */
-    public final BigDecimal getLongitude() {
+    public BigDecimal getLongitude() {
         return longitude;
     }
 
@@ -173,7 +173,7 @@ public class SysArea implements Serializable {
      * 设置 经度 sys_area.longitude
      * @param longitude 经度
      */
-    public final void setLongitude(BigDecimal longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 
@@ -181,7 +181,7 @@ public class SysArea implements Serializable {
      * 获取 纬度 sys_area.latitude
      * @return 纬度
      */
-    public final BigDecimal getLatitude() {
+    public BigDecimal getLatitude() {
         return latitude;
     }
 
@@ -189,7 +189,7 @@ public class SysArea implements Serializable {
      * 设置 纬度 sys_area.latitude
      * @param latitude 纬度
      */
-    public final void setLatitude(BigDecimal latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
@@ -197,7 +197,7 @@ public class SysArea implements Serializable {
      * 获取 创建人 sys_area.create_user
      * @return 创建人
      */
-    public final String getCreateUser() {
+    public String getCreateUser() {
         return createUser;
     }
 
@@ -205,7 +205,7 @@ public class SysArea implements Serializable {
      * 设置 创建人 sys_area.create_user
      * @param createUser 创建人
      */
-    public final void setCreateUser(String createUser) {
+    public void setCreateUser(String createUser) {
         this.createUser = createUser == null ? null : createUser.trim();
     }
 
@@ -213,7 +213,7 @@ public class SysArea implements Serializable {
      * 获取 创建时间 sys_area.create_time
      * @return 创建时间
      */
-    public final Date getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
@@ -221,7 +221,7 @@ public class SysArea implements Serializable {
      * 设置 创建时间 sys_area.create_time
      * @param createTime 创建时间
      */
-    public final void setCreateTime(Date createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -229,7 +229,7 @@ public class SysArea implements Serializable {
      * 获取 排序字段 sys_area.sort_num
      * @return 排序字段
      */
-    public final Integer getSortNum() {
+    public Integer getSortNum() {
         return sortNum;
     }
 
@@ -237,7 +237,7 @@ public class SysArea implements Serializable {
      * 设置 排序字段 sys_area.sort_num
      * @param sortNum 排序字段
      */
-    public final void setSortNum(Integer sortNum) {
+    public void setSortNum(Integer sortNum) {
         this.sortNum = sortNum;
     }
 
@@ -251,7 +251,7 @@ public class SysArea implements Serializable {
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());
         sb.append(" [");

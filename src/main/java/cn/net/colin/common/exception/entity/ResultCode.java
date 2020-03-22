@@ -19,6 +19,7 @@ public enum ResultCode {
     STATUS_CODE_404("404","请求的网页不存在"),
     STATUS_CODE_405("405","资源被禁止"),
     STATUS_CODE_500("500","内部服务器错误,请联系管理员"),
+    SESSIONINVALID("888","登录状态已过期，请重新登录！"),
     UNKNOWN_ERROR("999","未知异常");
 
     /**

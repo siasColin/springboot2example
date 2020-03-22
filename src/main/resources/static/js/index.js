@@ -105,7 +105,6 @@ function setSecondMenu(data){
 }
 
 function setIframeSrc(url,menulevel,obj,moduleTarget){
-    debugger;
     if(url != ''){
         if(moduleTarget == '_blank'){//新窗口打开
             window.open(url);

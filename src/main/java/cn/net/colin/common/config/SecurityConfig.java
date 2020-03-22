@@ -89,7 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf().ignoringAntMatchers("/auth/login","/hello/*","/common/uploadSingle","/common/uploadMany").and()
             .authorizeRequests()
             //允许访问的路径，但是依然会走spring security内部流程
-            .antMatchers("/","/login","/loginerror","/authException","/error","/test/*").permitAll()
+            .antMatchers("/","/login","/loginerror","/authException","/error","/common/sessionInvalid","/test/*").permitAll()
             //所有的请求需要认证即登陆后才能访问
             .anyRequest().authenticated()
             .and()
@@ -102,6 +102,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .logout().logoutUrl("/logout")
             .logoutSuccessUrl("/")
+            .and()
+            .sessionManagement()
+                .invalidSessionUrl("/common/sessionInvalid")
             .and()
             //                开启cookie保存用户数据
             .rememberMe()

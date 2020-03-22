@@ -42,6 +42,9 @@
 		<a class="btn btn-sm" th:href="@{/(l='zh_CN')}">中文</a>
 		<a class="btn btn-sm" th:href="@{/(l='en_US')}">English</a>
 	</form>
+	<script>
+        if(this.parent!=this) this.parent.window.location.href=window.location.href;
+	</script>
 	</body>
 
 </html>
