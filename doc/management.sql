@@ -11,7 +11,7 @@
  Target Server Version : 50527
  File Encoding         : 65001
 
- Date: 18/03/2020 10:50:41
+ Date: 23/03/2020 17:08:05
 */
 
 SET NAMES utf8mb4;
@@ -45,6 +45,7 @@ CREATE TABLE `sys_area`  (
 -- ----------------------------
 INSERT INTO `sys_area` VALUES (1, '河南省', '410000000000', 1, '41', 113.628962, 34.757272, 'admin', '2020-03-07 15:07:00', 0);
 INSERT INTO `sys_area` VALUES (335383212932988928, '郑州市', '410100000000', 3, '410000000000', 113.628960, 34.757270, 'admin', '2020-03-07 15:08:10', 1);
+INSERT INTO `sys_area` VALUES (400536107900534784, '新郑市', '410100000009', 4, '410100000000', NULL, NULL, 'admin', '2020-03-19 08:34:19', NULL);
 
 -- ----------------------------
 -- Table structure for sys_modulelist
@@ -60,6 +61,7 @@ CREATE TABLE `sys_modulelist`  (
   `module_target` varchar(6) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '打开位置navTab（系统内打开）、_blank(新窗口打开) ,默认（navTab）',
   `module_type` int(11) NOT NULL COMMENT '菜单还是功能点，1菜单，0功能点',
   `module_status` int(11) NOT NULL COMMENT '菜单状态，1启用，0禁用',
+  `sort_num` int(11) NULL DEFAULT NULL COMMENT '排序字段',
   `create_user` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
@@ -68,6 +70,12 @@ CREATE TABLE `sys_modulelist`  (
   INDEX `idx_sysmodullist_pid`(`pid`) USING BTREE,
   INDEX `idx_sysmodullist_name`(`module_name`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_modulelist
+-- ----------------------------
+INSERT INTO `sys_modulelist` VALUES (1, -1, '项目名称', 'PROJECTNAME', NULL, NULL, 'navTab', 1, 1, NULL, 'admin', '2020-03-21 18:41:27');
+INSERT INTO `sys_modulelist` VALUES (2, 1, '地区管理', 'AREAMANAGE', 'icon-reorder', NULL, 'navTab', 0, 1, NULL, 'admin', '2020-03-21 18:42:27');
 
 -- ----------------------------
 -- Table structure for sys_operatetype
@@ -121,9 +129,9 @@ CREATE TABLE `sys_org`  (
 -- ----------------------------
 -- Records of sys_org
 -- ----------------------------
-INSERT INTO `sys_org` VALUES (0, '410000000000', '河南省', '41000000000000', '-1', 0, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_org` VALUES (0, '410000000000', '河南省', '41000000000000', '-1', 0, '', '', NULL, NULL, NULL);
 INSERT INTO `sys_org` VALUES (1, '410000000000', '河南省气象局', '41000041600000', '41000000000000', 416, NULL, NULL, 'admin', '2020-03-07 15:09:41', 0);
-INSERT INTO `sys_org` VALUES (335386239865716736, '410000000000', '服务中心', '41000041601000', '41000041600000', 416, NULL, NULL, 'admin', '2020-03-07 15:11:46', 1);
+INSERT INTO `sys_org` VALUES (335386239865716736, '410000000000', '服务中心', '41000041601000', '41000041600000', 416, '', 'uploadfile/orgLogo/APP应用图标3.png', 'admin', '2020-03-07 15:11:46', 1);
 
 -- ----------------------------
 -- Table structure for sys_org_role

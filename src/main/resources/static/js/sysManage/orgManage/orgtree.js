@@ -25,38 +25,16 @@ $(function(){
     loadOrgTree();
 });
 
+function initOrgTree(data){
+    treeObj = $.fn.zTree.init($("#org_tree"), setting, data);
+    expandRoot();
+}
 /**
  * 加载地区树
  */
 function loadOrgTree(){
     var param = {};
-    $.ajax({
-        async:true,
-        type: "GET",
-        url: Common.ctxPath+'orgManage/orgListTree',
-        data:param,
-        dataType: "json",
-        beforeSend : function(xhr) {
-            xhr.setRequestHeader(_header, _token);
-        },
-        success: function(rsp){
-            if(rsp.returnCode == '0'){
-                treeObj = $.fn.zTree.init($("#org_tree"), setting, rsp.data);
-                expandRoot();
-            }else{
-                Common.error(rsp.returnMessage);
-            }
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            var sessionstatus = XMLHttpRequest.getResponseHeader("sessionstatus");
-            // 通过XMLHttpRequest取得响应头，sessionstatus，
-            if(sessionstatus == "sessionTimeOut"){
-                window.location.replace("/");
-            }else {
-                Common.error("请求异常")
-            }
-        }
-    });
+    Common.ajax('orgManage/orgListTree',param,true,'GET',initOrgTree);
 }
 
 function expandRoot(){
