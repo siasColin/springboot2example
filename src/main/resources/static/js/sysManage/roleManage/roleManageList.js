@@ -37,7 +37,7 @@ $(function(){
                 scrollbar: false, //  滚动条 禁止
                 // closeBtn: 0,
                 area: ['265px', '350px'], //宽高
-                content: Common.ctxPath+'areaManage/areatree/none'
+                content: Common.ctxPath+'areaManage/childsAreatree/none'
             });
         });
     });

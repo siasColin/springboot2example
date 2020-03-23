@@ -75,30 +75,30 @@ public class SysRoleServiceImpl implements ISysRoleService {
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         /**
          * 判断是否拥有管理员权限
-         *      有则返回所有角色信息；
+         *      有则返回，当前地区及子地区所有角色信息；
          *      无则只返回当前登录地区下以及子地区的共享角色信息，以及本机构的私有角色信息
          */
         if(sysUser != null && !SpringSecurityUtil.hasRole("ADMIN_AUTH")){
-            //如果参数中有地区编码，说明查询指定地区的角色信息，否则进行过滤
-            if(!(paramMap != null && paramMap.get("areaCode") != null)){
-                SysArea sysArea = sysUser.getSysOrg().getSysArea();
-                //是管理员，首选查询本地区以及所有子地区
-                Map<String,Object> areaParams = new HashMap<String,Object>();
-                areaParams.put("maxAreaLevel",sysArea.getAreaLevel());
-                //机构只查询到县
-                areaParams.put("minAreaLevel",4);
-                List<TreeNode> areaNodeList = sysAreaMapper.selectAreaTreeNodes(areaParams);
-                List<TreeNode> childAreaList = new ArrayList<TreeNode>();
-                TreeNode pTreeNode = new TreeNode();
-                pTreeNode.setId(sysArea.getAreaCode());
-                pTreeNode.setName(sysArea.getAreaName());
-                pTreeNode.setPId(sysArea.getParentCode());
-                childAreaList.add(pTreeNode);
-                RecursiveChildUtil.areaTreeChildRecursive(sysArea.getAreaCode(),areaNodeList,childAreaList);
-                List<List<TreeNode>> areaList = SQLUtil.getSumArrayList(childAreaList);
-                paramMap.put("areaList",areaList);
-            }
             paramMap.put("orgCode",sysUser.getSysOrg().getOrgCode());
+        }
+        //如果参数中有地区编码，说明查询指定地区的角色信息，否则进行当前地区及子地区过滤
+        if(!(paramMap != null && paramMap.get("areaCode") != null)){
+            SysArea sysArea = sysUser.getSysOrg().getSysArea();
+            //是管理员，首选查询本地区以及所有子地区
+            Map<String,Object> areaParams = new HashMap<String,Object>();
+            areaParams.put("maxAreaLevel",sysArea.getAreaLevel());
+            //机构只查询到县
+            areaParams.put("minAreaLevel",4);
+            List<TreeNode> areaNodeList = sysAreaMapper.selectAreaTreeNodes(areaParams);
+            List<TreeNode> childAreaList = new ArrayList<TreeNode>();
+            TreeNode pTreeNode = new TreeNode();
+            pTreeNode.setId(sysArea.getAreaCode());
+            pTreeNode.setName(sysArea.getAreaName());
+            pTreeNode.setPId(sysArea.getParentCode());
+            childAreaList.add(pTreeNode);
+            RecursiveChildUtil.areaTreeChildRecursive(sysArea.getAreaCode(),areaNodeList,childAreaList);
+            List<List<TreeNode>> areaList = SQLUtil.getSumArrayList(childAreaList);
+            paramMap.put("areaList",areaList);
         }
         return this.sysRoleMapper.selectByParams(paramMap);
     }

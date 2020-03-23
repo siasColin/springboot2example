@@ -83,4 +83,12 @@ public interface ISysAreaService {
      * @return
      */
     int updatAreaWithFK(SysArea sysArea,String areaCode);
+
+    /**
+     * 管理员，返回当前登录地区以及子地区信息
+     * 非管理员，返回当前登录地区
+     * @param paramMap
+     * @return
+     */
+    List<TreeNode> selectChildsAreaListTree(Map<String, Object> paramMap);
 }

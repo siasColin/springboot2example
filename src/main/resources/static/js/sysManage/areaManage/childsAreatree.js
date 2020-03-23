@@ -30,7 +30,7 @@ $(function(){
  */
 function loadAreaTree(){
     var param = {};
-    Common.ajax('areaManage/areaListTree',param,true,'GET',initAreaTree);
+    Common.ajax('areaManage/childsAreaListTree/4',param,true,'GET',initAreaTree);
 }
 
 function initAreaTree(data){

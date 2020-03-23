@@ -55,6 +55,7 @@
                     and module_name like '%${moduleName}%'
                 </if>
             </where>
+          order by sort_num asc,create_time desc
     </select>
     <select id="selectByPid" resultMap="BaseResultMap">
         select

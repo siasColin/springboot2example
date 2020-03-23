@@ -91,6 +91,7 @@
                 </foreach>
             </if>
         </where>
+        order by sort_num asc,create_time desc
     </select>
     <select id="selectChildNumByOrgCode" resultType="java.lang.Integer">
         SELECT COUNT(id) childNum FROM sys_org WHERE parent_code = #{orgCode,jdbcType=VARCHAR}

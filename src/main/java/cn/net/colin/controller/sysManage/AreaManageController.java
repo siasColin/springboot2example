@@ -60,6 +60,28 @@ public class AreaManageController {
     }
 
     /**
+     * 跳转到当前登录地区及子地区树页面
+     * @param type
+     * @return
+     */
+    @GetMapping("/childsAreatree/{type}")
+    public String childsArealist(@PathVariable("type") String type){
+        /**
+         * type:
+         *      none 普通ztree页面
+         *      radio 单选框ztree页面
+         *      check 复选框ztree页面
+         */
+        String targetPage = "sysManage/areaManage/childsAreatree";
+        if(type.equals("radio")){//跳转到普通ztree页面
+            targetPage = "sysManage/areaManage/childsAreatreeRadio";
+        }else if(type.equals("check")){
+            targetPage = "sysManage/areaManage/childsAreatreeCheck";
+        }
+        return targetPage;
+    }
+
+    /**
      * 返回满足zTree结构的地区信息
      * @param areaName 地区名字（模糊查询）
      * @param areaLevel 地区行政级别（0 国家 1 省 2 直辖市 3 地级市 4 县 5 乡/镇 6 村）
@@ -82,6 +104,23 @@ public class AreaManageController {
             paramMap.put("minAreaLevel",Integer.parseInt(minAreaLevel));
         }
         List<TreeNode> treeNodeList = sysAreaService.selectAreaTreeNodes(paramMap);
+        return ResultInfo.ofData(ResultCode.SUCCESS,treeNodeList);
+    }
+
+    /**
+     * 返回当前登录地区以及子地区信息
+     * @param minAreaLevel 最小行政级别（例如：参数为4 则查询县级及以上行政级别的地区）
+     * @return ResultInfo 自定义结果返回实体类
+     * @throws IOException
+     */
+    @GetMapping("/childsAreaListTree/{minAreaLevel}")
+    @ResponseBody
+    public ResultInfo childsAreaListTree(@PathVariable("minAreaLevel") String minAreaLevel) throws IOException {
+        Map<String,Object> paramMap = new HashMap<String,Object>();
+        if(minAreaLevel != null && !minAreaLevel.equals("")){
+            paramMap.put("minAreaLevel",Integer.parseInt(minAreaLevel));
+        }
+        List<TreeNode> treeNodeList = sysAreaService.selectChildsAreaListTree(paramMap);
         return ResultInfo.ofData(ResultCode.SUCCESS,treeNodeList);
     }
 

@@ -147,4 +147,31 @@ public class SysAreaServiceImpl implements ISysAreaService {
         //最后更新地区信息
         return this.sysAreaMapper.updateByPrimaryKeySelective(sysArea);
     }
+
+    @Override
+    public List<TreeNode> selectChildsAreaListTree(Map<String, Object> paramMap) {
+        SysUser sysUser = SpringSecurityUtil.getPrincipal();
+        SysArea sysArea = sysUser.getSysOrg().getSysArea();
+        List<TreeNode> childList = new ArrayList<TreeNode>();
+        if(sysUser != null && sysArea != null){
+            TreeNode pTreeNode = new TreeNode();
+            pTreeNode.setId(sysArea.getAreaCode());
+            pTreeNode.setName(sysArea.getAreaName());
+            pTreeNode.setPId(sysArea.getParentCode());
+            pTreeNode.setIsParent("false");
+            pTreeNode.setOpen("false");
+            if(SpringSecurityUtil.hasRole("ADMIN_AUTH")){//管理员
+                List<TreeNode> treeNodeList = this.sysAreaMapper.selectAreaTreeNodes(paramMap);
+                if(treeNodeList != null && treeNodeList.size() >0){
+                    pTreeNode.setIsParent("true");
+                    pTreeNode.setOpen("true");
+                }
+                childList.add(pTreeNode);
+                RecursiveChildUtil.areaTreeChildRecursive(sysArea.getAreaCode(),treeNodeList,childList);
+            }else{
+                childList.add(pTreeNode);
+            }
+        }
+        return childList;
+    }
 }
