@@ -51,6 +51,7 @@
         where id in(
         select role_id from sys_user_role where user_id = #{userid,jdbcType=BIGINT}
         )
+        and role_status = 1
     </select>
 
   <select id="selectRoleNumByAreaCode" resultType="java.lang.Integer">
@@ -109,6 +110,21 @@
     </delete>
     <delete id="deleteRoleAndPermissions">
         delete from sys_role_operatetype where role_id in
+        <foreach collection="array" open="(" separator="," close=")" item="id">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+    <delete id="deleteRoleModulelistByModuleListid">
+        delete from sys_role_modulelist where modulelist_id = #{moduleListId,jdbcType=BIGINT}
+    </delete>
+    <delete id="deleteRoleModulelistByRoleIds">
+        delete from sys_role_modulelist where role_id in
+        <foreach collection="array" open="(" separator="," close=")" item="id">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+    <delete id="deleteRoleAndUserByRoleIds">
+        delete from sys_user_role where role_id in
         <foreach collection="array" open="(" separator="," close=")" item="id">
             #{id,jdbcType=BIGINT}
         </foreach>

@@ -73,6 +73,17 @@ var Common = {
                         Common.openConfirm(rsp.returnMessage,function () {
                             window.location.replace(Common.ctxPath+Common.sessionInvalidURL);
                         });
+                    }else if(rsp.returnCode == '006'){//当前登录用户关联信息已更新，提示用户重新登录
+                        layui.use(['layer'], function(){
+                            var layer = layui.layer
+                            var logoutTipIndex = layer.confirm(rsp.returnMessage, {
+                                btn: ['确定'], //按钮
+                                shade:0.5
+                            }, function(){
+                                layer.close(logoutTipIndex);
+                                $("#logout",parent.document).submit();
+                            });
+                        });
                     }else{
                         Common.error(rsp.returnMessage);
     				}

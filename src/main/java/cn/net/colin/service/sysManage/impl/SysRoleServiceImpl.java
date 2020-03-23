@@ -151,9 +151,9 @@ public class SysRoleServiceImpl implements ISysRoleService {
         //2.删除角色权限关联关系
         this.sysRoleMapper.deleteRoleAndPermissions(ids);
         //3.删除角色菜单关联关系
-
+        this.sysRoleMapper.deleteRoleModulelistByRoleIds(ids);
         //4.删除角色用户关联关系
-
+        this.sysRoleMapper.deleteRoleAndUserByRoleIds(ids);
         return num;
     }
 }

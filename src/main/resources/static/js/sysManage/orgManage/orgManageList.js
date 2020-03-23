@@ -1,5 +1,3 @@
-var _header = $("meta[name='_csrf_header']").attr("content");
-var _token =$("meta[name='_csrf']").attr("content");
 var treeObj;
 var setting = {
     view: {
@@ -70,44 +68,36 @@ $(function(){
     });
 
     $("#chongzhi").click(function () {
-        $("input").val("");
-        $("img").removeAttr("src");
+        layui.use(['form'], function(){
+            var form = layui.form;
+            $("#orgName").val('');
+            $("#orgCode").val('');
+            $("#id").val('');
+            $("#parentCode").val('');
+            $("#parentName").val('');
+            $("#areaCode").val('');
+            $("#areaName").val('');
+            $("#orgAddress").val('');
+            $("#sortNum").val('');
+            $("#orgLogo").val('');
+            $("img").removeAttr("src");
+            form.render();
+        });
     });
 });
 
+
+function initOrgTree(data){
+    treeObj = $.fn.zTree.init($("#org_tree"), setting, data);
+    expandRoot();
+}
 
 /**
  * 加载机构树
  */
 function loadOrgTree(){
     var param = {};
-    $.ajax({
-        async:true,
-        type: "GET",
-        url: Common.ctxPath+'orgManage/orgListTree',
-        data:param,
-        dataType: "json",
-        beforeSend : function(xhr) {
-            xhr.setRequestHeader(_header, _token);
-        },
-        success: function(rsp){
-            if(rsp.returnCode == '0'){
-                treeObj = $.fn.zTree.init($("#org_tree"), setting, rsp.data);
-                expandRoot();
-            }else{
-                Common.error(rsp.returnMessage);
-            }
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            var sessionstatus = XMLHttpRequest.getResponseHeader("sessionstatus");
-            // 通过XMLHttpRequest取得响应头，sessionstatus，
-            if(sessionstatus == "sessionTimeOut"){
-                window.location.replace("/");
-            }else {
-                Common.error("请求异常")
-            }
-        }
-    });
+    Common.ajax('orgManage/orgListTree',param,true,'GET',initOrgTree);
 }
 
 
@@ -120,6 +110,85 @@ function expandRoot(){
     }
 }
 
+function saveOrgSuccess(data){
+    var parentCode = $("#parentCode").val();
+    //将新增机构异步添加到zTree树
+    var pNode = treeObj.getNodeByParam("id",parentCode);
+    var newNode = {};
+    newNode.id = data.orgCode;
+    newNode.pId = data.parentCode;
+    newNode.name = data.orgName;
+    newNode.param = {"orgid": data.id};
+    newNode = treeObj.addNodes(pNode, newNode);
+    Common.openConfirm("添加成功，是否重置表单？",function () {
+        $("#chongzhi").click();
+    })
+}
+
+function saveOrgHandler(data){
+    if(data !=null && data != '' && data.orgCode != null && data.orgCode != ''){
+        Common.info("机构编码已经存在");
+        return;
+    }else{
+        Common.ajax('orgManage/org',$("#form1").serialize(),true,'POST',saveOrgSuccess);
+    }
+}
+
+function updateOrgSuccess(data){
+    var selectNode = treeObj.getSelectedNodes()[0];
+    //如果修改的节点是父节点（存在子节点）则影响相对较大，这里重新初始化ztree树
+    if(selectNode.isParent && (selectNode.pId != data.parentCode || selectNode.id != data.orgCode)){
+        treeObj.destroy();
+        loadOrgTree();
+        $("#chongzhi").click();
+    }else{
+        if(selectNode.pId == data.parentCode){//节点位置不变
+            selectNode.id = data.orgCode
+            selectNode.name = data.orgName
+            treeObj.updateNode(selectNode);
+        }else{//节点位置改变
+            var parentCode = $("#parentCode").val();
+            //先移除
+            treeObj.removeNode(selectNode);
+            //再新增
+            var pNode = treeObj.getNodeByParam("id",parentCode);
+            var newNode = {};
+            newNode.id = data.orgCode;
+            newNode.pId = data.parentCode;
+            newNode.name = data.orgName;
+            newNode.param = {"orgid":data.id};
+            newNode = treeObj.addNodes(pNode, newNode);
+        }
+    }
+    Common.success("更新成功！");
+}
+
+function updateOrgHandler(data){
+    if(data !=null && data != '' && data.orgCode != null && data.orgCode != ''){
+        Common.info("机构编码已经存在");
+        return;
+    }else{
+        var selectNode = treeObj.getSelectedNodes()[0];
+        //由于orgCode作为和其他表的关联字段，如果修改orgCode则需要提醒用户是否同步修改关联表
+        //首先判断该机构编码是否被其他表引用
+        var isQuote = checkRelation(selectNode.id).isQuote;
+        if(isQuote){//如果被引用提示用户将同时更新被引用的地方
+            Common.openConfirm("机构编码存在外键引用，需要同步更新，是否继续？",function(){
+                Common.ajax('orgManage/org/'+selectNode.id,$("#form1").serialize(),true,'PUT',updateOrgSuccess);
+            });
+        }else{//没有被引用，则可以直接更新
+            Common.ajax('orgManage/org',$("#form1").serialize(),true,'PUT',updateOrgSuccess);
+        }
+    }
+}
+
+function orgDeleteHandler(data){
+    var selectNode = treeObj.getSelectedNodes()[0];
+    treeObj.removeNode(selectNode);
+    $("#chongzhi").click();
+    Common.success("删除成功");
+}
+
 layui.use(['form','upload','layer'], function(){
     var form = layui.form
     ,layer = layui.layer
@@ -128,128 +197,14 @@ layui.use(['form','upload','layer'], function(){
     form.on('submit(saveOrUpdate)', function(data){
         if(data.field.id==null||data.field.id==''){ //保存
             //判断当前添加的机构编码是否已存在
-            $.ajax({
-                type : 'GET',
-                url: Common.ctxPath+"orgManage/orgOnCode/"+data.field.orgCode,//请求的action路径
-                error: function () {//请求失败处理函数
-                    Common.error('请求失败!')
-                },
-                success:function(obj) {
-                    if(obj.data !=null && obj.data != '' && obj.data.orgCode != null && obj.data.orgCode != ''){
-                        Common.info("机构编码已经存在");
-                        return;
-                    }else{
-                        $.ajax({
-                            type : 'POST',
-                            url : Common.ctxPath+'orgManage/org',
-                            data :$("#form1").serialize(),
-                            dataType : 'json',
-                            beforeSend : function(xhr) {
-                                xhr.setRequestHeader(_header, _token);
-                            },
-                            success : function(rsp) {
-                                if(rsp.returnCode == '0'){
-                                    //将新增机构异步添加到zTree树
-                                    var pNode = treeObj.getNodeByParam("id",data.field.parentCode);
-                                    var newNode = {};
-                                    newNode.id = rsp.data.orgCode;
-                                    newNode.pId = rsp.data.parentCode;
-                                    newNode.name = rsp.data.orgName;
-                                    newNode.param = {"orgid":rsp.data.id};
-                                    newNode = treeObj.addNodes(pNode, newNode);
-                                    Common.openConfirm("添加成功，是否重置表单？",function () {
-                                        $("input").val("");
-                                        $("img").removeAttr("src");
-                                    })
-                                }else{
-                                    Common.error(rsp.returnMessage);
-                                }
-                            },
-                            error : function(rsp) {
-                                Common.error("保存失败");
-                            }
-                        });
-                    }
-                }
-            });
+            Common.ajax("orgManage/orgOnCode/"+data.field.orgCode,null,true,'GET',saveOrgHandler);
         }else{
             var selectNode = treeObj.getSelectedNodes()[0];
             if(selectNode.id != data.field.orgCode){//orgCode被修改
                 //判断当前添加的机构编码是否已存在
-                $.ajax({
-                    type : 'GET',
-                    url: Common.ctxPath+"orgManage/orgOnCode/"+data.field.orgCode,//请求的action路径
-                    error: function () {//请求失败处理函数
-                        Common.error('请求失败!')
-                    },
-                    success:function(obj) {
-                        if(obj.data !=null && obj.data != '' && obj.data.orgCode != null && obj.data.orgCode != ''){
-                            Common.info("机构编码已经存在");
-                            return;
-                        }else{
-                            //由于orgCode作为和其他表的关联字段，如果修改orgCode则需要提醒用户是否同步修改关联表
-                            //首先判断该机构编码是否被其他表引用
-                            var isQuote = checkRelation(selectNode.id).isQuote;
-                            if(isQuote){//如果被引用提示用户将同时更新被引用的地方
-                                Common.openConfirm("机构编码存在外键引用，需要同步更新，是否继续？",function(){
-                                    $.ajax({
-                                        type : 'PUT',
-                                        url : Common.ctxPath+'orgManage/org/'+selectNode.id,
-                                        data :$("#form1").serialize(),
-                                        dataType : 'json',
-                                        beforeSend : function(xhr) {
-                                            xhr.setRequestHeader(_header, _token);
-                                        },
-                                        success : function(rsp) {
-                                            if(rsp.returnCode == '0'){
-                                                //如果修改的节点是父节点（存在子节点）则影响相对较大，这里重新初始化ztree树
-                                                if(selectNode.isParent){
-                                                    //更新机构编码,影响ztree的整体结构。所以这里重新初始化ztree树
-                                                    treeObj.destroy();
-                                                    loadOrgTree();
-                                                }else{
-                                                    if(selectNode.pId == rsp.data.parentCode){//节点位置不变
-                                                        selectNode.id = rsp.data.orgCode
-                                                        selectNode.name = rsp.data.orgName
-                                                        treeObj.updateNode(selectNode);
-                                                    }else{//节点位置改变
-                                                        //先移除
-                                                        treeObj.removeNode(selectNode);
-                                                        //再新增
-                                                        var pNode = treeObj.getNodeByParam("id",data.field.parentCode);
-                                                        var newNode = {};
-                                                        newNode.id = rsp.data.orgCode;
-                                                        newNode.pId = rsp.data.parentCode;
-                                                        newNode.name = rsp.data.orgName;
-                                                        newNode.param = {"orgid":rsp.data.id};
-                                                        newNode = treeObj.addNodes(pNode, newNode);
-                                                    }
-                                                }
-                                                Common.success(rsp.returnMessage);
-                                            }else if(rsp.returnCode == '006'){//当前登录用户关联信息已更细，提示用户重新登录
-                                                layer.confirm(rsp.returnMessage, {
-                                                    btn: ['确定'], //按钮
-                                                    shade:0.5
-                                                }, function(){
-                                                    $("#logout",parent.document).submit();
-                                                });
-                                            }else{
-                                                Common.error(rsp.returnMessage);
-                                            }
-                                        },
-                                        error : function(rsp) {
-                                            Common.error("修改失败");
-                                        }
-                                    });
-                                })
-                            }else{//没有被引用，则可以直接更新
-                                updateOrg(selectNode,data);
-                            }
-                        }
-                    }
-                });
+                Common.ajax("orgManage/orgOnCode/"+data.field.orgCode,null,true,'GET',updateOrgHandler);
             }else{
-                updateOrg(selectNode,data);
+                Common.ajax('orgManage/org',$("#form1").serialize(),true,'PUT',updateOrgSuccess);
             }
 
         }
@@ -262,26 +217,7 @@ layui.use(['form','upload','layer'], function(){
         if(checkObj.isQuote){//存在引用，不允许删除
             Common.info(checkObj.msg);
         }else{
-            $.ajax({
-                type : 'DELETE',
-                url : Common.ctxPath+'orgManage/org/'+data.field.id,
-                dataType : 'json',
-                beforeSend : function(xhr) {
-                    xhr.setRequestHeader(_header, _token);
-                },
-                success : function(rsp) {
-                    if(rsp.returnCode == '0'){
-                        var selectNode = treeObj.getSelectedNodes()[0];
-                        treeObj.removeNode(selectNode);
-                        Common.success(rsp.returnMessage);
-                    }else{
-                        Common.error(rsp.returnMessage);
-                    }
-                },
-                error : function(rsp) {
-                    Common.error("删除失败");
-                }
-            });
+            Common.ajax('orgManage/org/'+data.field.id,null,true,'DELETE',orgDeleteHandler);
         }
         //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         return false;
@@ -316,52 +252,29 @@ layui.use(['form','upload','layer'], function(){
     });
 });
 
+function orgNodeClickHandler(data){
+    layui.use(['form'], function(){
+        var form = layui.form;
+        $("#orgName").val(data.orgName);
+        $("#orgCode").val(data.orgCode);
+        $("#id").val(data.id);
+        $("#parentCode").val(data.parentCode);
+        $("#parentName").val(data.parentName);
+        $("#areaCode").val(data.areaCode);
+        $("#areaName").val(data.areaName);
+        $("#orgAddress").val(data.orgAddress);
+        $("#sortNum").val(data.sortNum);
+        if(!$.isEmpty(data.orgLogo)){
+            $("#orgLogo").val(data.orgLogo);
+            $("#orglogoImg").attr("src",Common.ctxPath+data.orgLogo);
+        }
+        form.render();
+    });
+}
 
 function orgNodeOnClick(event, treeId, treeNode) {
-    $("input").val("");
-    $("img").removeAttr("src");
-    $.ajax({
-        async:true,
-        type: "GET",
-        url: Common.ctxPath+'orgManage/org/'+treeNode.param.orgid,
-        dataType: "json",
-        beforeSend : function(xhr) {
-            xhr.setRequestHeader(_header, _token);
-        },
-        success: function(rsp){
-            if(rsp.returnCode == '0'){
-                var data = rsp.data;
-                layui.use(['form'], function(){
-                    var form = layui.form;
-                    $("#orgName").val(data.orgName);
-                    $("#orgCode").val(data.orgCode);
-                    $("#id").val(data.id);
-                    $("#parentCode").val(data.parentCode);
-                    $("#parentName").val(data.parentName);
-                    $("#areaCode").val(data.areaCode);
-                    $("#areaName").val(data.areaName);
-                    $("#orgAddress").val(data.orgAddress);
-                    $("#sortNum").val(data.sortNum);
-                    if(!$.isEmpty(data.orgLogo)){
-                        $("#orgLogo").val(data.orgLogo);
-                        $("#orglogoImg").attr("src",Common.ctxPath+data.orgLogo);
-                    }
-                    form.render();
-                });
-            }else{
-                Common.error(rsp.returnMessage);
-            }
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            var sessionstatus = XMLHttpRequest.getResponseHeader("sessionstatus");
-            // 通过XMLHttpRequest取得响应头，sessionstatus，
-            if(sessionstatus == "sessionTimeOut"){
-                window.location.replace("/");
-            }else {
-                Common.error("请求异常")
-            }
-        }
-    });
+    $("#chongzhi").click();
+    Common.ajax('orgManage/org/'+treeNode.param.orgid,null,true,'GET',orgNodeClickHandler);
 };
 
 /**
@@ -377,9 +290,6 @@ function checkRelation(orgCode){
         type : 'GET',
         url : Common.ctxPath+'orgManage/orgRelation/'+orgCode,
         dataType : 'json',
-        beforeSend : function(xhr) {
-            xhr.setRequestHeader(_header, _token);
-        },
         success : function(rsp) {
             if(rsp.returnCode == '0'){
                 resultobj.isQuote = true;
@@ -393,54 +303,4 @@ function checkRelation(orgCode){
         }
     });
     return resultobj;
-}
-
-
-/**
- * 更新机构信息
- * @param selectNode
- * @param data
- */
-function updateOrg(selectNode,data){
-    $.ajax({
-        type : 'PUT',
-        url : Common.ctxPath+'orgManage/org',
-        data :$("#form1").serialize(),
-        dataType : 'json',
-        beforeSend : function(xhr) {
-            xhr.setRequestHeader(_header, _token);
-        },
-        success : function(rsp) {
-            if(rsp.returnCode == '0'){
-                if(selectNode.pId == rsp.data.parentCode){//节点位置不变
-                    selectNode.id = rsp.data.orgCode
-                    selectNode.name = rsp.data.orgName
-                    treeObj.updateNode(selectNode);
-                }else{//节点位置改变
-                    if(selectNode.isParent){
-                        //重新初始化ztree树
-                        treeObj.destroy();
-                        loadOrgTree();
-                    }else{
-                        //先移除
-                        treeObj.removeNode(selectNode);
-                        //再新增
-                        var pNode = treeObj.getNodeByParam("id",data.field.parentCode);
-                        var newNode = {};
-                        newNode.id = rsp.data.orgCode;
-                        newNode.pId = rsp.data.parentCode;
-                        newNode.name = rsp.data.orgName;
-                        newNode.param = {"orgid":rsp.data.id};
-                        newNode = treeObj.addNodes(pNode, newNode);
-                    }
-                }
-                Common.success(rsp.returnMessage);
-            }else{
-                Common.error(rsp.returnMessage);
-            }
-        },
-        error : function(rsp) {
-            Common.error("修改失败");
-        }
-    });
 }

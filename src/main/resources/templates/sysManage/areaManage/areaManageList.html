@@ -45,9 +45,9 @@
                 <div class="layui-row">
                     <div class="layui-col-xs9">
                         <div class="layui-form-item">
-                            <label class="layui-form-label"><span class="span-red">*</span>地区编码</label>
+                            <label class="layui-form-label"><span class="span-red">*</span>地区名称</label>
                             <div class="layui-input-block">
-                                <input type="text"  id="areaCode" name="areaCode"  lay-verify="required|dasLength" daslength="30" placeholder="请输入地区编码" autocomplete="off" class="layui-input">
+                                <input type="text" id="areaName" name="areaName" lay-verify="required|dasLength" daslength="30" placeholder="请输入地区名称" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                     </div>
@@ -56,10 +56,9 @@
                 <div class="layui-row">
                     <div class="layui-col-xs9">
                         <div class="layui-form-item">
-                            <label class="layui-form-label">上级区域</label>
+                            <label class="layui-form-label"><span class="span-red">*</span>地区编码</label>
                             <div class="layui-input-block">
-                                <input type="hidden" id="parentCode" name="parentCode">
-                                <input type="text" readonly id="parentName" name="parentName" placeholder="请选择" autocomplete="off" class="layui-input">
+                                <input type="text"  id="areaCode" name="areaCode"  lay-verify="required|dasLength" daslength="30" placeholder="请输入地区编码" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                     </div>
@@ -68,9 +67,10 @@
                 <div class="layui-row">
                     <div class="layui-col-xs9">
                         <div class="layui-form-item">
-                            <label class="layui-form-label"><span class="span-red">*</span>地区名称</label>
+                            <label class="layui-form-label">上级区域</label>
                             <div class="layui-input-block">
-                                <input type="text" id="areaName" name="areaName" lay-verify="required|dasLength" daslength="30" placeholder="请输入地区名称" autocomplete="off" class="layui-input">
+                                <input type="hidden" id="parentCode" name="parentCode">
+                                <input type="text" readonly id="parentName" name="parentName" placeholder="请选择" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                     </div>
@@ -104,7 +104,6 @@
                             <label class="layui-form-label"><span class="span-red">*</span>区域等级</label>
                             <div class="layui-input-block">
                                 <select id="areaLevel" name="areaLevel" lay-verify="required">
-                                    <option value="请选择"></option>
                                     <option value=0>国家</option>
                                     <option value=1>省级</option>
                                     <option value=2>直辖市</option>

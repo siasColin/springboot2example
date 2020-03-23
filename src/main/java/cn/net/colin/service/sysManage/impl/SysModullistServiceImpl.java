@@ -1,6 +1,7 @@
 package cn.net.colin.service.sysManage.impl;
 
 import cn.net.colin.mapper.sysManage.SysModullistMapper;
+import cn.net.colin.mapper.sysManage.SysRoleMapper;
 import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysModulelist;
 import cn.net.colin.service.sysManage.ISysModullistService;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,8 @@ import java.util.Map;
 public class SysModullistServiceImpl implements ISysModullistService {
     @Autowired
     private SysModullistMapper sysModullistMapper;
+    @Autowired
+    private SysRoleMapper sysRoleMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(SysModullistServiceImpl.class);
 
@@ -24,8 +28,13 @@ public class SysModullistServiceImpl implements ISysModullistService {
         return this.sysModullistMapper.selectByPrimaryKey(id);
     }
 
+
+    @Transactional(rollbackFor = Exception.class)
     public int deleteByPrimaryKey(Long id) {
-        return this.sysModullistMapper.deleteByPrimaryKey(id);
+        int deleteNum = this.sysModullistMapper.deleteByPrimaryKey(id);
+        //同时删除，菜单和角色关联关系
+        sysRoleMapper.deleteRoleModulelistByModuleListid(id);
+        return deleteNum;
     }
 
     public int updateByPrimaryKeySelective(SysModulelist record) {

@@ -150,4 +150,22 @@ public interface SysRoleMapper {
      * @param ids
      */
     void deleteRoleAndPermissions(Long[] ids);
+
+    /**
+     * 根据菜单id，删除角色和菜单关联关系
+     * @param id
+     */
+    void deleteRoleModulelistByModuleListid(@Param("moduleListId") Long id);
+
+    /**
+     * 删除角色和菜单关联关系
+     * @param ids
+     */
+    void deleteRoleModulelistByRoleIds(Long[] ids);
+
+    /**
+     * 删除角色和用户表关联关系
+     * @param ids
+     */
+    void deleteRoleAndUserByRoleIds(Long[] ids);
 }
