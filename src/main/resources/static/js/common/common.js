@@ -174,6 +174,30 @@ var Common = {
         var r = window.location.search.substr(1).match(reg);  //匹配目标参数
         if (r != null) return unescape(r[2]);
         return null; //返回参数值
+    },
+    getCheckedNodesWithOutParent : function (zTree){
+        var selectedNodes = "";
+        var nodes = zTree.getCheckedNodes(true);
+        for (var i=0, l=nodes.length; i<l; i++) {
+            if(nodes[i].isParent==false&&nodes[i].halfCheck==false){//过滤掉父节点和半选节点
+                selectedNodes += nodes[i].id + ",";
+            }
+        }
+        if(selectedNodes.length > 0){
+            selectedNodes = selectedNodes.substring(0,selectedNodes.length-1);
+        }
+        return selectedNodes;
+    },
+    getCheckedNodes : function (zTree){
+        var selectedNodes = "";
+        var nodes = zTree.getCheckedNodes(true);
+        for (var i=0, l=nodes.length; i<l; i++) {
+            selectedNodes += nodes[i].id + ",";
+        }
+        if(selectedNodes.length > 0){
+            selectedNodes = selectedNodes.substring(0,selectedNodes.length-1);
+        }
+        return selectedNodes;
     }
 
 };

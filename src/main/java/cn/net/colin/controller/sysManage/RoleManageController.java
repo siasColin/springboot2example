@@ -4,6 +4,7 @@ import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.exception.entity.ResultInfo;
 import cn.net.colin.common.util.SnowflakeIdWorker;
 import cn.net.colin.common.util.SpringSecurityUtil;
+import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysArea;
 import cn.net.colin.model.sysManage.SysOperatetype;
 import cn.net.colin.model.sysManage.SysRole;
@@ -11,6 +12,7 @@ import cn.net.colin.model.sysManage.SysUser;
 import cn.net.colin.service.sysManage.ISysRoleService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,4 +156,61 @@ public class RoleManageController {
         }
         return resultInfo;
     }
+
+    /**
+     * 跳转角色菜单授权页面
+     * @return
+     */
+    @GetMapping("/roleAndMenu")
+    public String roleAndMenu(){
+        return "sysManage/roleManage/roleAndMenu";
+    }
+
+    /**
+     * 获取以地区为父节点的角色ztree树结构数据
+     * @param minAreaLevel 最小行政级别（例如：参数为4 则查询县级及以上行政级别的地区）
+     * @return ResultInfo 自定义结果返回实体类
+     * @throws IOException
+     */
+    @GetMapping("/roleWithAreaListTree/{minAreaLevel}")
+    @ResponseBody
+    public ResultInfo roleWithAreaListTree(@PathVariable("minAreaLevel") String minAreaLevel) throws IOException {
+        Map<String,Object> paramMap = new HashMap<String,Object>();
+        if(minAreaLevel != null && !minAreaLevel.equals("")){
+            paramMap.put("minAreaLevel",Integer.parseInt(minAreaLevel));
+        }
+        List<TreeNode> treeNodeList = sysRoleService.roleWithAreaListTree(paramMap);
+        return ResultInfo.ofData(ResultCode.SUCCESS,treeNodeList);
+    }
+    /**
+     * 保存角色菜单信息
+     * @param params
+     * @return
+     */
+    @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH')")
+    @PostMapping("/roleAndMenu")
+    @ResponseBody
+    public ResultInfo saveRoleAndMenu(@RequestParam Map<String,Object> params){
+        int num = sysRoleService.saveRoleAndMenu(params);
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        if(num > 0){
+            resultInfo = ResultInfo.of(ResultCode.SUCCESS);
+        }
+        return resultInfo;
+    }
+
+    /**
+     * 根据角色id，查询角色关联的菜单
+     * @param roleId
+     * @return
+     */
+    @GetMapping("/roleAndMenu/{roleId}")
+    @ResponseBody
+    public ResultInfo roleAndMenu(@PathVariable("roleId") String roleId){
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        List<String> menuList = this.sysRoleService.selectMenuIdsByRoleId(Long.parseLong(roleId));
+        resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,menuList);
+        return  resultInfo;
+    }
+
 }

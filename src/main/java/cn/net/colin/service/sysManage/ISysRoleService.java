@@ -1,5 +1,6 @@
 package cn.net.colin.service.sysManage;
 
+import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysRole;
 
 import java.util.List;
@@ -76,4 +77,25 @@ public interface ISysRoleService {
      * @return
      */
     int deleteBatchByPrimaryKey(Long[] ids);
+
+    /**
+     * 获取以地区为父节点的角色ztree树结构数据
+     * @param paramMap
+     * @return
+     */
+    List<TreeNode> roleWithAreaListTree(Map<String, Object> paramMap);
+
+    /**
+     * 保存角色菜单信息
+     * @param params
+     * @return
+     */
+    int saveRoleAndMenu(Map<String, Object> params);
+
+    /**
+     * 根据角色id，查询角色关联的菜单
+     * @param roleId
+     * @return
+     */
+    List<String> selectMenuIdsByRoleId(Long roleId);
 }

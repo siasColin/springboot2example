@@ -39,7 +39,7 @@
         "moduleType": "",
         "moduleTarget": "navTab",
         "moduleIcon": "icon-reorder",
-        "moduleUrl": "roleManage/roleManageList"
+        "moduleUrl": ""
       }
     ],
     "secondMenu_1603": [
@@ -52,6 +52,27 @@
         "moduleTarget": "navTab",
         "moduleIcon": "icon-reorder",
         "moduleUrl": "areaManage/arealist"
+      }
+    ],
+    "secondMenu_1606": [
+      {
+        "id": "16060",
+        "pid": "1606",
+        "moduleName": "角色管理",
+        "moduleCode": "ROLEMANAGE",
+        "moduleType": "",
+        "moduleTarget": "navTab",
+        "moduleIcon": "icon-reorder",
+        "moduleUrl": "roleManage/roleManageList"
+      },      {
+        "id": "16061",
+        "pid": "1606",
+        "moduleName": "角色菜单授权",
+        "moduleCode": "ROLEANDMENU",
+        "moduleType": "",
+        "moduleTarget": "navTab",
+        "moduleIcon": "icon-reorder",
+        "moduleUrl": "roleManage/roleAndMenu"
       }
     ]
   }

@@ -94,6 +94,9 @@
         </where>
         order by sort_num asc,create_time desc
     </select>
+    <select id="selectMenuIdsByRoleId" resultType="java.lang.String">
+        select modulelist_id from sys_role_modulelist where role_id = #{roleId,jdbcType=BIGINT}
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_role
@@ -295,6 +298,13 @@
         values
         <foreach collection="list" index="index" item="item" separator=",">
             (#{item.roleId,jdbcType=BIGINT}, #{item.operateTypeId,jdbcType=BIGINT})
+        </foreach>
+    </insert>
+    <insert id="insertRoleMenuBatch">
+        insert into sys_role_modulelist (role_id, modulelist_id)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.roleId,jdbcType=BIGINT},#{item.moduleListId,jdbcType=BIGINT})
         </foreach>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="cn.net.colin.model.sysManage.SysRole">

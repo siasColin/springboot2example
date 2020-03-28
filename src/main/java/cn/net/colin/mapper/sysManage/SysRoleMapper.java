@@ -168,4 +168,18 @@ public interface SysRoleMapper {
      * @param ids
      */
     void deleteRoleAndUserByRoleIds(Long[] ids);
+
+    /**
+     * 批量保存角色和菜单关联关系
+     * @param roleAndMenuList
+     * @return
+     */
+    int insertRoleMenuBatch(List<Map<String, Long>> roleAndMenuList);
+
+    /**
+     * 根据角色id，查询角色关联的菜单
+     * @param roleId
+     * @return
+     */
+    List<String> selectMenuIdsByRoleId(@Param("roleId") Long roleId);
 }

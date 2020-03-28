@@ -76,29 +76,36 @@ public class SysRoleServiceImpl implements ISysRoleService {
         /**
          * 判断是否拥有管理员权限
          *      有则返回，当前地区及子地区所有角色信息；
-         *      无则只返回当前登录地区下以及子地区的共享角色信息，以及本机构的私有角色信息
+         *      无则只返回当前登录地区的共享角色信息，以及本机构的私有角色信息
          */
         if(sysUser != null && !SpringSecurityUtil.hasRole("ADMIN_AUTH")){
             paramMap.put("orgCode",sysUser.getSysOrg().getOrgCode());
         }
         //如果参数中有地区编码，说明查询指定地区的角色信息，否则进行当前地区及子地区过滤
         if(!(paramMap != null && paramMap.get("areaCode") != null)){
-            SysArea sysArea = sysUser.getSysOrg().getSysArea();
-            //是管理员，首选查询本地区以及所有子地区
-            Map<String,Object> areaParams = new HashMap<String,Object>();
-            areaParams.put("maxAreaLevel",sysArea.getAreaLevel());
-            //机构只查询到县
-            areaParams.put("minAreaLevel",4);
-            List<TreeNode> areaNodeList = sysAreaMapper.selectAreaTreeNodes(areaParams);
-            List<TreeNode> childAreaList = new ArrayList<TreeNode>();
-            TreeNode pTreeNode = new TreeNode();
-            pTreeNode.setId(sysArea.getAreaCode());
-            pTreeNode.setName(sysArea.getAreaName());
-            pTreeNode.setPId(sysArea.getParentCode());
-            childAreaList.add(pTreeNode);
-            RecursiveChildUtil.areaTreeChildRecursive(sysArea.getAreaCode(),areaNodeList,childAreaList);
-            List<List<TreeNode>> areaList = SQLUtil.getSumArrayList(childAreaList);
-            paramMap.put("areaList",areaList);
+            List<TreeNode> areaList = new ArrayList<TreeNode>();
+            if(sysUser != null){
+                SysArea sysArea = sysUser.getSysOrg().getSysArea();
+                TreeNode pTreeNode = new TreeNode();
+                pTreeNode.setId(sysArea.getAreaCode());
+                pTreeNode.setName(sysArea.getAreaName());
+                pTreeNode.setPId(sysArea.getParentCode());
+                pTreeNode.setIsParent("false");
+                pTreeNode.setOpen("false");
+                if(SpringSecurityUtil.hasRole("ADMIN_AUTH")){//管理员
+                    List<TreeNode> treeNodeList = this.sysAreaMapper.selectAreaTreeNodes(paramMap);
+                    if(treeNodeList != null && treeNodeList.size() >0){
+                        pTreeNode.setIsParent("true");
+                        pTreeNode.setOpen("true");
+                    }
+                    areaList.add(pTreeNode);
+                    RecursiveChildUtil.areaTreeChildRecursive(sysArea.getAreaCode(),treeNodeList,areaList);
+                }else{
+                    areaList.add(pTreeNode);
+                }
+            }
+            List<List<TreeNode>> sumAreaList = SQLUtil.getSumArrayList(areaList);
+            paramMap.put("areaList",sumAreaList);
         }
         return this.sysRoleMapper.selectByParams(paramMap);
     }
@@ -155,5 +162,94 @@ public class SysRoleServiceImpl implements ISysRoleService {
         //4.删除角色用户关联关系
         this.sysRoleMapper.deleteRoleAndUserByRoleIds(ids);
         return num;
+    }
+
+    @Override
+    public List<TreeNode> roleWithAreaListTree(Map<String, Object> paramMap) {
+        SysUser sysUser = SpringSecurityUtil.getPrincipal();
+        /**
+         * 判断是否拥有管理员权限
+         *      有则返回，当前地区及子地区所有角色信息；
+         *      无则只返回当前登录地区的共享角色信息，以及本机构的私有角色信息
+         */
+        if(sysUser != null && !SpringSecurityUtil.hasRole("ADMIN_AUTH")){
+            paramMap.put("orgCode",sysUser.getSysOrg().getOrgCode());
+        }
+        List<TreeNode> areaList = new ArrayList<TreeNode>();
+        if(sysUser != null){
+            SysArea sysArea = sysUser.getSysOrg().getSysArea();
+            TreeNode pTreeNode = new TreeNode();
+            pTreeNode.setId(sysArea.getAreaCode());
+            pTreeNode.setName(sysArea.getAreaName());
+            pTreeNode.setPId(sysArea.getParentCode());
+            pTreeNode.setIsParent("false");
+            pTreeNode.setOpen("false");
+            if(SpringSecurityUtil.hasRole("ADMIN_AUTH")){//管理员
+                List<TreeNode> treeNodeList = this.sysAreaMapper.selectAreaTreeNodes(paramMap);
+                if(treeNodeList != null && treeNodeList.size() >0){
+                    pTreeNode.setIsParent("true");
+                    pTreeNode.setOpen("true");
+                }
+                areaList.add(pTreeNode);
+                RecursiveChildUtil.areaTreeChildRecursive(sysArea.getAreaCode(),treeNodeList,areaList);
+            }else{
+                areaList.add(pTreeNode);
+            }
+        }
+        List<List<TreeNode>> sumAreaList = SQLUtil.getSumArrayList(areaList);
+        paramMap.put("areaList",sumAreaList);
+        List<SysRole> roleList = this.sysRoleMapper.selectByParams(paramMap);
+        List<TreeNode> resultList = new ArrayList<TreeNode>();
+        if(areaList != null && areaList.size() > 0 && roleList != null && roleList.size() > 0){
+            for(int i=0;i<areaList.size();i++){
+                TreeNode areaNode = areaList.get(i);
+                areaNode.setChkDisabled("true");
+                areaNode.setId("area_"+areaNode.getId());
+                areaNode.setPId("area_"+areaNode.getPId());
+                resultList.add(areaNode);
+            }
+            for(int i=0;i<roleList.size();i++){
+                SysRole sysRole = roleList.get(i);
+                TreeNode roleNode = new TreeNode();
+                roleNode.setName(sysRole.getRoleName());
+                roleNode.setId(sysRole.getId()+"");
+                roleNode.setPId("area_"+sysRole.getAreaCode());
+                resultList.add(roleNode);
+            }
+        }
+
+        return resultList;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int saveRoleAndMenu(Map<String, Object> params) {
+        int saveNum = 0;
+        String checkedRole = params.get("checkedRole") == null ? null : params.get("checkedRole").toString();
+        String checkedMenus = params.get("checkedMenus") == null ? null : params.get("checkedMenus").toString();
+        if(checkedRole != null && !checkedRole.trim().equals("")){
+            //先删除选定角色和菜单的关联关系
+            Long [] roleArr = {Long.parseLong(checkedRole)};
+            this.sysRoleMapper.deleteRoleModulelistByRoleIds(roleArr);
+            if(checkedMenus != null && !checkedMenus.trim().equals("")){
+                String [] checkedMenuArr = checkedMenus.split(",");
+                //关联菜单不为空，保存
+                List<Map<String,Long>> roleAndMenuList = new ArrayList<Map<String,Long>>(checkedMenuArr.length);
+                long roleid = Long.parseLong(checkedRole);
+                for (int i = 0;i<checkedMenuArr.length;i++){
+                    Map<String,Long> roleAndMenu = new HashMap<String,Long>();
+                    roleAndMenu.put("roleId",roleid);
+                    roleAndMenu.put("moduleListId",Long.parseLong(checkedMenuArr[i]));
+                    roleAndMenuList.add(roleAndMenu);
+                }
+                saveNum = this.sysRoleMapper.insertRoleMenuBatch(roleAndMenuList);
+            }
+        }
+        return saveNum;
+    }
+
+    @Override
+    public List<String> selectMenuIdsByRoleId(Long roleId) {
+        return this.sysRoleMapper.selectMenuIdsByRoleId(roleId);
     }
 }

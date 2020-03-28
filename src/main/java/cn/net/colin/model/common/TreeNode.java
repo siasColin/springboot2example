@@ -22,6 +22,7 @@ public class TreeNode implements Serializable {
 	private String isParent;	// 该节点是否是父节点（表示该节点是否有子类），支持 "false","true" 字符串格式的数据
 	private String open;		// 该节点是否展开
 	private String operate; 	// 操作是否允许点击
+	private String chkDisabled; //设置节点的 checkbox / radio 是否禁用
 	private Map<String,Object> param;//存放临时添加的变量
 	public String getId() {
 		return id;
@@ -78,6 +79,12 @@ public class TreeNode implements Serializable {
     {
         this.param = param;
     }
-	
-	
+
+	public String getChkDisabled() {
+		return chkDisabled;
+	}
+
+	public void setChkDisabled(String chkDisabled) {
+		this.chkDisabled = chkDisabled;
+	}
 }
