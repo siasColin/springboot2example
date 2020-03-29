@@ -4,6 +4,7 @@ import cn.net.colin.model.sysManage.SysUser;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sxf
@@ -93,4 +94,25 @@ public interface SysUserMapper {
      * @return
      */
     int selectUserNumByOrgCode(@Param("orgCode") String orgCode);
+
+    /**
+     * 返回用户信息列表
+     * @param paramMap
+     * @return
+     */
+    List<SysUser> selectByParams(Map<String, Object> paramMap);
+
+    /**
+     * 根据id集合，删除用户
+     * @param ids
+     */
+    int deleteBatchByPrimaryKey(Long[] ids);
+
+    /**
+     * 重置用户密码
+     * @param password
+     * @param userIds
+     * @return
+     */
+    int updatePwdByUserIds(@Param("password")String password, @Param("userIds")String[] userIds);
 }

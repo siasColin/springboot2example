@@ -5,8 +5,10 @@ import cn.net.colin.common.exception.entity.ResultInfo;
 import cn.net.colin.common.util.DateUtils;
 import cn.net.colin.common.util.GetServerRealPathUnit;
 import cn.net.colin.controller.sysManage.AreaManageController;
+import cn.net.colin.service.common.ICommonservice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +40,8 @@ import java.util.Map;
 public class CommonController {
     Logger logger = LoggerFactory.getLogger(AreaManageController.class);
 
+    @Autowired
+    private ICommonservice commonservice;
 
     /**
      * 单文件上传
@@ -166,6 +170,26 @@ public class CommonController {
             ex.printStackTrace();
             return ResultInfo.of(ResultCode.UNKNOWN_ERROR);
         }
+    }
+
+    /**
+     * 录入页面数据不重复校验
+     * @param request id:区分新增和更新,val:校验值, code:校验字段, tableName:校验数据库表名
+     * @return
+     */
+    @RequestMapping("fromVerifyCode")
+    @ResponseBody
+    public Object fromVerifyCode(HttpServletRequest request){
+        Map<String,Object> map = new HashMap<>();
+        map.put("id",request.getParameter("id"));
+        map.put("val",request.getParameter("val"));
+        map.put("code",request.getParameter("code"));
+        map.put("tableName",request.getParameter("tableName"));
+        boolean flag = commonservice.fromVerifyByCode(map);
+        if(flag){
+            return ResultInfo.of(ResultCode.SUCCESS);
+        }
+        return ResultInfo.of(ResultCode.FAILED);
     }
 
     /**

@@ -4,6 +4,7 @@ import cn.net.colin.model.sysManage.SysUser;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ISysUserService extends UserDetailsService {
 
@@ -46,4 +47,42 @@ public interface ISysUserService extends UserDetailsService {
      * @return 返回修改成功的数量
      */
     int updateBatchByPrimaryKeySelective(List<SysUser> sysUserList);
+
+    /**
+     * 返回用户信息列表
+     * @param paramMap
+     * @return
+     */
+    List<SysUser> selectByParams(Map<String, Object> paramMap);
+
+    /**
+     * 保存用户以及用户关联角色信息
+     * @param user
+     * @param roles
+     * @return
+     */
+    int saveUserAndRoles(SysUser user, String[] roles);
+
+    /**
+     * 更新用户信息,以及用户和角色关联关系
+     * @param user
+     * @param roleIds
+     * @return
+     */
+    int updateUserAndRoles(SysUser user, String[] roleIds);
+
+    /**
+     * 根据id集合，删除用户
+     * @param ids
+     * @return
+     */
+    int deleteBatchByPrimaryKey(Long[] ids);
+
+    /**
+     * 重置用户密码
+     * @param password
+     * @param userIds
+     * @return
+     */
+    int updatePwdByUserIds(String password, String[] userIds);
 }

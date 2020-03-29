@@ -108,6 +108,12 @@ public class SysUser implements Serializable, UserDetails {
      */
     private SysOrg sysOrg;
 
+    /**
+     * 所属机构名称
+     */
+    private String orgName;
+
+
     /** 
      * 获取 主键ID sys_user.id
      * @return 主键ID
@@ -162,27 +168,35 @@ public class SysUser implements Serializable, UserDetails {
     }
 
     /**
-     * 是否过期
+     * 是否未过期
      * @return
      */
     @Override
     @JsonIgnore
     public boolean isAccountNonExpired() {
-        return true;
+        if(this.userStatus == 3){
+            return false;
+        }else{
+            return true;
+        }
     }
 
     /**
-     * 是否被锁定
+     * 是否未被锁定
      * @return
      */
     @Override
     @JsonIgnore
     public boolean isAccountNonLocked() {
-        return true;
+        if(this.userStatus == 4){
+            return false;
+        }else{
+            return true;
+        }
     }
 
     /**
-     * 密码是否过期
+     * 密码是否未过期
      * @return
      */
     @Override
@@ -197,7 +211,11 @@ public class SysUser implements Serializable, UserDetails {
     @Override
     @JsonIgnore
     public boolean isEnabled() {
-        return true;
+        if(this.userStatus == 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /** 
@@ -390,6 +408,14 @@ public class SysUser implements Serializable, UserDetails {
 
     public void setSysOrg(SysOrg sysOrg) {
         this.sysOrg = sysOrg;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
     }
 
     @Override

@@ -98,4 +98,11 @@ public interface ISysRoleService {
      * @return
      */
     List<String> selectMenuIdsByRoleId(Long roleId);
+
+    /**
+     * 返回指定用户关联的角色id集合
+     * @param paramMap
+     * @return
+     */
+    List<Long> selectRoleIdListByUserId(Map<String, Object> paramMap);
 }

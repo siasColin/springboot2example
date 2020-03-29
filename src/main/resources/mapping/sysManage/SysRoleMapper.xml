@@ -132,6 +132,12 @@
             #{id,jdbcType=BIGINT}
         </foreach>
     </delete>
+    <delete id="deleteUserAndRoleByUserId">
+        delete from sys_user_role where user_id in
+        <foreach collection="array" open="(" separator="," close=")" item="id">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
     <insert id="insert" parameterType="cn.net.colin.model.sysManage.SysRole">
     insert into sys_role (id, role_code, role_name, 
       role_attr, org_code, area_code, 
@@ -305,6 +311,13 @@
         values
         <foreach collection="list" index="index" item="item" separator=",">
             (#{item.roleId,jdbcType=BIGINT},#{item.moduleListId,jdbcType=BIGINT})
+        </foreach>
+    </insert>
+    <insert id="saveUserAndRoleList">
+        insert into sys_user_role (user_id,role_id)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.userId,jdbcType=BIGINT}, #{item.roleId,jdbcType=BIGINT})
         </foreach>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="cn.net.colin.model.sysManage.SysRole">

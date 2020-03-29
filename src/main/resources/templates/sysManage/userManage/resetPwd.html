@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
+    <title>用户管理</title>
+    <link rel="stylesheet" th:href="@{/plugin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/plugin/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/common/dasui.css}">
+    <style>
+        body{margin: 10px;}
+        .span-red{
+            margin: 5px;
+            color:red;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-container">
+    <form id="form1" class="layui-form" style="margin-top: 4%">
+        <input id="ids" name="ids" type="hidden" th:if="${ids!=null}" th:value="${ids}"/>
+        <div class="layui-form-item" hidden>
+            <div class="layui-input-block">
+                <button id="permissionSubmit" class="layui-btn" lay-submit lay-filter="save">
+                    重置
+                </button>
+            </div>
+        </div>
+        <!-- 第一行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>新密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" id="password" name="password"  lay-verify="required|dasLength" daslength="20" placeholder="请输入新的密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第二行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>您的登录密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" id="loginPassword" name="loginPassword" lay-verify="required|dasLength" daslength="20" placeholder="请输入当前登录用户密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/jquery-2.1.4.min.js}"></script>
+<script th:src="@{/plugin/layui/layui.js}"></script>
+<script th:src="@{/plugin/layui/xm-select.js}"></script>
+<script th:src="@{/js/common/layuiFromVerify.js}"></script>
+<script th:src="@{/plugin/zTree_v3/js/jquery.ztree.all.js}"></script>
+<script th:src="@{/js/common/common.js}"></script>
+<script th:src="@{/js/sysManage/userManage/resetPwd.js}"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        form.render();
+    });
+</script>
+</body>
+</html>

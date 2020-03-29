@@ -49,6 +49,9 @@ logging:
   file:
     # 指定日志生成位置
     path: ../logs/springboot2example
+  level:
+    root: info
+    cn.net.colin.common.util: debug
 
 #自定义rsa加密文件生成地址
 rsa:

@@ -79,7 +79,9 @@ public class SysRoleServiceImpl implements ISysRoleService {
          *      无则只返回当前登录地区的共享角色信息，以及本机构的私有角色信息
          */
         if(sysUser != null && !SpringSecurityUtil.hasRole("ADMIN_AUTH")){
-            paramMap.put("orgCode",sysUser.getSysOrg().getOrgCode());
+            if(paramMap.get("orgCode") == null){
+                paramMap.put("orgCode",sysUser.getSysOrg().getOrgCode());
+            }
         }
         //如果参数中有地区编码，说明查询指定地区的角色信息，否则进行当前地区及子地区过滤
         if(!(paramMap != null && paramMap.get("areaCode") != null)){
@@ -251,5 +253,18 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Override
     public List<String> selectMenuIdsByRoleId(Long roleId) {
         return this.sysRoleMapper.selectMenuIdsByRoleId(roleId);
+    }
+
+    @Override
+    public List<Long> selectRoleIdListByUserId(Map<String, Object> paramMap) {
+        List<Long> relustList = new ArrayList<Long>();
+        if(paramMap != null && paramMap.get("userId") != null){
+            //查询用户的系统角色
+            List<SysRole> sysRoleList = sysRoleMapper.selectByUserId(Long.parseLong(paramMap.get("userId").toString()));
+            for (SysRole role : sysRoleList) {
+                relustList.add(role.getId());
+            }
+        }
+        return relustList;
     }
 }

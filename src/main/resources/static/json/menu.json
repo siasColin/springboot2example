@@ -40,6 +40,15 @@
         "moduleTarget": "navTab",
         "moduleIcon": "icon-reorder",
         "moduleUrl": ""
+      },{
+        "id": "1607",
+        "pid": "1",
+        "moduleName": "用户管理",
+        "moduleCode": "ROLEMANAGE",
+        "moduleType": "",
+        "moduleTarget": "navTab",
+        "moduleIcon": "icon-reorder",
+        "moduleUrl": "userManage/userManageList"
       }
     ],
     "secondMenu_1603": [

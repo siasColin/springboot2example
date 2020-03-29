@@ -182,4 +182,16 @@ public interface SysRoleMapper {
      * @return
      */
     List<String> selectMenuIdsByRoleId(@Param("roleId") Long roleId);
+
+    /**
+     * 批量保存用户角色信息
+     * @param userAndRoleList
+     */
+    void saveUserAndRoleList(List<Map<String, Object>> userAndRoleList);
+
+    /**
+     * 根据用户id，批量删除用户和角色的关联关系
+     * @param userIds
+     */
+    void deleteUserAndRoleByUserId(Long [] userIds);
 }

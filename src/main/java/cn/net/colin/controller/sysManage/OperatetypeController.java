@@ -27,7 +27,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/operatetypeManage")
 public class OperatetypeController {
-    Logger logger = LoggerFactory.getLogger(AreaManageController.class);
+    Logger logger = LoggerFactory.getLogger(OperatetypeController.class);
 
     @Autowired
     private ISysOperatetypeService sysOperatetypeService;

@@ -26,21 +26,20 @@ layui.use(['form' ], function(){
             if(value.length<=0){
                 return '字段不能为空！';
             }
-            var rootPath =getRootPath();
             var id = $("#id").val();
             var val = value.toString().trim();
-            var code= item.id;
+            var code= $(item).attr("tableColumn");
             var tableName=$("#form1").attr("check");
             if(tableName != null){
                 var flag = true;
                 $.ajax({
-                    type : 'POST',
+                    type : 'GET',
                     async:false,
-                    url : rootPath+'/common/fromVerifyCode',
+                    url : Common.ctxPath+'common/fromVerifyCode',
                     data :{"id":id,"val":val,"tableName":tableName,"code":code},
                     dataType : 'json',
                     success : function(data) {
-                        if(data.code != 0){
+                        if(data.returnCode != '0'){
                             flag =false;
                         }
                     },
@@ -49,7 +48,7 @@ layui.use(['form' ], function(){
                 });
 
                 if(!flag){
-                    return "字段值已经存在,请重新填写!";
+                    return "已经存在,请重新填写!";
                 }
             }
         }

@@ -5,10 +5,8 @@ import cn.net.colin.common.exception.entity.ResultInfo;
 import cn.net.colin.common.util.SnowflakeIdWorker;
 import cn.net.colin.common.util.SpringSecurityUtil;
 import cn.net.colin.model.common.TreeNode;
-import cn.net.colin.model.sysManage.SysArea;
-import cn.net.colin.model.sysManage.SysOperatetype;
-import cn.net.colin.model.sysManage.SysRole;
-import cn.net.colin.model.sysManage.SysUser;
+import cn.net.colin.model.sysManage.*;
+import cn.net.colin.service.sysManage.ISysOrgService;
 import cn.net.colin.service.sysManage.ISysRoleService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -35,10 +33,12 @@ import java.util.Map;
 @Controller
 @RequestMapping("/roleManage")
 public class RoleManageController {
-    Logger logger = LoggerFactory.getLogger(AreaManageController.class);
+    Logger logger = LoggerFactory.getLogger(RoleManageController.class);
 
     @Autowired
     private ISysRoleService sysRoleService;
+    @Autowired
+    private ISysOrgService sysOrgService;
 
     @GetMapping("/roleManageList")
     public String arealist(){
@@ -66,6 +66,26 @@ public class RoleManageController {
         List<SysRole> roleList = sysRoleService.selectByParams(paramMap);
         PageInfo<SysRole> result = new PageInfo(roleList);
         return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,roleList,result.getTotal());
+    }
+
+    /**
+     * 返回指定机构可用角色信息列表
+     * @param orgCode 机构编码
+     * @return ResultInfo 自定义结果返回实体类
+     * @throws IOException
+     */
+    @GetMapping("/roleList/{orgCode}")
+    @ResponseBody
+    public ResultInfo areaListTree(@PathVariable("orgCode") String orgCode) throws IOException {
+        SysUser sysUser = SpringSecurityUtil.getPrincipal();
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("orgCode",orgCode);
+        SysOrg sysOrg = sysOrgService.selectByOrgCode(orgCode);
+        if(sysOrg != null && sysOrg.getAreaCode() != null){
+            params.put("areaCode",sysOrg.getAreaCode());
+        }
+        List<SysRole> roleList = sysRoleService.selectByParams(params);
+        return ResultInfo.ofData(ResultCode.SUCCESS,roleList);
     }
 
     /**
@@ -119,7 +139,7 @@ public class RoleManageController {
      * @param sysRole
      * @return
      */
-    @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH')")
+    @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','UPDATE_AUTH')")
     @PutMapping("/role")
     @ResponseBody
     public ResultInfo updateRole(SysRole sysRole,String [] systemPermissions){
@@ -211,6 +231,21 @@ public class RoleManageController {
         List<String> menuList = this.sysRoleService.selectMenuIdsByRoleId(Long.parseLong(roleId));
         resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,menuList);
         return  resultInfo;
+    }
+
+    /**
+     * 返回指定用户关联的角色id集合
+     * @return ResultInfo 自定义结果返回实体类
+     * @param userId 用户id
+     * @throws IOException
+     */
+    @GetMapping("/userRoleList/{userId}")
+    @ResponseBody
+    public ResultInfo userRoleList(@PathVariable("userId") String userId) throws IOException {
+        Map<String,Object> paramMap = new HashMap<String,Object>();
+        paramMap.put("userId",Long.parseLong(userId));
+        List<Long> roleIdList = this.sysRoleService.selectRoleIdListByUserId(paramMap);
+        return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,roleIdList,roleIdList.size());
     }
 
 }

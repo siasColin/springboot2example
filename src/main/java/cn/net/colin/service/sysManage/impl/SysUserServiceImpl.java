@@ -2,9 +2,12 @@ package cn.net.colin.service.sysManage.impl;
 
 import cn.net.colin.common.exception.BusinessRuntimeException;
 import cn.net.colin.common.exception.entity.ResultCode;
+import cn.net.colin.common.util.SQLUtil;
 import cn.net.colin.mapper.sysManage.*;
 import cn.net.colin.model.common.Role;
+import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.*;
+import cn.net.colin.service.sysManage.ISysOrgService;
 import cn.net.colin.service.sysManage.ISysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SysUserServiceImpl implements ISysUserService {
@@ -28,6 +34,8 @@ public class SysUserServiceImpl implements ISysUserService {
     private SysRoleMapper sysRoleMapper;
     @Autowired
     private SysOperatetypeMapper sysOperatetypeMapper;
+    @Autowired
+    private ISysOrgService sysOrgService;
 
     private static final Logger logger = LoggerFactory.getLogger(SysUserServiceImpl.class);
 
@@ -130,5 +138,76 @@ public class SysUserServiceImpl implements ISysUserService {
         }else{//认证失败
             throw new BusinessRuntimeException(ResultCode.LOGIN_ERROR);
         }
+    }
+
+    @Override
+    public List<SysUser> selectByParams(Map<String, Object> paramMap) {
+        //如果没有传入orgCode，则返回登录用户可维护的所有机构下的用户。如果传入了orgCode，说明是要查询指定机构的用户
+        if(paramMap != null && paramMap.get("orgCode") == null){
+            Map<String,Object> orgParams = new HashMap<String,Object>();
+            //首先获取当前登录用户可维护的机构
+            List<TreeNode> treeNodeList = sysOrgService.selectOrgTreeNodes(orgParams);
+            if(treeNodeList != null && treeNodeList.size() > 0){
+                List<List<TreeNode>> orgList = SQLUtil.getSumArrayList(treeNodeList);
+                paramMap.put("orgList",orgList);
+            }
+        }
+        return this.sysUserMapper.selectByParams(paramMap);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int saveUserAndRoles(SysUser user, String[] roles) {
+        int saveNum = this.sysUserMapper.insertSelective(user);
+        if(roles != null && roles.length > 0){
+            long userId = user.getId();
+            List<Map<String,Object>> userAndRoleList = new ArrayList<Map<String,Object>>();
+            for (String roleId: roles) {
+                Map<String,Object> userAndRoleMap = new HashMap<String,Object>(2);
+                userAndRoleMap.put("roleId",Long.parseLong(roleId));
+                userAndRoleMap.put("userId",userId);
+                userAndRoleList.add(userAndRoleMap);
+            }
+            this.sysRoleMapper.saveUserAndRoleList(userAndRoleList);
+        }
+        return saveNum;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateUserAndRoles(SysUser user, String[] roleIds) {
+        int updateNum = this.sysUserMapper.updateByPrimaryKeySelective(user);
+        //先删除用户和角色的关联关系
+        Long [] userIds = {user.getId()};
+        this.sysRoleMapper.deleteUserAndRoleByUserId(userIds);
+        //再保存
+        if(roleIds != null && roleIds.length > 0){
+            long userId = user.getId();
+            List<Map<String,Object>> userAndRoleList = new ArrayList<Map<String,Object>>();
+            for (String roleId: roleIds) {
+                Map<String,Object> userAndRoleMap = new HashMap<String,Object>(2);
+                userAndRoleMap.put("roleId",Long.parseLong(roleId));
+                userAndRoleMap.put("userId",userId);
+                userAndRoleList.add(userAndRoleMap);
+            }
+            this.sysRoleMapper.saveUserAndRoleList(userAndRoleList);
+        }
+        return updateNum;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteBatchByPrimaryKey(Long[] ids) {
+        //1.删除用户
+        int deleteNum = this.sysUserMapper.deleteBatchByPrimaryKey(ids);
+        //2.删除用户角色关联关系
+        this.sysRoleMapper.deleteUserAndRoleByUserId(ids);
+        return deleteNum;
+    }
+
+    @Override
+    public int updatePwdByUserIds(String password, String[] userIds) {
+        int updateNum = this.sysUserMapper.updatePwdByUserIds(password,userIds);
+        return updateNum;
     }
 }

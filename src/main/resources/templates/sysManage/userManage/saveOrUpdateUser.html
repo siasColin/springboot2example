@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
+    <title>用户管理</title>
+    <link rel="stylesheet" th:href="@{/plugin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/plugin/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/common/dasui.css}">
+    <style>
+        body{margin: 10px;}
+        .span-red{
+            margin: 5px;
+            color:red;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-container">
+    <form id="form1" class="layui-form" check="sys_user" style="margin-top: 4%">
+        <input id="id" name="id" type="hidden" th:if="${sysUser!=null}" th:value="${sysUser.id}"/>
+        <div class="layui-form-item" hidden>
+            <div class="layui-input-block">
+                <button id="permissionSubmit" class="layui-btn" lay-submit lay-filter="save">
+                    保存
+                </button>
+            </div>
+        </div>
+        <!-- 第一行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>登录名</label>
+                    <div class="layui-input-block">
+                        <input th:value="${sysUser!=null}?${sysUser.loginName}" type="text" id="loginName" name="loginName" tableColumn="login_name" lay-verify="required|dasLength|repeatCheck" daslength="30" placeholder="请输入登录" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第二行 -->
+        <div class="layui-row" th:if="${sysUser==null}">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" id="password" name="password" lay-verify="required|dasLength" daslength="20" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第三行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>真实姓名</label>
+                    <div class="layui-input-block">
+                        <input th:value="${sysUser!=null}?${sysUser.userName}" type="text" id="userName" name="userName" lay-verify="required|dasLength" daslength="30" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第四行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-block">
+                        <input th:checked="${sysUser ==null}?true : ${sysUser.userGender == 0}" type="radio" name="userGender" value="0" title="男">
+                        <input th:checked="${sysUser!=null}?${sysUser.userGender==1}" type="radio" name="userGender" value="1" title="女">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第五行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>手机号码</label>
+                    <div class="layui-input-block">
+                        <input th:value="${sysUser!=null}?${sysUser.phoneNumber}" type="text" id="phoneNumber" name="phoneNumber" tableColumn="phone_number" lay-verify="dasPhone|repeatCheck" placeholder="请输入手机号码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第六行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input th:value="${sysUser!=null}?${sysUser.userEmail}" type="text" id="userEmail" name="userEmail" lay-verify="dasEmail" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第七行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>所属机构</label>
+                    <div class="layui-input-block">
+                        <input th:value="${sysUser!=null}?${sysUser.orgCode}" type="hidden" id="orgCode" name="orgCode">
+                        <input th:value="${sysUser!=null}?${sysUser.orgName}" readonly type="text" id="orgName" name="orgName" lay-verify="required" placeholder="请选择所属机构" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+
+        <!-- 第八行-->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">绑定角色</label>
+                    <div class="layui-input-block">
+                        <div id="roles" class="xm-select-demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+
+        <!-- 第九行 -->
+        <div class="layui-row" th:if="${sysUser!=null}">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户状态</label>
+                    <div class="layui-input-block">
+                        <input th:checked="${sysUser ==null}?true : ${sysUser.userStatus == 0}" type="radio" name="userStatus" value="0" title="正常">
+                        <input th:checked="${sysUser!=null}?${sysUser.userStatus==2}" type="radio" name="userStatus" value="2" title="禁用">
+                        <input th:checked="${sysUser!=null}?${sysUser.userStatus==3}" type="radio" name="userStatus" value="3" title="过期">
+                        <input th:checked="${sysUser!=null}?${sysUser.userStatus==4}" type="radio" name="userStatus" value="4" title="锁定">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/jquery-2.1.4.min.js}"></script>
+<script th:src="@{/plugin/layui/layui.js}"></script>
+<script th:src="@{/plugin/layui/xm-select.js}"></script>
+<script th:src="@{/js/common/layuiFromVerify.js}"></script>
+<script th:src="@{/plugin/zTree_v3/js/jquery.ztree.all.js}"></script>
+<script th:src="@{/js/common/common.js}"></script>
+<script th:src="@{/js/sysManage/userManage/saveOrUpdateUser.js}"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        form.render();
+    });
+</script>
+</body>
+</html>
