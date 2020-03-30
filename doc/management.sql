@@ -11,7 +11,7 @@
  Target Server Version : 50527
  File Encoding         : 65001
 
- Date: 23/03/2020 17:08:05
+ Date: 30/03/2020 17:10:51
 */
 
 SET NAMES utf8mb4;
@@ -75,7 +75,15 @@ CREATE TABLE `sys_modulelist`  (
 -- Records of sys_modulelist
 -- ----------------------------
 INSERT INTO `sys_modulelist` VALUES (1, -1, '项目名称', 'PROJECTNAME', NULL, NULL, 'navTab', 1, 1, NULL, 'admin', '2020-03-21 18:41:27');
-INSERT INTO `sys_modulelist` VALUES (2, 1, '地区管理', 'AREAMANAGE', 'icon-reorder', NULL, 'navTab', 0, 1, NULL, 'admin', '2020-03-21 18:42:27');
+INSERT INTO `sys_modulelist` VALUES (2, 404512093411278848, '地区管理', 'AREAMANAGE', 'icon-reorder', '', 'navTab', 0, 1, NULL, 'admin', '2020-03-21 18:42:27');
+INSERT INTO `sys_modulelist` VALUES (404510340498391040, 404512093411278848, '机构管理', 'ORGMANAGE', 'icon-reorder', 'orgManage/orglist', 'navTab', 1, 1, 2, 'admin', '2020-03-30 07:46:30');
+INSERT INTO `sys_modulelist` VALUES (404510461441146880, 404512093411278848, '菜单管理', 'MENUMANAGE', 'icon-reorder', 'menuManage/menulist', 'navTab', 1, 1, 3, 'admin', '2020-03-30 07:46:59');
+INSERT INTO `sys_modulelist` VALUES (404510593343619072, 404512093411278848, '角色管理', 'ROLEMANAGE', 'icon-reorder', '', 'navTab', 0, 1, 4, 'admin', '2020-03-30 07:47:31');
+INSERT INTO `sys_modulelist` VALUES (404510764731269120, 404512093411278848, '用户管理', 'USERMANAGE', 'icon-reorder', 'userManage/userManageList', 'navTab', 0, 1, 5, 'admin', '2020-03-30 07:48:11');
+INSERT INTO `sys_modulelist` VALUES (404511178339975168, 2, '地区管理', 'AREAMANAGEFUNC', 'icon-reorder', 'areaManage/arealist', 'navTab', 1, 1, 1, 'admin', '2020-03-30 07:49:50');
+INSERT INTO `sys_modulelist` VALUES (404511379884670976, 404510593343619072, '角色管理', 'ROLEMANAGEFUNC', 'icon-reorder', 'roleManage/roleManageList', 'navTab', 1, 1, 1, 'admin', '2020-03-30 07:50:38');
+INSERT INTO `sys_modulelist` VALUES (404511457638678528, 404510593343619072, '角色菜单授权', 'ROLEANDMENU', 'icon-reorder', 'roleManage/roleAndMenu', 'navTab', 1, 1, 1, 'admin', '2020-03-30 07:50:57');
+INSERT INTO `sys_modulelist` VALUES (404512093411278848, 1, '系统管理', 'SYSTEMMANAGE', 'icon-cog', 'roleManage/roleAndMenu', 'navTab', 0, 1, 1, 'admin', '2020-03-30 07:53:28');
 
 -- ----------------------------
 -- Table structure for sys_operatetype
@@ -132,6 +140,8 @@ CREATE TABLE `sys_org`  (
 INSERT INTO `sys_org` VALUES (0, '410000000000', '河南省', '41000000000000', '-1', 0, '', '', NULL, NULL, NULL);
 INSERT INTO `sys_org` VALUES (1, '410000000000', '河南省气象局', '41000041600000', '41000000000000', 416, NULL, NULL, 'admin', '2020-03-07 15:09:41', 0);
 INSERT INTO `sys_org` VALUES (335386239865716736, '410000000000', '服务中心', '41000041601000', '41000041600000', 416, '', 'uploadfile/orgLogo/APP应用图标3.png', 'admin', '2020-03-07 15:11:46', 1);
+INSERT INTO `sys_org` VALUES (404189543468695552, '410100000000', '郑州市', '41010000000000', '41000000000000', NULL, '', '', 'admin', '2020-03-29 10:31:46', NULL);
+INSERT INTO `sys_org` VALUES (404189606702022656, '410100000000', '郑州市气象局', '41010041600000', '41010000000000', NULL, '', '', 'admin', '2020-03-29 10:32:01', NULL);
 
 -- ----------------------------
 -- Table structure for sys_org_role
@@ -174,6 +184,8 @@ CREATE TABLE `sys_role`  (
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES (1, 'ADMIN', '管理员', 0, NULL, '410000000000', 1, 'admin', '2020-03-07 15:36:42', 0);
+INSERT INTO `sys_role` VALUES (403730211182542848, 'ZZADMIN', '郑州市管理员', 0, NULL, '410100000000', 1, 'admin', '2020-03-28 04:06:33', 1);
+INSERT INTO `sys_role` VALUES (404189812852064256, 'ZZPRIVATETEST', '郑州市私有角色', 1, '41010041600000', '410100000000', 1, 'admin', '2020-03-29 10:32:51', 2);
 
 -- ----------------------------
 -- Table structure for sys_role_modulelist
@@ -187,6 +199,22 @@ CREATE TABLE `sys_role_modulelist`  (
   CONSTRAINT `FK_Reference_modulelist_role` FOREIGN KEY (`modulelist_id`) REFERENCES `sys_modulelist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_Reference_role_modulelist` FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色菜单关联表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_role_modulelist
+-- ----------------------------
+INSERT INTO `sys_role_modulelist` VALUES (1, 1);
+INSERT INTO `sys_role_modulelist` VALUES (403730211182542848, 1);
+INSERT INTO `sys_role_modulelist` VALUES (1, 2);
+INSERT INTO `sys_role_modulelist` VALUES (403730211182542848, 2);
+INSERT INTO `sys_role_modulelist` VALUES (1, 404510340498391040);
+INSERT INTO `sys_role_modulelist` VALUES (1, 404510461441146880);
+INSERT INTO `sys_role_modulelist` VALUES (1, 404510593343619072);
+INSERT INTO `sys_role_modulelist` VALUES (1, 404510764731269120);
+INSERT INTO `sys_role_modulelist` VALUES (1, 404511178339975168);
+INSERT INTO `sys_role_modulelist` VALUES (1, 404511379884670976);
+INSERT INTO `sys_role_modulelist` VALUES (1, 404511457638678528);
+INSERT INTO `sys_role_modulelist` VALUES (1, 404512093411278848);
 
 -- ----------------------------
 -- Table structure for sys_role_operatetype
@@ -205,7 +233,15 @@ CREATE TABLE `sys_role_operatetype`  (
 -- Records of sys_role_operatetype
 -- ----------------------------
 INSERT INTO `sys_role_operatetype` VALUES (1, 1);
+INSERT INTO `sys_role_operatetype` VALUES (403730211182542848, 1);
+INSERT INTO `sys_role_operatetype` VALUES (404189812852064256, 1);
 INSERT INTO `sys_role_operatetype` VALUES (1, 2);
+INSERT INTO `sys_role_operatetype` VALUES (403730211182542848, 2);
+INSERT INTO `sys_role_operatetype` VALUES (404189812852064256, 2);
+INSERT INTO `sys_role_operatetype` VALUES (403730211182542848, 3);
+INSERT INTO `sys_role_operatetype` VALUES (404189812852064256, 3);
+INSERT INTO `sys_role_operatetype` VALUES (403730211182542848, 4);
+INSERT INTO `sys_role_operatetype` VALUES (404189812852064256, 4);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -237,7 +273,8 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '$2a$10$Jw923tUCmRkkvZ/tv2YdYO3UKLN934VHz1ssADyxyPSM43sUWeAR6', '管理员', 1, '18037570119', '1540247870@qq.com', '41000041601000', '2020-03-07 15:13:43', '192.168.0.135', 0, 'admin', '2020-03-07 15:13:59');
+INSERT INTO `sys_user` VALUES (1, 'admin', '$2a$10$Jw923tUCmRkkvZ/tv2YdYO3UKLN934VHz1ssADyxyPSM43sUWeAR6', '管理员', 0, '18037570119', '1540247870@qq.com', '41000041601000', '2020-03-07 15:13:43', '192.168.0.135', 0, 'admin', '2020-03-07 15:13:59');
+INSERT INTO `sys_user` VALUES (404200473187385344, '111', '$2a$10$JxXZS2P7uFfrlduW3PfVde9HyZmtSnC4vwK0uX7OW7LeQ5RARXEmq', '111', 0, '18037570101', '', '41000041601000', NULL, NULL, 0, 'admin', '2020-03-29 11:15:12');
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -256,5 +293,6 @@ CREATE TABLE `sys_user_role`  (
 -- Records of sys_user_role
 -- ----------------------------
 INSERT INTO `sys_user_role` VALUES (1, 1);
+INSERT INTO `sys_user_role` VALUES (404200473187385344, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
