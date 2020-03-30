@@ -1,11 +1,18 @@
 package cn.net.colin.controller.common;
 
+import cn.net.colin.controller.sysManage.MenuManageController;
+import cn.net.colin.model.sysManage.SysModulelist;
+import cn.net.colin.service.sysManage.ISysModullistService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,6 +20,9 @@ import java.util.Map;
  */
 @Controller
 public class LoginController {
+    Logger logger = LoggerFactory.getLogger(MenuManageController.class);
+    @Autowired
+    private ISysModullistService sysModullistService;
 
     @RequestMapping("/loginerror")
     public String loginerror(Map<String,Object> modelMap){
@@ -39,5 +49,17 @@ public class LoginController {
             modelMap.put("msg","用户名密码错误");
             return  "login";
         }
+    }
+
+    /**
+     * 登录成功后跳转首页
+     * @param modelMap
+     * @return
+     */
+    @RequestMapping("/main")
+    public String main(Map<String,Object> modelMap){
+        List<SysModulelist> firstMenu = sysModullistService.selectFirstMenu();
+        modelMap.put("firstMenu",firstMenu);
+        return  "index";
     }
 }

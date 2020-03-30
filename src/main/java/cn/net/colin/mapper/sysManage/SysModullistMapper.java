@@ -94,4 +94,11 @@ public interface SysModullistMapper {
      * @return
      */
     List<SysModulelist> selectByPid(long pid);
+
+    /**
+     * 查询当前登录用户已授权的菜单
+     * @param roleParams
+     * @return
+     */
+    List<SysModulelist> selectMenu(Map<String, Object> roleParams);
 }

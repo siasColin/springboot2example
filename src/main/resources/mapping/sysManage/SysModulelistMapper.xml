@@ -63,6 +63,25 @@
         from sys_modulelist
         where pid = #{pid,jdbcType=BIGINT}
     </select>
+    <select id="selectMenu" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_modulelist
+        where
+          module_status = 1
+        <if test="sysRoleList != null and sysRoleList.size>0">
+            and id in(
+            select modulelist_id from sys_role_modulelist
+              where role_id in
+                <foreach close=")" collection="sysRoleList" index="index" item="item" open="(" separator=",">
+                    #{item.id}
+                </foreach>
+            )
+        </if>
+        <if test="pid != null">
+            and pid = #{pid,jdbcType=BIGINT}
+        </if>
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_modulelist
     where id = #{id,jdbcType=BIGINT}

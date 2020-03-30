@@ -30,10 +30,14 @@
 							<span style="display: inline-block;vertical-align: middle;font-size: 26px;font-family: '时尚中黑简体';line-height: 58px;color: white;">浙江省定时任务管理系统</span>
                         </h1>
 						<ul id="nav">
-							<li onclick="showSecondMenu('301951999484624896','','navTab')">
+							<li th:onclick="'javascript:showSecondMenu(\''+${fMenu.id}+'\''+',\''+${fMenu.getModuleIcon()}+'\''+')'"  th:each="fMenu:${firstMenu}">
+								<i th:class="${fMenu.moduleIcon}" class="icon-cog"></i>
+								<p th:text="${fMenu.moduleName}"></p>
+							</li>
+							<!--<li onclick="showSecondMenu('301951999484624896','','navTab')">
 								<i class="icon-cog"></i>
 								<p>系统管理</p>
-							</li>
+							</li>-->
 						</ul>
 						<div class="navTime">
 							<ul>

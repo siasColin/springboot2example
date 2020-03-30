@@ -44,7 +44,7 @@
         "id": "1607",
         "pid": "1",
         "moduleName": "用户管理",
-        "moduleCode": "ROLEMANAGE",
+        "moduleCode": "USERMANAGE",
         "moduleType": "",
         "moduleTarget": "navTab",
         "moduleIcon": "icon-reorder",

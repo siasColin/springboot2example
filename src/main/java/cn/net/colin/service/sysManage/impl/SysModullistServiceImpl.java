@@ -1,9 +1,13 @@
 package cn.net.colin.service.sysManage.impl;
 
+import cn.net.colin.common.util.SpringSecurityUtil;
 import cn.net.colin.mapper.sysManage.SysModullistMapper;
 import cn.net.colin.mapper.sysManage.SysRoleMapper;
+import cn.net.colin.model.common.Role;
 import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysModulelist;
+import cn.net.colin.model.sysManage.SysRole;
+import cn.net.colin.model.sysManage.SysUser;
 import cn.net.colin.service.sysManage.ISysModullistService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -77,5 +83,20 @@ public class SysModullistServiceImpl implements ISysModullistService {
     @Override
     public List<SysModulelist> selectByPid(long pid) {
         return this.sysModullistMapper.selectByPid(pid);
+    }
+
+    @Override
+    public List<SysModulelist> selectFirstMenu() {
+        List<SysModulelist> firstMuneList = new ArrayList<SysModulelist>();
+        SysUser sysUser = SpringSecurityUtil.getPrincipal();
+        if(sysUser != null && sysUser.getId() != null){
+            //查询用户的系统角色
+            List<SysRole> sysRoleList = this.sysRoleMapper.selectByUserId(sysUser.getId());
+            Map<String,Object> roleParams = new HashMap<String,Object>();
+            roleParams.put("sysRoleList",sysRoleList);
+            roleParams.put("pid",1);
+            firstMuneList = this.sysModullistMapper.selectMenu(roleParams);
+        }
+        return firstMuneList;
     }
 }

@@ -60,4 +60,10 @@ public interface ISysModullistService {
      * @return
      */
     List<SysModulelist> selectByPid(long pid);
+
+    /**
+     * 获取当前登录用户已授权的一级菜单
+     * @return
+     */
+    List<SysModulelist> selectFirstMenu();
 }
