@@ -86,7 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
 //            .csrf().disable()
             //可以针对项目中对外提供的接口（基于jwt+rsa认证的）可在这里设置忽略csrf
-            .csrf().ignoringAntMatchers("/auth/login","/hello/*","/common/uploadSingle","/common/uploadMany").and()
+            .csrf().ignoringAntMatchers("/auth/login","/hello/*","/common/uploadSingle","/common/uploadMany","/ueditor/config").and()
             .authorizeRequests()
             //允许访问的路径，但是依然会走spring security内部流程
             .antMatchers("/","/login","/loginerror","/authException","/error","/common/sessionInvalid","/test/*").permitAll()
