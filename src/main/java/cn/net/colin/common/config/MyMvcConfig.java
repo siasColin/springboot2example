@@ -38,12 +38,12 @@ public class MyMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowCredentials(true)
-                .maxAge(3600)
-                .allowedHeaders("*");
+        registry.addMapping("/**")//添加映射路径，“/**”表示对所有的路径实行全局跨域访问权限的设置。
+                .allowedOrigins("*")//开放哪些ip、端口、域名的访问权限
+                .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")//开放哪些http方法，允许跨域访问
+                .allowCredentials(true)//是否允许发送cookie信息
+                .maxAge(3600)// 预检请求的缓存时间（秒），即在这个时间段里，对于相同的跨域请求不会再预检了
+                .allowedHeaders("*");// #允许访问的头信息,*表示全
     }
 
     /**

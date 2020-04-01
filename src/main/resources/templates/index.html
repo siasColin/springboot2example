@@ -30,7 +30,7 @@
 							<span style="display: inline-block;vertical-align: middle;font-size: 26px;font-family: '时尚中黑简体';line-height: 58px;color: white;">浙江省定时任务管理系统</span>
                         </h1>
 						<ul id="nav">
-							<li th:οnclick="'javascript:showSecondMenu(\''+${fMenu.getId()}+'\','+'\''+${fMenu.getModuleUrl()}+'\','+'\''+${fMenu.moduleIcon}+'\')'"  th:each="fMenu:${firstMenu}">
+							<li onclick="showSecondMenu(this.getAttribute('data-id'),this.getAttribute('data-url'),this.getAttribute('data-target'))" th:data-id="${fMenu.id}" th:data-url="${fMenu.moduleUrl}" th:data-target="${fMenu.moduleTarget}" th:each="fMenu:${firstMenu}">
 								<i th:class="${fMenu.moduleIcon}" class="icon-cog"></i>
 								<p th:text="${fMenu.moduleName}"></p>
 							</li>

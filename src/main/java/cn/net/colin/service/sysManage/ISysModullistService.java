@@ -66,4 +66,11 @@ public interface ISysModullistService {
      * @return
      */
     List<SysModulelist> selectFirstMenu();
+
+    /**
+     * 根据一级菜单id，查询子菜单
+     * @param moduleId
+     * @return
+     */
+    Map<String, Object> selectChildMenu(String moduleId);
 }

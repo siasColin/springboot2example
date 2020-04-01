@@ -1,5 +1,7 @@
 package cn.net.colin.controller.common;
 
+import cn.net.colin.common.exception.entity.ResultCode;
+import cn.net.colin.common.exception.entity.ResultInfo;
 import cn.net.colin.controller.sysManage.MenuManageController;
 import cn.net.colin.model.sysManage.SysModulelist;
 import cn.net.colin.service.sysManage.ISysModullistService;
@@ -7,9 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -58,8 +58,22 @@ public class LoginController {
      */
     @RequestMapping("/main")
     public String main(Map<String,Object> modelMap){
-        List<SysModulelist> firstMenu = sysModullistService.selectFirstMenu();
+        List<SysModulelist> firstMenu = this.sysModullistService.selectFirstMenu();
         modelMap.put("firstMenu",firstMenu);
         return  "index";
+    }
+
+    /**
+     * 根据一级菜单id，查询子菜单
+     * @param moduleId
+     * @return
+     */
+    @GetMapping("/childMenu/{moduleId}")
+    @ResponseBody
+    public ResultInfo childMenu(@PathVariable("moduleId") String moduleId){
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        Map<String,Object> resultMap = this.sysModullistService.selectChildMenu(moduleId);
+        resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,resultMap);
+        return resultInfo;
     }
 }

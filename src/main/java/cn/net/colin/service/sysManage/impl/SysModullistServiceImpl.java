@@ -99,4 +99,29 @@ public class SysModullistServiceImpl implements ISysModullistService {
         }
         return firstMuneList;
     }
+
+    @Override
+    public Map<String, Object> selectChildMenu(String moduleId) {
+        Map<String,Object> resultMap = new HashMap<String,Object>();
+        List<SysModulelist> secondMuneList = new ArrayList<SysModulelist>();
+        SysUser sysUser = SpringSecurityUtil.getPrincipal();
+        if(sysUser != null && sysUser.getId() != null){
+            //查询用户的系统角色
+            List<SysRole> sysRoleList = this.sysRoleMapper.selectByUserId(sysUser.getId());
+            Map<String,Object> roleParams = new HashMap<String,Object>();
+            roleParams.put("sysRoleList",sysRoleList);
+            roleParams.put("pid",Long.parseLong(moduleId));
+            secondMuneList = this.sysModullistMapper.selectMenu(roleParams);
+            if(secondMuneList != null && secondMuneList.size() > 0){
+                resultMap.put("allSecondMenu",secondMuneList);
+                for (int i=0;i<secondMuneList.size();i++){
+                    roleParams.put("pid",secondMuneList.get(i).getId());
+                    List<SysModulelist> thirdMuneList = this.sysModullistMapper.selectMenu(roleParams);
+                    resultMap.put("secondMenu_"+secondMuneList.get(i).getId(),thirdMuneList);
+                }
+            }
+
+        }
+        return resultMap;
+    }
 }

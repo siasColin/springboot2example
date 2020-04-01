@@ -7,6 +7,12 @@ var _token =$("meta[name='_csrf']").attr("content");
  * @param nav 打开位置navTab（系统内打开）、_blank(新窗口打开) ,默认（navTab）
  */
 function showSecondMenu(moduleId,url,nav){
+    if($.isEmpty(url)){
+        url = '';
+    }
+    if($.isEmpty(nav)){
+        nav = 'navTab';
+    }
     url = Common.ctxPath+url;
     if(url!=Common.ctxPath){//如果菜单url和项目地址不相等，说明该以及菜单是功能点，需要打开
         $("#sidebar").hide();
@@ -31,7 +37,7 @@ function loadSecondMenu(moduleId){
     $.ajax({
         async:false,
         type: "GET",
-        url: Common.ctxPath+'json/menu.json',
+        url: Common.ctxPath+'childMenu/'+moduleId,
         data:{"moudleId":moduleId},
         dataType: "json",
         beforeSend : function(xhr) {
