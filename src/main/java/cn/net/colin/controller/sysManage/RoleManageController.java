@@ -41,28 +41,26 @@ public class RoleManageController {
     private ISysOrgService sysOrgService;
 
     @GetMapping("/roleManageList")
-    public String arealist(){
+    public String roleManageList(){
         return "sysManage/roleManage/roleManageList";
     }
 
     /**
      * 返回角色信息列表
-     * @param roleName 角色名字（模糊查询）
-     * @param areaCode 地区编码
+     * @param paramMap
+     *  roleName 角色名字（模糊查询）
+     *  areaCode 地区编码
+     *  page 页码
+     *  limit 每页数据量
      * @return ResultInfo 自定义结果返回实体类
      * @throws IOException
      */
     @GetMapping("/roleList")
     @ResponseBody
-    public ResultInfo areaListTree(String roleName, String areaCode) throws IOException {
-        Map<String,Object> paramMap = new HashMap<String,Object>();
-        if(roleName != null && !roleName.equals("")){
-            paramMap.put("roleName",roleName);
-        }
-        if(areaCode != null && !areaCode.equals("")){
-            paramMap.put("areaCode",areaCode);
-        }
-        PageHelper.startPage(1,10);
+    public ResultInfo roleList(@RequestParam Map<String,Object> paramMap) throws IOException {
+        int pageNum = paramMap.get("page") == null ? 1 : Integer.parseInt(paramMap.get("page").toString());
+        int pageSize = paramMap.get("limit") == null ? 10 : Integer.parseInt(paramMap.get("limit").toString());
+        PageHelper.startPage(pageNum,pageSize);
         List<SysRole> roleList = sysRoleService.selectByParams(paramMap);
         PageInfo<SysRole> result = new PageInfo(roleList);
         return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,roleList,result.getTotal());
@@ -76,7 +74,7 @@ public class RoleManageController {
      */
     @GetMapping("/roleList/{orgCode}")
     @ResponseBody
-    public ResultInfo areaListTree(@PathVariable("orgCode") String orgCode) throws IOException {
+    public ResultInfo roleList(@PathVariable("orgCode") String orgCode) throws IOException {
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("orgCode",orgCode);

@@ -39,28 +39,24 @@ public class UserManageController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping("/userManageList")
-    public String arealist(){
+    public String userManageList(){
         return "sysManage/userManage/userManageList";
     }
 
     /**
      * 返回用户信息列表
-     * @param userName 用户名字（模糊查询）
-     * @param orgCode 机构编码
+     * @param paramMap
+     *      userName 用户名字（模糊查询）
+     *      orgCode 机构编码
      * @return ResultInfo 自定义结果返回实体类
      * @throws IOException
      */
     @GetMapping("/userList")
     @ResponseBody
-    public ResultInfo areaListTree(String userName, String orgCode) throws IOException {
-        Map<String,Object> paramMap = new HashMap<String,Object>();
-        if(userName != null && !userName.equals("")){
-            paramMap.put("userName",userName);
-        }
-        if(orgCode != null && !orgCode.equals("")){
-            paramMap.put("orgCode",orgCode);
-        }
-        PageHelper.startPage(1,10);
+    public ResultInfo userList(@RequestParam Map<String,Object> paramMap) throws IOException {
+        int pageNum = paramMap.get("page") == null ? 1 : Integer.parseInt(paramMap.get("page").toString());
+        int pageSize = paramMap.get("limit") == null ? 10 : Integer.parseInt(paramMap.get("limit").toString());
+        PageHelper.startPage(pageNum,pageSize);
         List<SysUser> userList = sysUserService.selectByParams(paramMap);
         PageInfo<SysUser> result = new PageInfo(userList);
         return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,userList,result.getTotal());
@@ -155,10 +151,10 @@ public class UserManageController {
     }
 
     /**
-     * 更新用户信息
+     * 重置用户密码
      * @param password 新密码
      * @param loginPassword 当前登录用户密码
-     * @param userIds 要重置密码的用户id数组
+     * @param ids 要重置密码的用户id数组
      * @return
      */
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','UPDATE_AUTH')")
