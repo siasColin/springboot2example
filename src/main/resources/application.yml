@@ -32,6 +32,20 @@ spring:
       file-size-threshold: 0
   resources:
     static-locations: classpath:static/,file:static/
+  quartz:
+    properties:
+      org:
+        quartz:
+          threadPool:
+            # 实例化ThreadPool时，使用的线程类为SimpleThreadPool
+            class: org.quartz.simpl.SimpleThreadPool
+            # 并发个数  如果你只有几个工作每天触发几次 那么1个线程就可以,如果你有成千上万的工作，每分钟都有很多工作 那么久需要50-100之间.
+            # 只有1到100之间的数字是非常实用的
+            threadCount: 10
+            # 优先级 默认值为5
+            threadPriority: 5
+            #可以是“true”或“false”，默认为false
+            threadsInheritContextClassLoaderOfInitializingThread: true
 mybatis:
   # 指定全局配置文件位置
   config-location: classpath:mybatis-config.xml
@@ -52,6 +66,9 @@ logging:
   level:
     root: info
     cn.net.colin.common.util: debug
+    com.github.pagehelper: debug
+    cn.net.colin.mapper.sysManage.SysUserMapper: debug
+    cn.net.colin.mapper.quartzManage: debug
 
 #自定义rsa加密文件生成地址
 rsa:

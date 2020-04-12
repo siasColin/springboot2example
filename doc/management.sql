@@ -11,7 +11,7 @@
  Target Server Version : 50527
  File Encoding         : 65001
 
- Date: 30/03/2020 17:10:51
+ Date: 12/04/2020 21:37:48
 */
 
 SET NAMES utf8mb4;
@@ -82,8 +82,10 @@ INSERT INTO `sys_modulelist` VALUES (404510593343619072, 404512093411278848, '�
 INSERT INTO `sys_modulelist` VALUES (404510764731269120, 404512093411278848, '用户管理', 'USERMANAGE', 'icon-reorder', 'userManage/userManageList', 'navTab', 0, 1, 5, 'admin', '2020-03-30 07:48:11');
 INSERT INTO `sys_modulelist` VALUES (404511178339975168, 2, '地区管理', 'AREAMANAGEFUNC', 'icon-reorder', 'areaManage/arealist', 'navTab', 1, 1, 1, 'admin', '2020-03-30 07:49:50');
 INSERT INTO `sys_modulelist` VALUES (404511379884670976, 404510593343619072, '角色管理', 'ROLEMANAGEFUNC', 'icon-reorder', 'roleManage/roleManageList', 'navTab', 1, 1, 1, 'admin', '2020-03-30 07:50:38');
-INSERT INTO `sys_modulelist` VALUES (404511457638678528, 404510593343619072, '角色菜单授权', 'ROLEANDMENU', 'icon-reorder', 'roleManage/roleAndMenu', 'navTab', 1, 1, 1, 'admin', '2020-03-30 07:50:57');
-INSERT INTO `sys_modulelist` VALUES (404512093411278848, 1, '系统管理', 'SYSTEMMANAGE', 'icon-cog', 'roleManage/roleAndMenu', 'navTab', 0, 1, 1, 'admin', '2020-03-30 07:53:28');
+INSERT INTO `sys_modulelist` VALUES (404511457638678528, 404510593343619072, '角色菜单授权', 'ROLEANDMENU', 'icon-reorder', 'roleManage/roleAndMenu', 'navTab', 1, 1, 3, 'admin', '2020-03-30 07:50:57');
+INSERT INTO `sys_modulelist` VALUES (404512093411278848, 1, '系统管理', 'SYSTEMMANAGE', 'icon-cog', '', 'navTab', 0, 1, 1, 'admin', '2020-03-30 07:53:28');
+INSERT INTO `sys_modulelist` VALUES (408870234521403392, 404510593343619072, '角色用户绑定', 'ROLEANDUSERBIND', 'icon-reorder', 'roleManage/roleAndUser', 'navTab', 1, 1, 2, 'admin', '2020-04-11 08:31:10');
+INSERT INTO `sys_modulelist` VALUES (409246289421729792, 1, '任务管理', 'QUARTZMANAGE', 'icon-th', 'quartzManage/quzrtzManagelist', 'navTab', 1, 1, 2, 'admin', '2020-04-12 09:25:29');
 
 -- ----------------------------
 -- Table structure for sys_operatetype
@@ -157,6 +159,35 @@ CREATE TABLE `sys_org_role`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '机构角色关联表' ROW_FORMAT = Compact;
 
 -- ----------------------------
+-- Table structure for sys_quartz
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_quartz`;
+CREATE TABLE `sys_quartz`  (
+  `id` bigint(20) NOT NULL COMMENT '主键ID',
+  `quartzname` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务名称',
+  `cron` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '执行时间（Cron表达式）',
+  `clazzname` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务类名',
+  `running` int(11) NOT NULL DEFAULT 0 COMMENT '状态（1 启用，0禁用）',
+  `params` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '任务参数',
+  `exp1` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `exp2` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `exp3` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `exp4` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `exp5` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_quartz
+-- ----------------------------
+INSERT INTO `sys_quartz` VALUES (1, '测试1', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 1, '{\"name\":\"sxf\"}', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_quartz` VALUES (2, '测试2', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 1, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_quartz` VALUES (3, '测试3', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 1, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_quartz` VALUES (4, '测试4', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_quartz` VALUES (5, '测试5', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_quartz` VALUES (6, '测试6', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- ----------------------------
 -- Table structure for sys_role
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role`;
@@ -215,6 +246,8 @@ INSERT INTO `sys_role_modulelist` VALUES (1, 404511178339975168);
 INSERT INTO `sys_role_modulelist` VALUES (1, 404511379884670976);
 INSERT INTO `sys_role_modulelist` VALUES (1, 404511457638678528);
 INSERT INTO `sys_role_modulelist` VALUES (1, 404512093411278848);
+INSERT INTO `sys_role_modulelist` VALUES (1, 408870234521403392);
+INSERT INTO `sys_role_modulelist` VALUES (1, 409246289421729792);
 
 -- ----------------------------
 -- Table structure for sys_role_operatetype
@@ -293,6 +326,5 @@ CREATE TABLE `sys_user_role`  (
 -- Records of sys_user_role
 -- ----------------------------
 INSERT INTO `sys_user_role` VALUES (1, 1);
-INSERT INTO `sys_user_role` VALUES (404200473187385344, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;

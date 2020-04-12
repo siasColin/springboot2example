@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.net.colin.mapper.quartzManage.SysQuzrtzMapper">
+  <resultMap id="BaseResultMap" type="cn.net.colin.model.quartzManage.SysQuzrtz">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="quartzname" jdbcType="VARCHAR" property="quartzname" />
+    <result column="cron" jdbcType="VARCHAR" property="cron" />
+    <result column="clazzname" jdbcType="VARCHAR" property="clazzname" />
+    <result column="running" jdbcType="INTEGER" property="running" />
+    <result column="exp1" jdbcType="VARCHAR" property="exp1" />
+    <result column="exp2" jdbcType="VARCHAR" property="exp2" />
+    <result column="exp3" jdbcType="VARCHAR" property="exp3" />
+    <result column="exp4" jdbcType="VARCHAR" property="exp4" />
+    <result column="exp5" jdbcType="VARCHAR" property="exp5" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.net.colin.model.quartzManage.SysQuzrtz">
+    <result column="params" jdbcType="LONGVARCHAR" property="params" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, quartzname, cron, clazzname, running, exp1, exp2, exp3, exp4, exp5
+  </sql>
+  <sql id="Blob_Column_List">
+    params
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_quartz
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByParams" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_quartz
+    <where>
+      <if test="quartzname != null and quartzname != ''.toString()">
+        and quartzname like '%${quartzname}%'
+      </if>
+      <if test="running != null and running != ''.toString()">
+        and running = #{running,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+  <select id="selectByParamsWithBlobs" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_quartz
+    <where>
+      <if test="quartzname != null and quartzname != ''.toString()">
+        and quartzname like '%${quartzname}%'
+      </if>
+      <if test="running != null and running != ''.toString() or running == '0'.toString()">
+        and running = #{running,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_quartz
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.net.colin.model.quartzManage.SysQuzrtz">
+    insert into sys_quartz (id, quartzname, cron, 
+      clazzname, running, exp1, 
+      exp2, exp3, exp4, exp5, 
+      params)
+    values (#{id,jdbcType=BIGINT}, #{quartzname,jdbcType=VARCHAR}, #{cron,jdbcType=VARCHAR}, 
+      #{clazzname,jdbcType=VARCHAR}, #{running,jdbcType=INTEGER}, #{exp1,jdbcType=VARCHAR}, 
+      #{exp2,jdbcType=VARCHAR}, #{exp3,jdbcType=VARCHAR}, #{exp4,jdbcType=VARCHAR}, #{exp5,jdbcType=VARCHAR}, 
+      #{params,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.net.colin.model.quartzManage.SysQuzrtz">
+    insert into sys_quartz
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="quartzname != null">
+        quartzname,
+      </if>
+      <if test="cron != null">
+        cron,
+      </if>
+      <if test="clazzname != null">
+        clazzname,
+      </if>
+      <if test="running != null">
+        running,
+      </if>
+      <if test="exp1 != null">
+        exp1,
+      </if>
+      <if test="exp2 != null">
+        exp2,
+      </if>
+      <if test="exp3 != null">
+        exp3,
+      </if>
+      <if test="exp4 != null">
+        exp4,
+      </if>
+      <if test="exp5 != null">
+        exp5,
+      </if>
+      <if test="params != null">
+        params,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="quartzname != null">
+        #{quartzname,jdbcType=VARCHAR},
+      </if>
+      <if test="cron != null">
+        #{cron,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzname != null">
+        #{clazzname,jdbcType=VARCHAR},
+      </if>
+      <if test="running != null">
+        #{running,jdbcType=INTEGER},
+      </if>
+      <if test="exp1 != null">
+        #{exp1,jdbcType=VARCHAR},
+      </if>
+      <if test="exp2 != null">
+        #{exp2,jdbcType=VARCHAR},
+      </if>
+      <if test="exp3 != null">
+        #{exp3,jdbcType=VARCHAR},
+      </if>
+      <if test="exp4 != null">
+        #{exp4,jdbcType=VARCHAR},
+      </if>
+      <if test="exp5 != null">
+        #{exp5,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null">
+        #{params,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.net.colin.model.quartzManage.SysQuzrtz">
+    update sys_quartz
+    <set>
+      <if test="quartzname != null">
+        quartzname = #{quartzname,jdbcType=VARCHAR},
+      </if>
+      <if test="cron != null">
+        cron = #{cron,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzname != null">
+        clazzname = #{clazzname,jdbcType=VARCHAR},
+      </if>
+      <if test="running != null">
+        running = #{running,jdbcType=INTEGER},
+      </if>
+      <if test="exp1 != null">
+        exp1 = #{exp1,jdbcType=VARCHAR},
+      </if>
+      <if test="exp2 != null">
+        exp2 = #{exp2,jdbcType=VARCHAR},
+      </if>
+      <if test="exp3 != null">
+        exp3 = #{exp3,jdbcType=VARCHAR},
+      </if>
+      <if test="exp4 != null">
+        exp4 = #{exp4,jdbcType=VARCHAR},
+      </if>
+      <if test="exp5 != null">
+        exp5 = #{exp5,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null">
+        params = #{params,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.net.colin.model.quartzManage.SysQuzrtz">
+    update sys_quartz
+    set quartzname = #{quartzname,jdbcType=VARCHAR},
+      cron = #{cron,jdbcType=VARCHAR},
+      clazzname = #{clazzname,jdbcType=VARCHAR},
+      running = #{running,jdbcType=INTEGER},
+      exp1 = #{exp1,jdbcType=VARCHAR},
+      exp2 = #{exp2,jdbcType=VARCHAR},
+      exp3 = #{exp3,jdbcType=VARCHAR},
+      exp4 = #{exp4,jdbcType=VARCHAR},
+      exp5 = #{exp5,jdbcType=VARCHAR},
+      params = #{params,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.net.colin.model.quartzManage.SysQuzrtz">
+    update sys_quartz
+    set quartzname = #{quartzname,jdbcType=VARCHAR},
+      cron = #{cron,jdbcType=VARCHAR},
+      clazzname = #{clazzname,jdbcType=VARCHAR},
+      running = #{running,jdbcType=INTEGER},
+      exp1 = #{exp1,jdbcType=VARCHAR},
+      exp2 = #{exp2,jdbcType=VARCHAR},
+      exp3 = #{exp3,jdbcType=VARCHAR},
+      exp4 = #{exp4,jdbcType=VARCHAR},
+      exp5 = #{exp5,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,5 +1,7 @@
 package cn.net.colin.quartz;
+import cn.net.colin.model.quartzManage.SysQuzrtz;
 import cn.net.colin.quartz.util.QuartzManager;
+import cn.net.colin.service.quartzManage.ISysQuzrtzService;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,27 +11,45 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * @Package: cn.net.colin.quartz
+ * @Author: sxf
+ * @Date: 2020-3-28
+ * @Description: 项目启动时加载quartz的定时任务
+ */
 @Component
 public class InitTask implements ApplicationRunner {
-    private final static Logger LOGGER = LoggerFactory.getLogger(InitTask.class);
+    private final static Logger logger = LoggerFactory.getLogger(InitTask.class);
 
     @Autowired
     private Scheduler scheduler;
+    @Autowired
+    private ISysQuzrtzService sysQuzrtzService;
 
     @Override
     public void run(ApplicationArguments var) throws Exception{
-        ThreadPoolExecutor sendThreadPool = new ThreadPoolExecutor(20, 30,
-                200, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(5),
-                Executors.defaultThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
-        String params = "{\"name\":\"sxf\"}";
-        //一个任务添加失败，不影响其他任务
-        //QuartzManager.addJob(scheduler, "HelloJob", Class.forName("cn.net.colin.quartz.job.HelloJob"), "0/30 * * * * ?",params);
+        Map<String,Object> quartzParams = new HashMap<String,Object>();
+        quartzParams.put("running",1);//查询状态为“启动”的任务
+        List<SysQuzrtz> sysQuzrtzList = sysQuzrtzService.selectByParamsWithBlobs(quartzParams);
+        if(sysQuzrtzList != null && sysQuzrtzList.size() > 0){
+            for(int i=0;i<sysQuzrtzList.size();i++){
+                SysQuzrtz sysQuzrtz = sysQuzrtzList.get(i);
+                try{ //一个任务添加失败，不影响其他任务
+                    QuartzManager.addJob(scheduler, sysQuzrtz.getQuartzname()+"_"+sysQuzrtz.getId(), Class.forName(sysQuzrtz.getClazzname()), sysQuzrtz.getCron(),sysQuzrtz.getParams());
+                }catch (Exception e){
+                    logger.error("添加任务失败："+sysQuzrtz.toString());
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }

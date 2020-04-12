@@ -1,4 +1,4 @@
-var roleTable;
+var quartzTable;
 //定义处理数据结构转化的适配器
 var parseDataFun = function (res){
     return {
@@ -8,18 +8,11 @@ var parseDataFun = function (res){
         , "count": res.total
     };
 };
-/**
- * 弹出层中的地区树点击时触发，主要用于给页面元素赋值
- */
-function iframeAreaNodeClick(treeNode){
-    document.getElementById('areaCode').value=treeNode.id;
-    document.getElementById('areaName').value=treeNode.name;
-}
 
 /**
  * 保存或者更新成功后回调
  */
-function roleSaveOrUpdateSuccess(){
+function quartzSaveOrUpdateSuccess(){
     layui.use('layer', function() {
         var layer = layui.layer;
         layer.closeAll('iframe'); //关闭弹框
@@ -27,20 +20,6 @@ function roleSaveOrUpdateSuccess(){
     search();
 }
 $(function(){
-    $("#areaName").on("click",function(){
-        layui.use('layer', function(){
-            var layer = layui.layer;
-            layer.open({
-                type: 2,
-                skin: 'layui-layer-lan', //
-                title:'地区选择',
-                scrollbar: false, //  滚动条 禁止
-                // closeBtn: 0,
-                area: ['265px', '350px'], //宽高
-                content: Common.ctxPath+'areaManage/childsAreatree/none'
-            });
-        });
-    });
     layui.use([ 'layer', 'table','form'], function(){
         var layer = layui.layer //弹层
             ,table = layui.table //表格
@@ -48,45 +27,37 @@ $(function(){
 
         //执行一个 table 实例
         roleTable = table.render({
-            id: 'roletable'
-            ,elem: '#rolelist'
+            id: 'quartzTable'
+            ,elem: '#quartzist'
             ,height: "full-135"
             ,limit:10
             ,method:'GET'
-            ,url: Common.ctxPath+'roleManage/roleList' //数据接口
+            ,url: Common.ctxPath+'quartzManage/quartzList' //数据接口
             ,parseData :parseDataFun
-            ,title: '角色信息表'
+            ,title: '定时任务列表'
             ,page: true //开启分页
             ,toolbar: '#info_toolbar' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
             ,defaultToolbar: ['filter', 'print']
             ,totalRow: false //开启合计行
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'}
-                ,{field: 'roleName', title: '角色名称'}
-                ,{field: 'roleCode', title: '角色编码'}
-                ,{field: 'roleAttr', title: '角色属性',templet: function(d){
-                    if(d.roleAttr == 1){
-                        return "私有";
-                    }else if(d.roleAttr == 0){
-                        return "共享";
-                    }
-                }}
-                ,{field: 'roleStatus', title: '状态',templet: function(d){
-                    if(d.roleStatus == 1){
+                ,{field: 'quartzname', title: '任务名称'}
+                ,{field: 'cron', title: '执行时间',edit: 'text'}
+                ,{field: 'clazzname', title: '任务类名'}
+                ,{field: 'running', title: '任务状态',templet: function(d){
+                    if(d.running == 1){
                         return "启用";
-                    }else if(d.roleStatus == 0){
+                    }else if(d.running == 0){
                         return "禁用";
                     }
                 }}
-                ,{field: 'areaName', title: '所属地区'}
-                ,{field: 'orgName', title: '所属机构'}
                 ,{fixed: 'right',  align:'center', toolbar: '#barRolelist',width:130}
             ]]
         });
 
 
         //监听头工具栏事件
-        table.on('toolbar(roletable)', function(obj){
+        table.on('toolbar(quartzTable)', function(obj){
             var checkStatus = table.checkStatus(obj.config.id)
                 ,data = checkStatus.data; //获取选中的数据
             switch(obj.event){
@@ -128,7 +99,7 @@ $(function(){
         });
 
         //监听行工具事件
-        table.on('tool(roletable)', function(obj){
+        table.on('tool(quartzTable)', function(obj){
             var data = obj.data //获得当前行数据
                 ,layEvent = obj.event; //获得 lay-event 对应的值
             if(layEvent === 'detail'){
@@ -161,16 +132,13 @@ $(function(){
     });
 });
 function search(){
-    var roleNameObj = $('#roleName');
-    var areaCodeObj = $('#areaCode');
+    var quartzname = $('#quartzname');
     roleTable.reload({
         page: {
             curr: 1 //重新从第 1 页开始
         }
         ,where: {
-            roleName: roleNameObj.val(),
-            areaCode: areaCodeObj.val()
-
+            quartzname: quartzname.val()
         }
     });
 }
