@@ -105,4 +105,20 @@ public interface ISysRoleService {
      * @return
      */
     List<Long> selectRoleIdListByUserId(Map<String, Object> paramMap);
+
+    /**
+     * 角色绑定用户
+     * @param roleId
+     * @param users
+     * @return
+     */
+    int saveRoleAndUsers(String roleId, String[] users);
+
+    /**
+     * 解除角色用户绑定关系
+     * @param roleId
+     * @param users
+     * @return
+     */
+    int deleteRoleAndUser(String roleId, Long [] users);
 }

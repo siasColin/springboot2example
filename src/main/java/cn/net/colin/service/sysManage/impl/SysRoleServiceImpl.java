@@ -267,4 +267,29 @@ public class SysRoleServiceImpl implements ISysRoleService {
         }
         return relustList;
     }
+
+    @Override
+    public int saveRoleAndUsers(String roleId, String[] users) {
+        int saveNum = 0;
+        if(roleId != null && !roleId.trim().equals("") && users != null && users.length > 0){
+            List<Map<String,Object>> userAndRoleList = new ArrayList<Map<String,Object>>();
+            for (String userId: users) {
+                Map<String,Object> userAndRoleMap = new HashMap<String,Object>(2);
+                userAndRoleMap.put("roleId",Long.parseLong(roleId));
+                userAndRoleMap.put("userId",Long.parseLong(userId));
+                userAndRoleList.add(userAndRoleMap);
+            }
+            saveNum = this.sysRoleMapper.saveUserAndRoleList(userAndRoleList);
+        }
+        return saveNum;
+    }
+
+    @Override
+    public int deleteRoleAndUser(String roleId, Long [] users) {
+        int deleteNum = 0;
+        if(roleId != null && !roleId.trim().equals("") && users != null && users.length > 0){
+            deleteNum = this.sysRoleMapper.deleteUserAndRoleByRoleIdAndUserIds(Long.parseLong(roleId),users);
+        }
+        return deleteNum;
+    }
 }

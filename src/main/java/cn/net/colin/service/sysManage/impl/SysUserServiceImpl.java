@@ -143,7 +143,8 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public List<SysUser> selectByParams(Map<String, Object> paramMap) {
         //如果没有传入orgCode，则返回登录用户可维护的所有机构下的用户。如果传入了orgCode，说明是要查询指定机构的用户
-        if(paramMap != null && paramMap.get("orgCode") == null){
+        if(paramMap != null && (paramMap.get("orgCode") == null ||
+                (paramMap.get("orgCode") != null && paramMap.get("orgCode").toString().trim().equals("")))){
             Map<String,Object> orgParams = new HashMap<String,Object>();
             //首先获取当前登录用户可维护的机构
             List<TreeNode> treeNodeList = sysOrgService.selectOrgTreeNodes(orgParams);
@@ -209,5 +210,10 @@ public class SysUserServiceImpl implements ISysUserService {
     public int updatePwdByUserIds(String password, String[] userIds) {
         int updateNum = this.sysUserMapper.updatePwdByUserIds(password,userIds);
         return updateNum;
+    }
+
+    @Override
+    public List<SysUser> selectUserListByRoleId(String roleId) {
+        return sysUserMapper.selectUserListByRoleId(roleId);
     }
 }

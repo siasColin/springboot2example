@@ -89,7 +89,7 @@ var Common = {
     				}
     			},
     			error:function(rsp){
-    				Common.error(rsp.returnMessage);
+    				Common.error("服务器连接失败！");
     			}
     		})
 

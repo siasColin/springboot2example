@@ -47,7 +47,7 @@ $(function(){
 });
 
 /**
- * 加载地区树
+ * 加载角色（带地区层级）树
  */
 function loadRoleTree(){
     var param = {};

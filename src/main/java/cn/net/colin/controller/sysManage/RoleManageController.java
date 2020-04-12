@@ -246,4 +246,49 @@ public class RoleManageController {
         return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,roleIdList,roleIdList.size());
     }
 
+    /**
+     * 跳转角色用户绑定页面
+     * @return
+     */
+    @GetMapping("/roleAndUser")
+    public String roleAndUser(){
+        return "sysManage/roleManage/roleAndUser";
+    }
+
+    /**
+     * 角色绑定用户
+     * @param roleId 角色id
+     * @param users 用户id集合
+     * @return
+     */
+    @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH')")
+    @PostMapping("/roleAndUser/{roleId}")
+    @ResponseBody
+    public ResultInfo roleAndUser(@PathVariable("roleId") String roleId,String [] users){
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        int num = sysRoleService.saveRoleAndUsers(roleId,users);
+        if(num > 0){
+            resultInfo = ResultInfo.of(ResultCode.SUCCESS);
+        }
+        return resultInfo;
+    }
+
+    /**
+     * 解除角色用户绑定关系
+     * @param roleId 角色id
+     * @param users 用户id集合
+     * @return
+     */
+    @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')")
+    @DeleteMapping("/roleAndUser/{roleId}")
+    @ResponseBody
+    public ResultInfo deleteRoleAndUser(@PathVariable("roleId") String roleId,Long [] users){
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        int num = sysRoleService.deleteRoleAndUser(roleId,users);
+        if(num > 0){
+            resultInfo = ResultInfo.of(ResultCode.SUCCESS);
+        }
+        return resultInfo;
+    }
+
 }

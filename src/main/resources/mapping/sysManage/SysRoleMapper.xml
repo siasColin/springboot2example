@@ -73,13 +73,13 @@
         (select sa.area_name from sys_area sa where sa.area_code = sr.area_code) as areaName
         from sys_role sr
         <where>
-            <if test="roleName != null and roleName != ''">
+            <if test="roleName != null and roleName != ''.toString()">
                 and role_name like '%${roleName}%'
             </if>
-            <if test="areaCode != null and areaCode != ''">
+            <if test="areaCode != null and areaCode != ''.toString()">
                 and area_code = #{areaCode,jdbcType=VARCHAR}
             </if>
-            <if test="orgCode != null and orgCode != ''">
+            <if test="orgCode != null and orgCode != ''.toString()">
                 and ((org_code = #{orgCode,jdbcType=VARCHAR} and role_attr = 1) or role_attr = 0)
             </if>
             <if test="areaList != null and areaList.size() > 0">
@@ -135,6 +135,13 @@
     <delete id="deleteUserAndRoleByUserId">
         delete from sys_user_role where user_id in
         <foreach collection="array" open="(" separator="," close=")" item="id">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+    <delete id="deleteUserAndRoleByRoleIdAndUserIds">
+        delete from sys_user_role where role_id = #{roleid,jdbcType=BIGINT}
+        and user_id in
+        <foreach collection="users" open="(" separator="," close=")" item="id">
             #{id,jdbcType=BIGINT}
         </foreach>
     </delete>

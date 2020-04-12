@@ -85,4 +85,11 @@ public interface ISysUserService extends UserDetailsService {
      * @return
      */
     int updatePwdByUserIds(String password, String[] userIds);
+
+    /**
+     * 据角色id，查询角色关联的用户集合
+     * @param roleId
+     * @return 系统用户集合
+     */
+    List<SysUser> selectUserListByRoleId(String roleId);
 }

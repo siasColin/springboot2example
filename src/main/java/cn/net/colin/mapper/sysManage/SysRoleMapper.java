@@ -187,11 +187,19 @@ public interface SysRoleMapper {
      * 批量保存用户角色信息
      * @param userAndRoleList
      */
-    void saveUserAndRoleList(List<Map<String, Object>> userAndRoleList);
+    int saveUserAndRoleList(List<Map<String, Object>> userAndRoleList);
 
     /**
      * 根据用户id，批量删除用户和角色的关联关系
      * @param userIds
      */
     void deleteUserAndRoleByUserId(Long [] userIds);
+
+    /**
+     * 解除角色用户绑定关系
+     * @param roleId
+     * @param users
+     * @return
+     */
+    int deleteUserAndRoleByRoleIdAndUserIds(@Param("roleid") Long roleId, Long[] users);
 }

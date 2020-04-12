@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ public class UserManageController {
      * @param paramMap
      *      userName 用户名字（模糊查询）
      *      orgCode 机构编码
+     *      roleIdNotBind 角色id，如果传入该字段则查询未绑定该角色的用户集合
      * @return ResultInfo 自定义结果返回实体类
      * @throws IOException
      */
@@ -172,6 +174,31 @@ public class UserManageController {
             int updateNum = this.sysUserService.updatePwdByUserIds(password,ids);
         }
         return resultInfo;
+    }
+
+    /**
+     * 根据角色id，查询角色关联的用户集合
+     * @param roleId
+     * @return
+     */
+    @GetMapping("/roleAndUserList/{roleId}")
+    @ResponseBody
+    public ResultInfo roleAndUserList(@PathVariable("roleId") String roleId, HttpServletRequest request){
+        int pageNum = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page").toString());
+        int pageSize = request.getParameter("limit") == null ? 10 : Integer.parseInt(request.getParameter("limit").toString());
+        PageHelper.startPage(pageNum,pageSize);
+        List<SysUser> roleList = sysUserService.selectUserListByRoleId(roleId);
+        PageInfo<SysUser> result = new PageInfo(roleList);
+        return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,roleList,result.getTotal());
+    }
+
+    /**
+     * 跳转到角色用户绑定时，在指定角色下新增用户绑定的用户选择页面
+     * @return
+     */
+    @GetMapping("/userListByRoleIdAndNotBind")
+    public String userListByRoleIdAndNotBind(){
+        return "sysManage/userManage/userListByRoleIdAndNotBind";
     }
 
 }

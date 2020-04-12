@@ -69,10 +69,10 @@
         ,(select sog.org_name from sys_org sog where sog.org_code = ssu.org_code) as orgName
         from sys_user ssu
         <where>
-            <if test="userName != null">
+            <if test="userName != null and userName != ''.toString()">
                 and user_name like '%${userName}%'
             </if>
-            <if test="orgCode != null">
+            <if test="orgCode != null and orgCode != ''.toString()">
                 and org_code = #{orgCode,jdbcType=VARCHAR}
             </if>
             <if test="orgList != null and orgList.size() > 0">
@@ -84,7 +84,22 @@
                     </foreach>
                 </foreach>
             </if>
+            <if test="roleIdNotBind != null">
+                and id not in(
+                  select user_id from sys_user_role where role_id = #{roleIdNotBind,jdbcType=BIGINT}
+                )
+            </if>
         </where>
+    </select>
+    <select id="selectUserListByRoleId" resultMap="BaseResultMapExt">
+        select
+        <include refid="Base_Column_List"/>
+        ,(select sog.org_name from sys_org sog where sog.org_code = ssu.org_code) as orgName
+        from sys_user ssu
+        where id in(
+          select user_id from sys_user_role where role_id = #{roleId,jdbcType=BIGINT}
+        )
+        order by id desc
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_user

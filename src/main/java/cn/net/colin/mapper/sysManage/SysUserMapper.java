@@ -115,4 +115,11 @@ public interface SysUserMapper {
      * @return
      */
     int updatePwdByUserIds(@Param("password")String password, @Param("userIds")String[] userIds);
+
+    /**
+     * 据角色id，查询角色关联的用户集合
+     * @param roleId
+     * @return 系统用户集合
+     */
+    List<SysUser> selectUserListByRoleId(@Param("roleId") String roleId);
 }

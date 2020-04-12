@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
+    <title>角色用户绑定</title>
+    <link rel="stylesheet" th:href="@{/plugin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/plugin/zTree_v3/css/bootstrapStyle/bootstrapStyle.css}" type="text/css">
+    <!--<link rel="stylesheet" th:href="@{/plugin/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">-->
+    <link rel="stylesheet" th:href="@{/css/common/dasui.css}">
+    <style>
+        body{margin: 10px;}
+        .demo-carousel{height: 200px; line-height: 200px; text-align: center;}
+
+        @media  screen and (max-width: 1366px) {
+            #area_tree{
+                height:630px;
+            }
+        }
+        .span-red{
+            margin: 5px;
+            color:red;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-row" style="height: 100%;">
+    <div class="layui-col-md3">
+        <div class="layui-inline">
+            <input type="text" class="layui-input" name="oneOrgName" id="oneRoleName" placeholder="请输入角色名称" autocomplete="off" style="width: 280px;">
+        </div>
+        <ul id="role_tree" class="ztree" style="overflow-y: auto;margin-top:5px;"></ul>
+    </div>
+    <div class="layui-col-md9">
+        <table class="layui-hide" id="roleAndUserlist" lay-filter="roleAndUserTable"></table>
+        <script type="text/html" id="info_toolbar">
+            <div class="layui-btn-container">
+                <div class="layui-inline" title="新增绑定" lay-event="add"
+                     sec:authorize="hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH')">
+                    <i class="layui-icon layui-icon-add-1"></i>
+                </div>
+                <div class="layui-inline" title="解除绑定" lay-event="delete"
+                     sec:authorize="hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')">
+                    <i class="layui-icon layui-icon-delete"></i>
+                </div>
+            </div>
+        </script>
+        <script type="text/html" id="barRoleAndUserlist">
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" sec:authorize="hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')">解除绑定</a>
+        </script>
+    </div>
+</div>
+<script th:src="@{/js/jquery-2.1.4.min.js}"></script>
+<script th:src="@{/plugin/layui/layui.js}"></script>
+<script th:src="@{/js/common/layuiFromVerify.js}"></script>
+<script th:src="@{/plugin/zTree_v3/js/jquery.ztree.all.js}"></script>
+<script th:src="@{/js/common/common.js}"></script>
+<script th:src="@{/js/sysManage/roleManage/roleAndUser.js}"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        form.render();
+    });
+    $('#role_tree').css('height',$(window).height()-150);   // iframe高度
+
+    $(window).resize(function () {
+        $('#role_tree').css('height',$(window).height()-150);   // iframe高度
+    });
+</script>
+</body>
+</html>
