@@ -1,9 +1,9 @@
 package cn.net.colin.quartz.util;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import cn.net.colin.common.util.JsonUtils;
 import org.quartz.*;
 
+import java.util.Map;
 import java.util.Set;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
@@ -41,11 +41,11 @@ public class QuartzManager {
             JobKey jobKey = new JobKey(jobName, JOB_GROUP_NAME);// 任务名，任务组，任务执行类
             JobDetail jobDetail = newJob(cls).withIdentity(jobKey).build();
             if (params != null && !params.equals("")) {
-				JSONObject paramsjson = JSON.parseObject(params);
-				Set<String> keyset = paramsjson.keySet();
+                Map<String,Object> paramsMap = JsonUtils.toMap(params,String.class,Object.class);
+				Set<String> keyset = paramsMap.keySet();
 				JobDataMap datamap = jobDetail.getJobDataMap();
 				for (String key : keyset) {
-					datamap.put(key, paramsjson.get(key));
+					datamap.put(key, paramsMap.get(key));
 				}
 			}
             TriggerKey triggerKey = new TriggerKey(jobName, TRIGGER_GROUP_NAME);// 触发器
@@ -88,12 +88,12 @@ public class QuartzManager {
             JobKey jobKey = new JobKey(jobName, jobGroupName);
             JobDetail jobDetail = newJob(jobClass).withIdentity(jobKey).build();
             if (params != null && !params.equals("")) {
-				JSONObject paramsjson = JSON.parseObject(params);
-				Set<String> keyset = paramsjson.keySet();
-				JobDataMap datamap = jobDetail.getJobDataMap();
-				for (String key : keyset) {
-					datamap.put(key, paramsjson.get(key));
-				}
+                Map<String,Object> paramsMap = JsonUtils.toMap(params,String.class,Object.class);
+                Set<String> keyset = paramsMap.keySet();
+                JobDataMap datamap = jobDetail.getJobDataMap();
+                for (String key : keyset) {
+                    datamap.put(key, paramsMap.get(key));
+                }
 			}
             // 触发器  
             TriggerKey triggerKey = new TriggerKey(triggerName,

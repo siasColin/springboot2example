@@ -1,14 +1,13 @@
 package cn.net.colin.filter;
 
 import cn.net.colin.common.config.RsaKeyProperties;
-import cn.net.colin.common.exception.BusinessRuntimeException;
 import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.exception.entity.ResultInfo;
+import cn.net.colin.common.util.JsonUtils;
 import cn.net.colin.common.util.JwtUtils;
 import cn.net.colin.model.common.Payload;
 import cn.net.colin.model.sysManage.SysUser;
 import cn.net.colin.service.sysManage.ISysUserService;
-import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +99,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             out = response.getWriter();
             ResultInfo resultInfo = ResultInfo.of(resultCode);
-            out.write(JSON.toJSONString(resultInfo));
+            out.write(JsonUtils.toString(resultInfo));
             out.flush();
         }catch (Exception e){
             e.printStackTrace();

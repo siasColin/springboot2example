@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author: 黑马程序员
- **/
+ * @author: sxf
+ * Jackson 常用方法工具类
+ */
 public class JsonUtils {
 
     public static final ObjectMapper mapper = new ObjectMapper();

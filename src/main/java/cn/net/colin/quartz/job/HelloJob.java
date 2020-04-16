@@ -2,7 +2,6 @@ package cn.net.colin.quartz.job;
 
 import cn.net.colin.model.sysManage.SysArea;
 import cn.net.colin.service.sysManage.ISysAreaService;
-import com.alibaba.fastjson.JSON;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

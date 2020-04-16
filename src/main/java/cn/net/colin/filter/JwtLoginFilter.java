@@ -1,23 +1,19 @@
 package cn.net.colin.filter;
 
 import cn.net.colin.common.config.RsaKeyProperties;
-import cn.net.colin.common.exception.BusinessRuntimeException;
 import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.exception.entity.ResultInfo;
+import cn.net.colin.common.util.JsonUtils;
 import cn.net.colin.common.util.JwtUtils;
 import cn.net.colin.model.common.Role;
 import cn.net.colin.model.sysManage.SysUser;
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.*;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -100,7 +95,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             out = response.getWriter();
             ResultInfo resultInfo = ResultInfo.of(resultCode);
-            out.write(JSON.toJSONString(resultInfo));
+            out.write(JsonUtils.toString(resultInfo));
             out.flush();
         }catch (Exception e){
             e.printStackTrace();
