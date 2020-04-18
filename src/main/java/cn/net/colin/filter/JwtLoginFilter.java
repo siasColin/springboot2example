@@ -68,10 +68,13 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         SysUser user = new SysUser();
         user.setLoginName(authResult.getName());
         user.setRoles((List<Role>) authResult.getAuthorities());
-        //生成token，有效期24个小时
-        String token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 24 * 60);
-        //将Token写入response头信息中
+        //生成token，有效期10分钟
+        String token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 10);
+        //再生成一个refresh_token，用于刷新token,有效期24小时
+        String refresh_token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 24*60);
+        //将两个Token写入response头信息中
         response.addHeader("Authorization", "Bearer "+token);
+        response.addHeader("Refresh_token", refresh_token);
         response(response,ResultCode.SUCCESS);
     }
 

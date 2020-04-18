@@ -8,6 +8,7 @@ import cn.net.colin.common.util.JwtUtils;
 import cn.net.colin.model.common.Payload;
 import cn.net.colin.model.sysManage.SysUser;
 import cn.net.colin.service.sysManage.ISysUserService;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,33 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                         chain.doFilter(request, response);
                     }else{
+                        response(response,ResultCode.TOKEN_ERROR);
+                    }
+                }catch (ExpiredJwtException e){//token过期
+                    //判断用于刷新的token是否过期
+                    String refresh_token = request.getHeader("Refresh_token");
+                    try{
+                        Payload<SysUser> payload = JwtUtils.getInfoFromToken(refresh_token, prop.getPublicKey(), SysUser.class);
+                        SysUser user = payload.getUserInfo();
+                        if(user!=null){//验证通过
+                            UserDetails userDetails = sysUserService.loadUserByUsername(user.getLoginName());
+                            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                            SecurityContextHolder.getContext().setAuthentication(authentication);
+                            //生成新的token
+                            String newToken = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 10);
+                            //再生成一个refresh_token，用于刷新token,有效期24小时
+                            String newRefresh_token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 24*60);
+                            //将两个Token写入response头信息中
+                            response.addHeader("Authorization", "Bearer "+newToken);
+                            response.addHeader("Refresh_token", newRefresh_token);
+                            chain.doFilter(request, response);
+                        }else{
+                            response(response,ResultCode.TOKEN_ERROR);
+                        }
+                        //尽可能让老的refresh_token失效，可以配合redis完成
+                    }catch (ExpiredJwtException ex){//refresh_token过期
+                        response(response,ResultCode.TOKEN_ERROR);
+                    }catch (Exception exc){
                         response(response,ResultCode.TOKEN_ERROR);
                     }
                 }catch (Exception e){
