@@ -11,11 +11,76 @@
  Target Server Version : 50527
  File Encoding         : 65001
 
- Date: 12/04/2020 21:37:48
+ Date: 19/04/2020 12:51:23
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for article_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `article_comment`;
+CREATE TABLE `article_comment`  (
+  `id` bigint(20) NOT NULL COMMENT '主键ID',
+  `info_id` bigint(20) NOT NULL DEFAULT -1 COMMENT '评论文章的主键ID',
+  `parent_id` bigint(20) NOT NULL COMMENT '父ID，被引用评论的ID，默认-1：表示是一级评论',
+  `comment_content` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论内容',
+  `comment_time` datetime NOT NULL COMMENT '评论时间',
+  `from_user_id` bigint(20) NOT NULL COMMENT '评论人用户id',
+  `to_user_id` bigint(20) NOT NULL COMMENT '被评论人用户id',
+  `read_status` int(11) NOT NULL DEFAULT 0 COMMENT '是否已读（1 是，0 否）',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `inx_article_comment`(`info_id`) USING BTREE,
+  INDEX `inx_article_to_userid`(`to_user_id`) USING BTREE,
+  INDEX `inx_article_from_userid`(`from_user_id`) USING BTREE,
+  INDEX `inx_article_parentid`(`parent_id`) USING BTREE,
+  CONSTRAINT `FK_Reference_article_comment` FOREIGN KEY (`info_id`) REFERENCES `article_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_Reference_article_from_userid` FOREIGN KEY (`from_user_id`) REFERENCES `sys_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_Reference_article_to_userid` FOREIGN KEY (`to_user_id`) REFERENCES `sys_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文章评论回复表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for article_info
+-- ----------------------------
+DROP TABLE IF EXISTS `article_info`;
+CREATE TABLE `article_info`  (
+  `id` bigint(20) NOT NULL COMMENT '主键ID',
+  `user_id` bigint(20) NOT NULL COMMENT '发布用户ID',
+  `type_id` bigint(20) NOT NULL COMMENT '分类id',
+  `info_title` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标题',
+  `info_abstract` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '摘要',
+  `info_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '内容',
+  `info_attachments` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附件',
+  `info_amount` int(11) NOT NULL DEFAULT 0 COMMENT '阅读量',
+  `info_coverimg` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '封面图片',
+  `info_open` int(11) NOT NULL DEFAULT 1 COMMENT '是否公开 0仅自己 1公开',
+  `info_iscomment` int(11) NOT NULL DEFAULT 1 COMMENT '是否开启评论 0关闭 1开启',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后一次编辑时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `inx_quartz_userid`(`user_id`) USING BTREE,
+  INDEX `inx_quartz_typeid`(`type_id`) USING BTREE,
+  INDEX `inx_quartz_title`(`info_title`) USING BTREE,
+  INDEX `inx_quartz_open`(`info_open`) USING BTREE,
+  CONSTRAINT `FK_Reference_articleInfo_typeid` FOREIGN KEY (`type_id`) REFERENCES `article_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文章信息表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for article_type
+-- ----------------------------
+DROP TABLE IF EXISTS `article_type`;
+CREATE TABLE `article_type`  (
+  `id` bigint(20) NOT NULL COMMENT '主键ID',
+  `type_code` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文章类型编码',
+  `type_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文章类型名',
+  `create_user` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `sort_num` int(11) NULL DEFAULT NULL COMMENT '排序字段',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `inx_article_type_code`(`type_code`) USING BTREE,
+  INDEX `inx_article_type_name`(`type_name`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文章分类表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for sys_area
@@ -132,7 +197,7 @@ CREATE TABLE `sys_org`  (
   UNIQUE INDEX `inx_sysorg_orgcode`(`org_code`) USING BTREE,
   INDEX `inx_sysorg_parentcode`(`parent_code`) USING BTREE,
   INDEX `inx_sysorg_orgname`(`org_name`) USING BTREE,
-  INDEX `FK_Reference_area_org`(`area_code`) USING BTREE,
+  INDEX `inx_area_org`(`area_code`) USING BTREE,
   CONSTRAINT `FK_Reference_area_org` FOREIGN KEY (`area_code`) REFERENCES `sys_area` (`area_code`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '机构表' ROW_FORMAT = Compact;
 
@@ -174,7 +239,9 @@ CREATE TABLE `sys_quartz`  (
   `exp3` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `exp4` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `exp5` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `inx_quartz_running`(`running`) USING BTREE,
+  INDEX `inx_quartz_name`(`quartzname`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务表' ROW_FORMAT = Compact;
 
 -- ----------------------------
