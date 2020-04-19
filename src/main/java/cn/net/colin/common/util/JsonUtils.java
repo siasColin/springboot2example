@@ -70,4 +70,13 @@ public class JsonUtils {
             return null;
         }
     }
+    public static String jsonPretty(String jsonStr){
+        try{
+            Object obj = mapper.readValue(jsonStr, Object.class);
+            jsonStr = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+        }catch (Exception e){
+            logger.error("json解析出错：" + jsonStr, e);
+        }
+        return jsonStr;
+    }
 }

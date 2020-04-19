@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.InvocationTargetException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -19,7 +20,11 @@ public class GlobalExceptionHandler {
             BusinessRuntimeException bex = (BusinessRuntimeException)e;
             result = ResultInfo.of(bex.getResultCode());
         }else{
-            result.setReturnMessage(e.getMessage());
+            if(e instanceof InvocationTargetException && e.getMessage() == null){
+                result.setReturnMessage(((InvocationTargetException) e).getTargetException().getMessage());
+            }else {
+                result.setReturnMessage(e.toString());
+            }
         }
         /*result.setTotal(5l);
         List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();

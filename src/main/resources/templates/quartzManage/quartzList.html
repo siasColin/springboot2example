@@ -28,10 +28,18 @@
     </style>
 </head>
 <body>
-<div class="demoTable">
+<div class="demoTable layui-form">
     任务名称：
     <div class="layui-inline">
         <input class="layui-input" name="quartzname" id="quartzname" autocomplete="off">
+    </div>
+    任务状态：
+    <div class="layui-inline ">
+        <select class="layui-select" name="running"  id="running">
+            <option value=""></option>
+            <option value="1">启用</option>
+            <option value="0">禁用</option>
+        </select>
     </div>
     <button class="layui-btn" onclick="search();" id="findBy">搜索</button>
     <button type="reset" class="layui-btn" id="chongzhi">重置</button>
@@ -54,6 +62,11 @@
 </script>
 
 <script type="text/html" id="barQuartzlist">
+    {{#  if(d.running == 1){ }}
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="changeRunning">禁用</a>
+    {{#  } else { }}
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="changeRunning">启用</a>
+    {{#  } }}
     <a class="layui-btn layui-btn-xs" lay-event="edit" sec:authorize="hasAnyAuthority('ADMIN_AUTH','UPDATE_AUTH')">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" sec:authorize="hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')">删除</a>
 </script>

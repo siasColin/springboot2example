@@ -1,12 +1,17 @@
 package cn.net.colin.model.quartzManage;
 
+import cn.net.colin.common.helper.LongJsonDeserializer;
+import cn.net.colin.common.helper.LongJsonSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.io.Serializable;
 
 /** 
  * @author sxf code generator
  * date:2020/04/12 15:54
  */
-public class SysQuzrtz implements Serializable {
+public class SysQuartz implements Serializable {
     /** 
      * 串行版本ID
     */
@@ -14,7 +19,9 @@ public class SysQuzrtz implements Serializable {
 
     /** 
      * 主键ID
-     */ 
+     */
+    @JsonSerialize(using = LongJsonSerializer.class)
+    @JsonDeserialize(using = LongJsonDeserializer.class)
     private Long id;
 
     /** 

@@ -15,6 +15,7 @@ public enum ResultCode {
     FILE_NOTFOUND("005","文件接收失败"),
     RELOGIN("006","用户关联信息已更新，请重新登录！"),
     PWD_ERROR("007","密码错误"),
+    CRON_ERROR("008","时间格式错误"),
     STATUS_CODE_400("400","请求无效"),
     STATUS_CODE_403("403","禁止访问"),
     STATUS_CODE_404("404","请求的网页不存在"),

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.net.colin.mapper.quartzManage.SysQuzrtzMapper">
-  <resultMap id="BaseResultMap" type="cn.net.colin.model.quartzManage.SysQuzrtz">
+  <resultMap id="BaseResultMap" type="cn.net.colin.model.quartzManage.SysQuartz">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="quartzname" jdbcType="VARCHAR" property="quartzname" />
     <result column="cron" jdbcType="VARCHAR" property="cron" />
@@ -13,7 +13,7 @@
     <result column="exp4" jdbcType="VARCHAR" property="exp4" />
     <result column="exp5" jdbcType="VARCHAR" property="exp5" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.net.colin.model.quartzManage.SysQuzrtz">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.net.colin.model.quartzManage.SysQuartz">
     <result column="params" jdbcType="LONGVARCHAR" property="params" />
   </resultMap>
   <sql id="Base_Column_List">
@@ -42,6 +42,7 @@
         and running = #{running,jdbcType=INTEGER}
       </if>
     </where>
+    order by running desc,id desc
   </select>
   <select id="selectByParamsWithBlobs" resultMap="ResultMapWithBLOBs">
     select
@@ -58,11 +59,26 @@
       </if>
     </where>
   </select>
+  <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_quartz
+    where id in
+    <foreach collection="array" open="(" separator="," close=")" item="id">
+      #{id,jdbcType=BIGINT}
+    </foreach>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_quartz
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="cn.net.colin.model.quartzManage.SysQuzrtz">
+  <delete id="deleteBatchByPrimaryKey">
+    delete from sys_quartz where id in
+    <foreach collection="array" open="(" separator="," close=")" item="id">
+      #{id,jdbcType=BIGINT}
+    </foreach>
+  </delete>
+  <insert id="insert" parameterType="cn.net.colin.model.quartzManage.SysQuartz">
     insert into sys_quartz (id, quartzname, cron, 
       clazzname, running, exp1, 
       exp2, exp3, exp4, exp5, 
@@ -72,7 +88,7 @@
       #{exp2,jdbcType=VARCHAR}, #{exp3,jdbcType=VARCHAR}, #{exp4,jdbcType=VARCHAR}, #{exp5,jdbcType=VARCHAR}, 
       #{params,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="cn.net.colin.model.quartzManage.SysQuzrtz">
+  <insert id="insertSelective" parameterType="cn.net.colin.model.quartzManage.SysQuartz">
     insert into sys_quartz
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -145,7 +161,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.net.colin.model.quartzManage.SysQuzrtz">
+  <update id="updateByPrimaryKeySelective" parameterType="cn.net.colin.model.quartzManage.SysQuartz">
     update sys_quartz
     <set>
       <if test="quartzname != null">
@@ -181,7 +197,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.net.colin.model.quartzManage.SysQuzrtz">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.net.colin.model.quartzManage.SysQuartz">
     update sys_quartz
     set quartzname = #{quartzname,jdbcType=VARCHAR},
       cron = #{cron,jdbcType=VARCHAR},
@@ -195,7 +211,7 @@
       params = #{params,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.net.colin.model.quartzManage.SysQuzrtz">
+  <update id="updateByPrimaryKey" parameterType="cn.net.colin.model.quartzManage.SysQuartz">
     update sys_quartz
     set quartzname = #{quartzname,jdbcType=VARCHAR},
       cron = #{cron,jdbcType=VARCHAR},

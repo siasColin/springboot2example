@@ -1,23 +1,23 @@
 package cn.net.colin.service.quartzManage;
 
-import cn.net.colin.model.quartzManage.SysQuzrtz;
+import cn.net.colin.model.quartzManage.SysQuartz;
 
 import java.util.List;
 import java.util.Map;
 
 public interface ISysQuzrtzService {
 
-    SysQuzrtz selectByPrimaryKey(Long id);
+    SysQuartz selectByPrimaryKey(Long id);
 
     int deleteByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(SysQuzrtz record);
+    int updateByPrimaryKeySelective(SysQuartz record);
 
-    int updateByPrimaryKey(SysQuzrtz record);
+    int updateByPrimaryKey(SysQuartz record);
 
-    int insert(SysQuzrtz record);
+    int insert(SysQuartz record);
 
-    int insertSelective(SysQuzrtz record);
+    int insertSelective(SysQuartz record);
 
     /**
      * 返回任务信息列表
@@ -26,7 +26,7 @@ public interface ISysQuzrtzService {
      *  running 任务状态（1 启用，0禁用）
      * @return
      */
-    List<SysQuzrtz> selectByParams(Map<String, Object> paramMap);
+    List<SysQuartz> selectByParams(Map<String, Object> paramMap);
 
     /**
      * 返回任务信息列表(带任务参数)
@@ -35,5 +35,19 @@ public interface ISysQuzrtzService {
      *  running 任务状态（1 启用，0禁用）
      * @return
      */
-    List<SysQuzrtz> selectByParamsWithBlobs(Map<String, Object> quartzParams);
+    List<SysQuartz> selectByParamsWithBlobs(Map<String, Object> quartzParams);
+
+    /**
+     * 批量删除任务
+     * @param ids
+     * @return
+     */
+    int deleteBatchByPrimaryKey(Long[] ids);
+
+    /**
+     * 根据id数组，查询任务集合
+     * @param ids
+     * @return
+     */
+    List<SysQuartz> selectByPrimaryKeys(Long[] ids);
 }

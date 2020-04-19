@@ -2,7 +2,7 @@ package cn.net.colin.service.quartzManage.impl;
 
 import cn.net.colin.mapper.quartzManage.SysQuzrtzMapper;
 
-import cn.net.colin.model.quartzManage.SysQuzrtz;
+import cn.net.colin.model.quartzManage.SysQuartz;
 import cn.net.colin.service.quartzManage.ISysQuzrtzService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class SysQuzrtzServiceImpl implements ISysQuzrtzService {
     private static final Logger logger = LoggerFactory.getLogger(SysQuzrtzServiceImpl.class);
 
 
-    public SysQuzrtz selectByPrimaryKey(Long id) {
+    public SysQuartz selectByPrimaryKey(Long id) {
         return this.sysQuzrtzMapper.selectByPrimaryKey(id);
     }
 
@@ -29,29 +29,39 @@ public class SysQuzrtzServiceImpl implements ISysQuzrtzService {
         return this.sysQuzrtzMapper.deleteByPrimaryKey(id);
     }
 
-    public int updateByPrimaryKeySelective(SysQuzrtz record) {
+    public int updateByPrimaryKeySelective(SysQuartz record) {
         return this.sysQuzrtzMapper.updateByPrimaryKeySelective(record);
     }
 
-    public int updateByPrimaryKey(SysQuzrtz record) {
+    public int updateByPrimaryKey(SysQuartz record) {
         return this.sysQuzrtzMapper.updateByPrimaryKeyWithBLOBs(record);
     }
 
-    public int insert(SysQuzrtz record) {
+    public int insert(SysQuartz record) {
         return this.sysQuzrtzMapper.insert(record);
     }
 
-    public int insertSelective(SysQuzrtz record) {
+    public int insertSelective(SysQuartz record) {
         return this.sysQuzrtzMapper.insertSelective(record);
     }
 
     @Override
-    public List<SysQuzrtz> selectByParams(Map<String, Object> paramMap) {
+    public List<SysQuartz> selectByParams(Map<String, Object> paramMap) {
         return this.sysQuzrtzMapper.selectByParams(paramMap);
     }
 
     @Override
-    public List<SysQuzrtz> selectByParamsWithBlobs(Map<String, Object> quartzParams) {
+    public List<SysQuartz> selectByParamsWithBlobs(Map<String, Object> quartzParams) {
         return this.sysQuzrtzMapper.selectByParamsWithBlobs(quartzParams);
+    }
+
+    @Override
+    public int deleteBatchByPrimaryKey(Long[] ids) {
+        return this.sysQuzrtzMapper.deleteBatchByPrimaryKey(ids);
+    }
+
+    @Override
+    public List<SysQuartz> selectByPrimaryKeys(Long[] ids) {
+        return this.sysQuzrtzMapper.selectByPrimaryKeys(ids);
     }
 }

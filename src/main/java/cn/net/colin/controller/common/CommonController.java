@@ -4,8 +4,10 @@ import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.exception.entity.ResultInfo;
 import cn.net.colin.common.util.DateUtils;
 import cn.net.colin.common.util.GetServerRealPathUnit;
+import cn.net.colin.common.util.JsonUtils;
 import cn.net.colin.controller.sysManage.AreaManageController;
 import cn.net.colin.service.common.ICommonservice;
+import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -190,6 +192,43 @@ public class CommonController {
             return ResultInfo.of(ResultCode.SUCCESS);
         }
         return ResultInfo.of(ResultCode.FAILED);
+    }
+
+    /**
+     * 校验传入的值是否是Cron表达式
+     * @return
+     */
+    @RequestMapping("cronCheck")
+    @ResponseBody
+    public ResultInfo cronCheck(String cronVal){
+        try{
+            if (CronExpression.isValidExpression(cronVal)) {
+                return ResultInfo.of(ResultCode.SUCCESS);
+            }else{
+                return ResultInfo.of(ResultCode.FAILED);
+            }
+        }catch (Exception e){
+            return ResultInfo.of(ResultCode.FAILED);
+        }
+    }
+
+    /**
+     * 校验传入的值是否是Json格式
+     * @return
+     */
+    @RequestMapping("jsonCheck")
+    @ResponseBody
+    public ResultInfo jsonCheck(String jsonVal){
+        try{
+            Map<String,Object> map = JsonUtils.toMap(jsonVal,String.class,Object.class);
+            if(map != null){
+                return ResultInfo.of(ResultCode.SUCCESS);
+            }else{
+                return ResultInfo.of(ResultCode.FAILED);
+            }
+        }catch (Exception e){
+            return ResultInfo.of(ResultCode.FAILED);
+        }
     }
 
     /**

@@ -358,7 +358,7 @@
 			$("#nav li").on('click',function(){
 				$(this).addClass('navActive').siblings().removeClass('navActive');  // 头部导航切换效果
 			});
-			
+            $("#nav li").first().click();
 			var bar = document.getElementById("rightList");
 			Sortable.create(bar, {group: 'shared',onEnd:function(){
 					//  拖拽排序回调函数

@@ -1,5 +1,5 @@
 package cn.net.colin.quartz;
-import cn.net.colin.model.quartzManage.SysQuzrtz;
+import cn.net.colin.model.quartzManage.SysQuartz;
 import cn.net.colin.quartz.util.QuartzManager;
 import cn.net.colin.service.quartzManage.ISysQuzrtzService;
 import org.quartz.*;
@@ -10,14 +10,9 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Package: cn.net.colin.quartz
@@ -38,10 +33,10 @@ public class InitTask implements ApplicationRunner {
     public void run(ApplicationArguments var) throws Exception{
         Map<String,Object> quartzParams = new HashMap<String,Object>();
         quartzParams.put("running",1);//查询状态为“启动”的任务
-        List<SysQuzrtz> sysQuzrtzList = sysQuzrtzService.selectByParamsWithBlobs(quartzParams);
-        if(sysQuzrtzList != null && sysQuzrtzList.size() > 0){
-            for(int i=0;i<sysQuzrtzList.size();i++){
-                SysQuzrtz sysQuzrtz = sysQuzrtzList.get(i);
+        List<SysQuartz> sysQuartzList = sysQuzrtzService.selectByParamsWithBlobs(quartzParams);
+        if(sysQuartzList != null && sysQuartzList.size() > 0){
+            for(int i=0;i<sysQuartzList.size();i++){
+                SysQuartz sysQuzrtz = sysQuartzList.get(i);
                 try{ //一个任务添加失败，不影响其他任务
                     QuartzManager.addJob(scheduler, sysQuzrtz.getQuartzname()+"_"+sysQuzrtz.getId(), Class.forName(sysQuzrtz.getClazzname()), sysQuzrtz.getCron(),sysQuzrtz.getParams());
                 }catch (Exception e){

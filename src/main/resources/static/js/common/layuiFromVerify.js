@@ -243,6 +243,51 @@ layui.use(['form' ], function(){
             }*/
 
         }
+        //Cron表达式格式校验
+        ,cronCheck: function(value){
+            if(!$.isEmpty(value)) {
+                var cronCheckParams = {};
+                cronCheckParams.cronVal = value;
+                var checkFlag = true;
+                $.ajax({
+                    async: false,
+                    url: Common.ctxPath + 'common/cronCheck',
+                    type: 'GET',
+                    data: cronCheckParams,
+                    dataType: "json",
+                    success: function (rsp) {
+                        if (rsp.returnCode != '0') {////0 验证通过，1 验证失败
+                            checkFlag = false;
+                        }
+                    }
+                });
+                if (!checkFlag) {
+                    return "时间表达式有误，请仔细检查！";
+                }
+            }
+        }
+        ,isJson: function(value){
+            if(!$.isEmpty(value)){
+                var jsonParams = {};
+                jsonParams.jsonVal = value;
+                var checkFlag = true;
+                $.ajax({
+                    async: false,
+                    url: Common.ctxPath + 'common/jsonCheck',
+                    type: 'GET',
+                    data: jsonParams,
+                    dataType: "json",
+                    success: function (rsp) {
+                        if (rsp.returnCode != '0') {////0 验证通过，1 验证失败
+                            checkFlag = false;
+                        }
+                    }
+                });
+                if (!checkFlag) {
+                    return "json格式有误，请仔细检查！";
+                }
+            }
+        }
 
     });
 
@@ -289,5 +334,4 @@ function getRootPath(){
     else {
         return window.location.protocol + '//' + window.location.host + '/' + webName;
     }
-
 }

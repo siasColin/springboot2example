@@ -46,12 +46,12 @@ $(function(){
                 ,{field: 'clazzname', title: '任务类名'}
                 ,{field: 'running', title: '任务状态',templet: function(d){
                     if(d.running == 1){
-                        return "启用";
+                        return '<span style="color: green">已启用</span>';
                     }else if(d.running == 0){
-                        return "禁用";
+                        return '<span style="color: red">已禁用</span>';
                     }
                 }}
-                ,{fixed: 'right',  align:'center', toolbar: '#barRolelist',width:130}
+                ,{fixed: 'right',  align:'center', toolbar: '#barQuartzlist',width:230}
             ]]
         });
 
@@ -63,11 +63,11 @@ $(function(){
             switch(obj.event){
                 case 'add':
                     layer.open({
-                        title:"角色信息",
+                        title:"新增任务",
                         type: 2,
-                        area: ['75%','90%'],
+                        area: ['60%','80%'],
                         btn: ['保存', '取消'],
-                        content: Common.ctxPath+'roleManage/role',
+                        content: Common.ctxPath+'quartzManage/quartz',
                         yes: function(index,layero){
                             // 获取iframe层的body
                             var body = layer.getChildFrame('body', index);
@@ -91,7 +91,7 @@ $(function(){
                         var params = {};
                         params.ids = ids;
                         Common.openConfirm("确定删除吗?",function () {
-                            Common.ajax('roleManage/role',params,true,'DELETE',search);
+                            Common.ajax('quartzManage/quartz',params,true,'DELETE',search);
                         });
                     }
                     break;
@@ -107,15 +107,15 @@ $(function(){
                 var params = {};
                 params.ids = data.id;
                 Common.openConfirm("确定删除吗?",function () {
-                    Common.ajax('roleManage/role',params,true,'DELETE',search);
+                    Common.ajax('quartzManage/quartz',params,true,'DELETE',search);
                 })
             } else if(layEvent === 'edit'){
                 layer.open({
-                    title:"角色信息",
+                    title:"修改任务",
                     type: 2,
-                    area: ['75%','90%'],
+                    area: ['60%','80%'],
                     btn: ['修改', '取消'],
-                    content: Common.ctxPath+'roleManage/role/'+data.id,
+                    content: Common.ctxPath+'quartzManage/quartz/'+data.id,
                     yes: function(index,layero){
                         // 获取iframe层的body
                         var body = layer.getChildFrame('body', index);
@@ -124,7 +124,17 @@ $(function(){
 
                     }
                 });
+            }else if(layEvent === 'changeRunning'){//启用或禁用任务
+                Common.ajax('quartzManage/quartz/'+data.id,null,true,'PUT',changeRunningResult);
             }
+        });
+        table.on('edit(quartzTable)', function(obj){
+            // console.log(obj.value);
+            // console.log(obj.field);
+            // console.log(obj.data);
+            var params = {};
+            params.cron = obj.value;
+            Common.ajax('quartzManage/quartzCron/'+obj.data.id,params,true,'PUT',updateCron);
         });
         $("#chongzhi").click(function () {
             $("input").val("");
@@ -133,12 +143,28 @@ $(function(){
 });
 function search(){
     var quartzname = $('#quartzname');
+    var running = $('#running');
     roleTable.reload({
         page: {
             curr: 1 //重新从第 1 页开始
         }
         ,where: {
-            quartzname: quartzname.val()
+            quartzname: quartzname.val(),
+            running: running.val()
         }
     });
+}
+
+function changeRunningResult(data){
+    if(data == 1){
+        Common.success("启用成功");
+    }else if(data == 0){
+        Common.success("禁用成功");
+    }
+    search();
+}
+
+function updateCron(){
+    Common.success("修改成功");
+    search();
 }
