@@ -51,6 +51,8 @@ $(function(){
                         return '<span style="color: red">已禁用</span>';
                     }
                 }}
+                ,{field: 'exp1', title: '上次执行开始时间'}
+                ,{field: 'exp2', title: '上次执行结束时间'}
                 ,{fixed: 'right',  align:'center', toolbar: '#barQuartzlist',width:230}
             ]]
         });
