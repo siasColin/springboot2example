@@ -96,8 +96,6 @@ function setSecondMenu(data){
                 if(urlPa.indexOf("http") != 0 || urlPa.indexOf("https") != 0){
                     urlPa = Common.ctxPath+urlPa;
                 }
-                    urlPa = Common.ctxPath+urlPa;
-                }
                 html += '<li onclick="setIframeSrc(\''+urlPa+'\',3,this,\''+moduleTarget+'\')"><a href="javascript:void(0);"><i class="icon-double-angle-right"></i>'+thirdMenu[j].moduleName+'</a></li>';
             }
             html+='</ul>';
