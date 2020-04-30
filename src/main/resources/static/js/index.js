@@ -77,7 +77,7 @@ function setSecondMenu(data){
         var secondmenuurl = secondMenu[i].moduleUrl;
 
         //判断如果不是以http开头,说明是系统内菜单，加上项目路径
-        if(secondmenuurl.indexOf("http") != 0){
+        if(secondmenuurl.indexOf("http") != 0 || secondmenuurl.indexOf("https") != 0){
             secondmenuurl = Common.ctxPath+secondmenuurl;
         }
         //如果有三级菜单，拼接三级菜单
@@ -93,7 +93,9 @@ function setSecondMenu(data){
             html+='<ul class="submenu">';
             for(var j=0;j<thirdMenu.length;j++){
                 var urlPa = thirdMenu[j].moduleUrl;
-                if(secondmenuurl.indexOf("http") != 0){
+                if(urlPa.indexOf("http") != 0 || urlPa.indexOf("https") != 0){
+                    urlPa = Common.ctxPath+urlPa;
+                }
                     urlPa = Common.ctxPath+urlPa;
                 }
                 html += '<li onclick="setIframeSrc(\''+urlPa+'\',3,this,\''+moduleTarget+'\')"><a href="javascript:void(0);"><i class="icon-double-angle-right"></i>'+thirdMenu[j].moduleName+'</a></li>';
