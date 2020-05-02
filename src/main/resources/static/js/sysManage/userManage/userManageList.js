@@ -85,7 +85,7 @@ $(function(){
                         return "锁定";
                     }
                 }}
-                ,{fixed: 'right',  align:'center', toolbar: '#barRolelist',width:130}
+                ,{fixed: 'right',  align:'center', toolbar: '#barUserlist',width:130}
             ]]
         });
 
