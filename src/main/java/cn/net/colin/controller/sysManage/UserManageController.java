@@ -126,6 +126,26 @@ public class UserManageController {
     }
 
     /**
+     * 更新用户头像
+     * @param user
+     * @return
+     */
+    @PutMapping("/userHeadImg")
+    @ResponseBody
+    public ResultInfo updateHeadImg(SysUser user){
+        SysUser sysUser = SpringSecurityUtil.getPrincipal();
+        if (sysUser != null){
+            user.setId(sysUser.getId());
+        }
+        int num = sysUserService.updateByPrimaryKeySelective(user);
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        if(num > 0){
+            resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,user);
+        }
+        return resultInfo;
+    }
+
+    /**
      * 根据id集合，删除用户
      * @param ids
      * @return

@@ -11,6 +11,7 @@
         <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber"/>
         <result column="user_email" jdbcType="VARCHAR" property="userEmail"/>
         <result column="org_code" jdbcType="VARCHAR" property="orgCode"/>
+        <result column="head_img" jdbcType="VARCHAR" property="headImg"/>
         <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"/>
         <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp"/>
         <result column="user_status" jdbcType="INTEGER" property="userStatus"/>
@@ -28,6 +29,7 @@
         <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber"/>
         <result column="user_email" jdbcType="VARCHAR" property="userEmail"/>
         <result column="org_code" jdbcType="VARCHAR" property="orgCode"/>
+        <result column="head_img" jdbcType="VARCHAR" property="headImg"/>
         <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"/>
         <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp"/>
         <result column="user_status" jdbcType="INTEGER" property="userStatus"/>
@@ -38,7 +40,7 @@
 
     <sql id="Base_Column_List">
     id, login_name, password/*, admin_flag*/, user_name, user_gender, phone_number, user_email,
-    org_code, last_login_time, last_login_ip,user_status, create_user, create_time
+    org_code,head_img, last_login_time, last_login_ip,user_status, create_user, create_time
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMapExt">
         select
@@ -114,12 +116,12 @@
     <insert id="insert" parameterType="cn.net.colin.model.sysManage.SysUser">
     insert into sys_user (id, login_name, password, 
       /*admin_flag, */user_name, user_gender,
-      phone_number, user_email, org_code, 
+      phone_number, user_email, org_code,head_img,
       last_login_time, last_login_ip,user_status, create_user,
       create_time)
     values (#{id,jdbcType=BIGINT}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       /*#{adminFlag,jdbcType=INTEGER},*/ #{userName,jdbcType=VARCHAR}, #{userGender,jdbcType=INTEGER},
-      #{phoneNumber,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+      #{phoneNumber,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR},
       #{lastLoginTime,jdbcType=TIMESTAMP}, #{lastLoginIp,jdbcType=VARCHAR},#{userStatus,jdbcType=INTEGER}, #{createUser,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
@@ -152,6 +154,9 @@
             </if>
             <if test="orgCode != null">
                 org_code,
+            </if>
+            <if test="headImg != null">
+                head_img,
             </if>
             <if test="lastLoginTime != null">
                 last_login_time,
@@ -197,6 +202,9 @@
             <if test="orgCode != null">
                 #{orgCode,jdbcType=VARCHAR},
             </if>
+            <if test="headImg != null">
+                #{headImg,jdbcType=VARCHAR},
+            </if>
             <if test="lastLoginTime != null">
                 #{lastLoginTime,jdbcType=TIMESTAMP},
             </if>
@@ -217,7 +225,7 @@
     <insert id="insertBatch" parameterType="java.util.List">
         insert into sys_user (id, login_name, password,
         /*admin_flag,*/ user_name, user_gender,
-        phone_number, user_email, org_code,
+        phone_number, user_email, org_code,head_img,
         last_login_time, last_login_ip, user_status,
         create_user, create_time)
         values
@@ -226,7 +234,7 @@
             /*#{item.adminFlag,jdbcType=INTEGER},*/ #{item.userName,jdbcType=VARCHAR},
             #{item.userGender,jdbcType=INTEGER},
             #{item.phoneNumber,jdbcType=VARCHAR}, #{item.userEmail,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR},
-            #{item.lastLoginTime,jdbcType=TIMESTAMP}, #{item.lastLoginIp,jdbcType=VARCHAR},
+            #{headImg,jdbcType=VARCHAR},#{item.lastLoginTime,jdbcType=TIMESTAMP}, #{item.lastLoginIp,jdbcType=VARCHAR},
             #{userStatus,jdbcType=INTEGER},
             #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP})
         </foreach>
@@ -234,7 +242,7 @@
     <insert id="insertBatchSelective" parameterType="java.util.List">
         insert into sys_user
         (id, login_name, password, /*admin_flag,*/ user_name, user_gender, phone_number, user_email,
-        org_code, last_login_time, last_login_ip,user_status, create_user, create_time)
+        org_code,head_img,last_login_time, last_login_ip,user_status, create_user, create_time)
         values
         <foreach collection="list" index="index" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -290,6 +298,12 @@
                     #{item.orgCode,jdbcType=VARCHAR},
                 </if>
                 <if test="item.orgCode == null">
+                    NULL,
+                </if>
+                <if test="item.headImg != null">
+                    #{item.headImg,jdbcType=VARCHAR},
+                </if>
+                <if test="item.headImg == null">
                     NULL,
                 </if>
                 <if test="item.lastLoginTime != null">
@@ -352,6 +366,9 @@
             <if test="orgCode != null">
                 org_code = #{orgCode,jdbcType=VARCHAR},
             </if>
+            <if test="headImg != null">
+                head_img = #{headImg,jdbcType=VARCHAR},
+            </if>
             <if test="lastLoginTime != null">
                 last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
             </if>
@@ -380,6 +397,7 @@
       phone_number = #{phoneNumber,jdbcType=VARCHAR},
       user_email = #{userEmail,jdbcType=VARCHAR},
       org_code = #{orgCode,jdbcType=VARCHAR},
+      head_img = #{headImg,jdbcType=VARCHAR},
       last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
       last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
       user_status = #{userStatus,jdbcType=INTEGER},

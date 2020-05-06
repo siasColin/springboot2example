@@ -113,6 +113,11 @@ public class SysUser implements Serializable, UserDetails {
      */
     private String orgName;
 
+    /**
+     * 头像
+     */
+    private String headImg = "/image/boy-01.png";
+
 
     /** 
      * 获取 主键ID sys_user.id
@@ -416,6 +421,16 @@ public class SysUser implements Serializable, UserDetails {
 
     public void setOrgName(String orgName) {
         this.orgName = orgName;
+    }
+
+    public String getHeadImg() {
+        return headImg;
+    }
+
+    public void setHeadImg(String headImg) {
+        if(headImg != null && !headImg.trim().equals("")){
+            this.headImg = headImg;
+        }
     }
 
     @Override

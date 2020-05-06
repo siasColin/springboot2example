@@ -143,3 +143,37 @@ function setIframeSrc(url,menulevel,obj,moduleTarget){
         $(obj).addClass("active");
     }
 }
+$(function(){
+    layui.use('upload', function() {
+        var upload = layui.upload;
+        //上传头像
+        var headImgUploadInst = upload.render({
+            elem: '#headImg'
+            ,url: Common.ctxPath+'common/uploadSingle'
+            ,accept: 'images' //普通文件
+            ,acceptMime: 'image/*'
+            ,field:'file'
+            ,data: {"prefixPath": 'headImg'}
+            ,before: function () {
+                Common.load();
+            }
+            ,done: function(res){
+                Common.closeload();
+                if(res.returnCode == '0'){//成功
+                    $("#headImg").attr("src",Common.ctxPath+res.data.fileUrl);
+                    var headImg = res.data.fileUrl;
+                    var params = {};
+                    params.headImg = headImg;
+                    //更新数据库
+                    Common.ajax('userManage/userHeadImg',params,true,'PUT',null);
+                }else{
+                    Common.info(res.returnMessage);
+                }
+            }
+            ,error: function(){
+                Common.closeload();
+                Common.info("请求异常");
+            }
+        });
+    });
+})

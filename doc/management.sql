@@ -11,7 +11,7 @@
  Target Server Version : 50527
  File Encoding         : 65001
 
- Date: 19/04/2020 12:51:23
+ Date: 06/05/2020 13:31:25
 */
 
 SET NAMES utf8mb4;
@@ -50,10 +50,11 @@ CREATE TABLE `article_info`  (
   `type_id` bigint(20) NOT NULL COMMENT '分类id',
   `info_title` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标题',
   `info_abstract` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '摘要',
-  `info_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '内容',
-  `info_attachments` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附件',
+  `info_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '内容',
+  `info_tags` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '标签（多个逗号分隔）',
+  `info_attachments` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附件',
   `info_amount` int(11) NOT NULL DEFAULT 0 COMMENT '阅读量',
-  `info_coverimg` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '封面图片',
+  `info_coverimg` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '封面图片',
   `info_open` int(11) NOT NULL DEFAULT 1 COMMENT '是否公开 0仅自己 1公开',
   `info_iscomment` int(11) NOT NULL DEFAULT 1 COMMENT '是否开启评论 0关闭 1开启',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
@@ -247,12 +248,11 @@ CREATE TABLE `sys_quartz`  (
 -- ----------------------------
 -- Records of sys_quartz
 -- ----------------------------
-INSERT INTO `sys_quartz` VALUES (1, '测试1', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 1, '{\"name\":\"sxf\"}', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `sys_quartz` VALUES (2, '测试2', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 1, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `sys_quartz` VALUES (3, '测试3', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 1, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_quartz` VALUES (1, '测试1', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, '{\"name\":\"sxf\"}', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_quartz` VALUES (2, '测试2', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `sys_quartz` VALUES (4, '测试4', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `sys_quartz` VALUES (5, '测试5', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `sys_quartz` VALUES (6, '测试6', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_quartz` VALUES (5, '测试5', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 1, NULL, '2020-05-06 13:27:30', '2020-05-06 13:27:30', NULL, NULL, NULL);
+INSERT INTO `sys_quartz` VALUES (6, '测试6', '0 30 * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -355,6 +355,7 @@ CREATE TABLE `sys_user`  (
   `user_gender` int(11) NOT NULL COMMENT '性别(0 男，1 女)',
   `phone_number` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '电话号码',
   `user_email` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
+  `head_img` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '头像',
   `org_code` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '关联机构表机构编码',
   `last_login_time` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
   `last_login_ip` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '最后登录IP',
@@ -373,8 +374,8 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '$2a$10$Jw923tUCmRkkvZ/tv2YdYO3UKLN934VHz1ssADyxyPSM43sUWeAR6', '管理员', 0, '18037570119', '1540247870@qq.com', '41000041601000', '2020-03-07 15:13:43', '192.168.0.135', 0, 'admin', '2020-03-07 15:13:59');
-INSERT INTO `sys_user` VALUES (404200473187385344, '111', '$2a$10$JxXZS2P7uFfrlduW3PfVde9HyZmtSnC4vwK0uX7OW7LeQ5RARXEmq', '111', 0, '18037570101', '', '41000041601000', NULL, NULL, 0, 'admin', '2020-03-29 11:15:12');
+INSERT INTO `sys_user` VALUES (1, 'admin', '$2a$10$Jw923tUCmRkkvZ/tv2YdYO3UKLN934VHz1ssADyxyPSM43sUWeAR6', '管理员', 0, '18037570119', '1540247870@qq.com', 'uploadfile/headImg/boy-13.png', '41000041601000', '2020-03-07 15:13:43', '192.168.0.135', 0, 'admin', '2020-03-07 15:13:59');
+INSERT INTO `sys_user` VALUES (404200473187385344, '111', '$2a$10$JxXZS2P7uFfrlduW3PfVde9HyZmtSnC4vwK0uX7OW7LeQ5RARXEmq', '111', 0, '18037570101', '', NULL, '41000041601000', NULL, NULL, 0, 'admin', '2020-03-29 11:15:12');
 
 -- ----------------------------
 -- Table structure for sys_user_role
