@@ -33,7 +33,7 @@ public class OrgManageController {
     private ISysOrgService sysOrgService;
 
     @GetMapping("/orglist")
-    public String arealist(){
+    public String orglist(){
         return "sysManage/orgManage/orgManageList";
     }
 
@@ -89,7 +89,7 @@ public class OrgManageController {
      */
     @GetMapping("/orgOnCode/{orgcode}")
     @ResponseBody
-    public ResultInfo areaOnCode(@PathVariable("orgcode") String orgcode){
+    public ResultInfo orgOnCode(@PathVariable("orgcode") String orgcode){
         SysOrg sysOrg = sysOrgService.selectByOrgCode(orgcode);
         return ResultInfo.ofData(ResultCode.SUCCESS,sysOrg);
     }
@@ -102,7 +102,7 @@ public class OrgManageController {
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH')")
     @PostMapping("/org")
     @ResponseBody
-    public ResultInfo saveArea(SysOrg sysOrg){
+    public ResultInfo saveOrg(SysOrg sysOrg){
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         //父级ID为空，查询parentcode=-1的记录，默认parentcode=-1为根节点。如果没有记录那么新增节点作为根节点
         if(sysOrg.getParentCode() == null && (sysOrg.getParentCode() != null && sysOrg.getParentCode().trim().equals(""))){
@@ -131,7 +131,7 @@ public class OrgManageController {
      */
     @GetMapping("/org/{orgid}")
     @ResponseBody
-    public ResultInfo area(@PathVariable("orgid") String orgid){
+    public ResultInfo org(@PathVariable("orgid") String orgid){
         SysOrg sysOrg = sysOrgService.selectByPrimaryKey(Long.parseLong(orgid));
         return ResultInfo.ofData(ResultCode.SUCCESS,sysOrg);
     }

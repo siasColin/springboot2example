@@ -38,7 +38,7 @@ public class OperatetypeController {
      */
     @GetMapping("/operatetypeList")
     @ResponseBody
-    public ResultInfo areaListTree() throws IOException {
+    public ResultInfo operatetypeList() throws IOException {
         Map<String,Object> paramMap = new HashMap<String,Object>();
         List<SysOperatetype> operatetypeList = sysOperatetypeService.selectByParams(paramMap);
         return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,operatetypeList,operatetypeList.size());
@@ -52,7 +52,7 @@ public class OperatetypeController {
      */
     @GetMapping("/operatetypeList/{roleid}")
     @ResponseBody
-    public ResultInfo areaListTree(@PathVariable("roleid") String roleid) throws IOException {
+    public ResultInfo operatetypeList(@PathVariable("roleid") String roleid) throws IOException {
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("roleid",Long.parseLong(roleid));
         List<Long> operatetypeidList = sysOperatetypeService.selectOperatetypeidListByRoleid(paramMap);

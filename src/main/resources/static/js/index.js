@@ -143,7 +143,31 @@ function setIframeSrc(url,menulevel,obj,moduleTarget){
         $(obj).addClass("active");
     }
 }
+
+function showMsgBox(){
+    layer.open({
+        id:"msgbox",
+        type: 2,
+        title: '消息中心',
+        shadeClose: true,
+        shade: false,
+        maxmin: true, //开启最大化最小化按钮
+        area: ['893px', '600px'],
+        content: Common.ctxPath+'articleManage/msgbox'
+    });
+    $("#msgcount").text('');
+}
+function msgBoxCount(){
+    Common.ajax("articleManage/msgboxcount",null,true,"GET",function (data) {
+        if(data.count > 0){
+            var count = data.count > 99 ? '99+': data.count+'';
+            $("#msgcount").text(count);
+        }
+
+    })
+}
 $(function(){
+    msgBoxCount();
     layui.use('upload', function() {
         var upload = layui.upload;
         //上传头像

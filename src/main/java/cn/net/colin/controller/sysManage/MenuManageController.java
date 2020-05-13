@@ -5,9 +5,7 @@ import cn.net.colin.common.exception.entity.ResultInfo;
 import cn.net.colin.common.util.SnowflakeIdWorker;
 import cn.net.colin.common.util.SpringSecurityUtil;
 import cn.net.colin.model.common.TreeNode;
-import cn.net.colin.model.sysManage.SysArea;
 import cn.net.colin.model.sysManage.SysModulelist;
-import cn.net.colin.model.sysManage.SysOrg;
 import cn.net.colin.model.sysManage.SysUser;
 import cn.net.colin.service.sysManage.ISysModullistService;
 import org.slf4j.Logger;
@@ -38,7 +36,7 @@ public class MenuManageController {
     private ISysModullistService sysModullistService;
 
     @GetMapping("/menulist")
-    public String arealist(){
+    public String menulist(){
         return "sysManage/menuManage/menuManageList";
     }
 
@@ -65,7 +63,7 @@ public class MenuManageController {
      * @return
      */
     @GetMapping("/menutree/{type}")
-    public String arealist(@PathVariable("type") String type){
+    public String menulist(@PathVariable("type") String type){
         /**
          * type:
          *      none 普通ztree页面
@@ -89,7 +87,7 @@ public class MenuManageController {
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH')")
     @PostMapping("/menu")
     @ResponseBody
-    public ResultInfo saveArea(SysModulelist sysModulelist){
+    public ResultInfo saveMenu(SysModulelist sysModulelist){
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         //父级ID为空，查询pid=-1的记录，默认pid=-1为根节点。如果没有记录那么新增节点作为根节点
         if(sysModulelist.getPid() == null){
@@ -118,7 +116,7 @@ public class MenuManageController {
      */
     @GetMapping("/menu/{id}")
     @ResponseBody
-    public ResultInfo area(@PathVariable("id") String id){
+    public ResultInfo menu(@PathVariable("id") String id){
         SysModulelist sysModulelist = sysModullistService.selectByPrimaryKey(Long.parseLong(id));
         return ResultInfo.ofData(ResultCode.SUCCESS,sysModulelist);
     }
@@ -157,7 +155,7 @@ public class MenuManageController {
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')")
     @DeleteMapping("/menu/{id}")
     @ResponseBody
-    public ResultInfo deleteArea(@PathVariable("id") Long id){
+    public ResultInfo deleteMenu(@PathVariable("id") Long id){
         int num = sysModullistService.deleteByPrimaryKey(id);
         ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
         if(num > 0){

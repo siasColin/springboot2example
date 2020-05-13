@@ -1,0 +1,92 @@
+@charset "utf-8";
+a, a:link { color: #8b8b8b; text-decoration: none; }
+a:visited {  }
+a:active, a:hover { text-decoration:none; }
+a:focus { outline: none; }
+
+.back_page{overflow: hidden}
+.back_page .title_{    font-size: 2.4em;  font-weight: bold;  padding: 2% 0;  border-top: 2px solid #000;}
+.text_mod{display: block    ;background: #fff;   box-shadow: 1px 1px 18px 1px #000;width: 96%;margin: 0 auto;height: 190px;outline: 1px solid #ccc;font-size: 1.5em;  line-height: 20px;  padding: 1.5%;  box-sizing: border-box;  text-indent: 2em; outline: none;}
+
+.back_page .btn_{     box-shadow: 1px 1px 9px 1px #000; width: 100px;  background: #5a8dff;  text-align: center;  height: 30px;  line-height: 30px;  border-radius: 4px;  color: #fff;  font-size: 15px;  font-weight: bold;  margin: 2% 2%;  }
+.back_page .btn_:hover{ cursor: pointer}
+.back_page_btm{}
+.back_page_btm{}/*border-top: 1px solid #ccc;*/
+.sub_back{position: relative;   width: 100%;  margin: 0 auto; overflow: hidden; border: 1px solid #ccc;  margin: 1% auto;}
+.left_user{ ;   float: left;  width: 10%;  height: 80px;     text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    /* margin-top: 11%; */
+    color: #ffffff;
+    line-height: 40px;
+    text-shadow: -1px 3px 24px #000000;
+    padding: 8px;
+box-sizing: border-box;
+    
+}
+.right_usertext{float: left;  width: 90%;  box-sizing: border-box;  padding: 1%;  font-size: 1.3em;}
+.right_usertext .txt_{word-wrap: break-word;overflow: auto;line-height: 22px;}
+.right_usertext .time_{   font-size: 0.7em;  width: 100%;  text-align: right;margin-top: 10px;}
+.right_usertext .time_ .span_01{color: red;}
+.right_usertext .time_ .span_02{    display: inline-block;  margin: 0 1%;float: left !important;font-size: 12px;color: #8b8b8b;}
+.right_usertext .time_ .span_03{    color: #2581b9;}
+.right_usertext .time_ .span_03:hover{cursor: pointer}
+.right_usertext .time_ .span_04{    color: #2581b9;}
+/*点击回复后的弹出框*/
+.tosub_back{    margin-top: 1%;display: none;text-align: left;  width: 95%;  margin-left: 5%;  background: #f2f2f2;  border: 1px solid #ccc; padding: 1%;  box-sizing: border-box;}
+.tosub_text{border: 1px solid #ccc; padding: 1%;  box-sizing: border-box;    margin: 1% 0;font-size: 1.0em;}
+.tosub_text .tosub_txt{word-wrap: break-word;  overflow: auto;color: #8b8b8b;line-height: 22px;}
+.tosub_text .sub_time{    text-align: right; margin-top: 10px;}
+
+.tosub_me{padding: 1%;  box-sizing: border-box;}
+.tosub_me>p{    text-align: right;  color: #5a8dff;  font-weight: bold;  width: 106px;  border: 1px solid #ccc; border-radius: 19%;  text-align: center;  background: #fff; /* float: right; */ margin-left: 80%;  margin-bottom: 0.6%;  }
+.tosub_me .sub_btn{width: 57px;  background: #5a8dff;  text-align: center;  padding: 4px 0;  font-size: 13px;  border-radius: 3px; color: #fff;  font-weight: bold; /* float: right; */  margin: 1%;  margin-left: 87%; margin-top: 2%;}
+.tosub_metext{width: 99%;border: 1px solid #ccc;  height: 57px;  background: #fff;overflow: auto;}
+
+.tosub_me_out{box-sizing: border-box;}
+.tosub_me_out .sub_btn{cursor: pointer;width: 57px;  background: #5a8dff;  text-align: center;  padding: 4px 0;  font-size: 13px;  border-radius: 3px; color: #fff;  font-weight: bold;  float: right;  margin: 1%;  margin-left: 90%; }
+
+.sub_callback{color:#196fb3;}
+.sub_callback:hover{cursor: pointer}
+.sub_user {
+    font-size: 1em;
+    color: #339b53;
+}
+
+.comment-size-name{
+    font-size: 0.7em;
+    color: #339b53;
+}
+.my-pl-con{
+	font-size: 0.7em;
+    width: 100%;
+}
+.pull-left{
+	float: left !important;
+}
+.date-dz-line{
+    padding: 0 15px;
+}
+.delec{
+	cursor: pointer;
+}
+.date-dz-z-click-red{
+	width: 17px;
+    height: 17px;
+    display: block;
+    float: left;
+    background-image: url(../image/icon-all_01.png);
+    background-repeat: no-repeat;
+    background-position: -6px -198px;
+    margin-right: 5px;
+}
+
+.z-num {
+    font-style: normal;
+}
+.date-dz-z-click {
+    color: #b83b44 !important;
+}
+.red {
+    background-position: -6px -119px !important;
+}

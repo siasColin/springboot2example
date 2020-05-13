@@ -69,15 +69,15 @@ public class CommonController {
             result.put("contentType", file.getContentType());
             result.put("fileName", file.getOriginalFilename());
             result.put("fileSize", file.getSize() + "");
-            result.put("fileUrl", "uploadfile/"+prefixPath+"/"+file.getOriginalFilename());
             File targetFile = new File(upload.getAbsolutePath() +separator+ file.getOriginalFilename());
+            String fileName =file.getOriginalFilename();
             if(targetFile.exists()) {//如果文件存在，重命名文件
-                String fileName =file.getOriginalFilename();
                 fileName = fileName.substring(0,fileName.lastIndexOf("."))+
                         "_"+DateUtils.date2Str(DateUtils.yyyymmddhhmmss)+
                         fileName.substring(fileName.lastIndexOf("."));
                 targetFile = new File(upload.getAbsolutePath() +separator+ fileName);
             }
+            result.put("fileUrl", "uploadfile/"+prefixPath+"/"+fileName);
             // TODO Spring Mvc 提供的写入方式
             file.transferTo(targetFile);
             resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,result);
@@ -142,21 +142,24 @@ public class CommonController {
      */
     @ResponseBody
     @RequestMapping("/downFile")
-    public Object downFile(HttpServletRequest request, HttpServletResponse response, String filepath)  {
+    public Object downFile(HttpServletResponse response, String filepath,String filename)  {
         try {
             filepath = java.net.URLDecoder.decode(filepath,"UTF-8");
             //兼容windows,linux分隔符
             String fileSeperator = File.separator;
             //物理路径地址头
-            String basePath = request.getServletContext().getRealPath("/");// 获取tomcat跟路径
+//            String basePath = request.getServletContext().getRealPath("/");// 获取tomcat跟路径
+            String basePath = GetServerRealPathUnit.getPath("static");
             String path=basePath+fileSeperator+filepath;
             File file=new File(path);
-            String fileName = file.getName();
+            if(filename == null || (filename != null && filename.trim().equals(""))){
+                filename = file.getName();
+            }
             //解决乱码
-            fileName = URLEncoder.encode(fileName, "UTF-8");
+            filename = URLEncoder.encode(filename, "UTF-8");
             response.reset();
             // 设置文件名称
-            response.setHeader("content-disposition", "attachment;fileName=\""+fileName+"\"");
+            response.setHeader("content-disposition", "attachment;fileName=\""+filename+"\"");
             response.setContentType("application/octet-stream");
             response.setHeader("content-type", "application/octet-stream");
             FileInputStream in = new FileInputStream(path);

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
+    <title>文章类型管理</title>
+    <link rel="stylesheet" th:href="@{/plugin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/plugin/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/common/dasui.css}">
+    <style>
+        body{margin: 10px;}
+    </style>
+</head>
+<body>
+<div class="demoTable">
+    类型名称：
+    <div class="layui-inline">
+        <input class="layui-input" name="typeName" id="typeName" autocomplete="off">
+    </div>
+    <button class="layui-btn" onclick="search();" id="findBy">搜索</button>
+    <button type="reset" class="layui-btn" id="chongzhi">重置</button>
+</div>
+
+
+<table class="layui-hide" id="articleTypeList" lay-filter="articleTypeTable"></table>
+
+<script type="text/html" id="info_toolbar">
+    <div class="layui-btn-container">
+        <div class="layui-inline" title="新增" lay-event="add"
+             sec:authorize="hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH')">
+            <i class="layui-icon layui-icon-add-1"></i>
+        </div>
+        <div class="layui-inline" title="删除" lay-event="delete"
+             sec:authorize="hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')">
+            <i class="layui-icon layui-icon-delete"></i>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="bararticleTypeList">
+    <a class="layui-btn layui-btn-xs" lay-event="edit" sec:authorize="hasAnyAuthority('ADMIN_AUTH','UPDATE_AUTH')">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" sec:authorize="hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')">删除</a>
+</script>
+
+<script th:src="@{/js/jquery-2.1.4.min.js}"></script>
+<script th:src="@{/plugin/layui/layui.js}"></script>
+<script th:src="@{/plugin/layui/xm-select.js}"></script>
+<script th:src="@{/js/common/layuiFromVerify.js}"></script>
+<script th:src="@{/plugin/zTree_v3/js/jquery.ztree.all.js}"></script>
+<script th:src="@{/js/common/common.js}"></script>
+<script th:src="@{/js/articleManage/articleTypeList.js}"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        form.render();
+    });
+</script>
+</body>

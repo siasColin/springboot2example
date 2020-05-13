@@ -45,8 +45,14 @@
 									<p id="testt">2018年8月15日</p>
 									<p>星期三</p>
 								</li>-->
+								<li style="display: flex;align-items: center;cursor: pointer;" onclick="showMsgBox();">
+									<span style="padding: 0 10px;">
+										<i class="layui-icon layui-icon-notice" style="color: #ffffff;font-size: 24px;"></i>
+										<span id="msgcount" class="layui-badge-dot" style="border-radius: 10px;vertical-align: top;left: -5px;padding: 0 5px !important;width: auto;height: auto;"></span>
+									</span>
+								</li>
 								<li>
-									<img id="headImg" th:src="@{${#authentication.principal.headImg}}" src="@{/image/boy-01.png}" style="border-radius: 50%;width: 50px;height: 50px;margin-top: 3px;cursor: pointer;">
+									<img id="headImg" th:src="@{/{headImg}(headImg=${#authentication.principal.headImg})}" src="image/boy-01.png" style="border-radius: 50%;width: 50px;height: 50px;margin-top: 3px;cursor: pointer;">
 								</li>
 								<li class="userName">
 									<!--<span>艾美儿，欢迎你！</span>-->

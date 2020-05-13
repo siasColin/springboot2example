@@ -116,7 +116,7 @@ public class SysUser implements Serializable, UserDetails {
     /**
      * 头像
      */
-    private String headImg = "/image/boy-01.png";
+    private String headImg = "image/boy-01.png";
 
 
     /** 

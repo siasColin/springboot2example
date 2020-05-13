@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
+    <title>文章浏览</title>
+    <link rel="stylesheet" th:href="@{/plugin/layui/css/layui.css}" media="all" />
+    <link rel="stylesheet" th:href="@{/css/backpage.css}" type="text/css" />
+    <style type="text/css">
+        *{margin:0;padding:0 5;}
+
+        .contentdiv{width:800px;
+            height:200px;
+            margin:100px auto;
+
+        }
+        abbr{text-decoration:none;
+            color:#52f7f2;
+        }
+    </style>
+</head>
+<body>
+<div class="contentdiv" >
+    <input type="hidden" id="sysUserId" th:value="${#authentication.principal == 'anonymousUser' ? '' : #authentication.principal.id}"/>
+    <input type="hidden" id="articleUserId" th:value="${articleInfo.userId}"/>
+    <input type="hidden" id="articleId" th:value="${articleInfo.id}"/>
+    <h1 style="font-family:'楷体';" th:text="${articleInfo.infoTitle}"></h1>
+    <p class="cssp" style="color:#ccc;padding: 8px 0;">
+        <abbr title="" th:text="${articleInfo.publishUser.userName}">&nbsp;&nbsp;</abbr>
+        <span th:text="${#dates.format(articleInfo.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+        &nbsp;&nbsp;阅读量:<span style="color: #52f7f2;" th:text="${articleInfo.infoAmount}"></span>
+        <a href="javascript:void(0);" class="date-dz-z" style="float: right !important;line-height:17px;"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">666</i>)</a>
+    </p>
+    <p class="cssp"style="background:#f2f2f2;width:800px;line-height:35px;padding: 10px;"><b>摘要:</b> [[${articleInfo.infoAbstract}]] </p>
+
+    <div id="infoContent" style="margin-top: 20px;">
+        [(${articleInfo.infoContent})]
+        <p>
+            <br/>
+        </p>
+    </div>
+
+    <div th:if="${articleInfo.infoIscomment == 1}" class="tosub_me_out" style="overflow: hidden;">
+        <textarea class="tosub_metext" id="container" name="content" cols="30" rows="10" placeholder=""></textarea>
+        <div class="sub_btn" onclick="publish_content()">评论</div>
+    </div>
+    <div th:if="${articleInfo.infoIscomment == 1}" class="back_page_btm" id="divHtml">
+
+    </div>
+    <h1></h1>
+</div>
+<script th:src="@{/js/jquery-2.1.4.min.js}"></script>
+<script th:src="@{/plugin/layui/layui.js}"></script>
+<script th:src="@{/js/common/common.js}"></script>
+<script th:src="@{/js/articleManage/articleView.js}"></script>
+<script th:src="@{/plugin/ueditor/ueditor.parse.js}"></script>
+<script>
+    setTimeout(function(){uParse('#infoContent',
+        {
+            'highlightJsUrl':Common.ctxPath+'/plugin/ueditor/third-party/SyntaxHighlighter/shCore.js',
+            'highlightCssUrl':Common.ctxPath+'/plugin/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css'})
+    },300);
+    var divHtml = $("#divHtml");
+    if(divHtml != undefined){
+        loadcomment();
+    }
+</script>
+</body>

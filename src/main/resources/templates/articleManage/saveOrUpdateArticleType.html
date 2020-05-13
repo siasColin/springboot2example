@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
+    <title>角色管理</title>
+    <link rel="stylesheet" th:href="@{/plugin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/plugin/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/common/dasui.css}">
+    <style>
+        body{margin: 10px;}
+        .demo-carousel{height: 200px; line-height: 200px; text-align: center;}
+
+        @media  screen and (max-width: 1366px) {
+            #area_tree{
+                height:630px;
+            }
+        }
+        .span-red{
+            margin: 5px;
+            color:red;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-container">
+    <form id="form1" class="layui-form" check="article_type" style="margin-top: 4%">
+        <input id="id" name="id" type="hidden" th:if="${articleType!=null}" th:value="${articleType.id}"/>
+        <div class="layui-form-item" hidden>
+            <div class="layui-input-block">
+                <button id="permissionSubmit" class="layui-btn" lay-submit lay-filter="save">
+                    保存
+                </button>
+            </div>
+        </div>
+        <!-- 第一行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>类型名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="typeName" name="typeName" th:value="${articleType!=null}?${articleType.typeName}" lay-verify="required|dasLength" daslength="10" placeholder="请输入类型名" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+        <!-- 第二行 -->
+        <div class="layui-row">
+            <div class="layui-col-xs2">　</div>
+            <div class="layui-col-xs8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="span-red">*</span>类型编码</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="typeCode" name="typeCode" tableColumn="type_code" th:value="${articleType!=null}?${articleType.typeCode}" lay-verify="required|dasLength|repeatCheck" daslength="50" placeholder="请输入类型编码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs2">　</div>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/jquery-2.1.4.min.js}"></script>
+<script th:src="@{/plugin/layui/layui.js}"></script>
+<script th:src="@{/plugin/layui/xm-select.js}"></script>
+<script th:src="@{/js/common/layuiFromVerify.js}"></script>
+<script th:src="@{/plugin/zTree_v3/js/jquery.ztree.all.js}"></script>
+<script th:src="@{/js/common/common.js}"></script>
+<script th:src="@{/js/articleManage/saveOrUpdateArticleType.js}"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        form.render();
+    });
+</script>
+</body>
+</html>

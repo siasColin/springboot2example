@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
+    <title>发布文章</title>
+    <link rel="stylesheet" th:href="@{/plugin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/plugin/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/common/dasui.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugin/tagsinput/css/jquery.tagsinput.min.css}" />
+    <style>
+        body{margin: 5px;}
+    </style>
+</head>
+<body>
+<div th:class="${articleInfo != null ? 'layui-fluid' : ''}">
+<form id="form1" class="layui-form layui-form-pane">
+    <input id="id" name="id" type="hidden" th:value="${(articleInfo != null && articleInfo.id != null) ? articleInfo.id : ''}"/>
+    <div class="layui-form-item" hidden>
+        <div class="layui-input-block">
+            <button id="permissionSubmit" class="layui-btn" lay-submit lay-filter="save">
+                保存
+            </button>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md3">
+            <div class="layui-row">
+                <div class="layui-col-md11" style="text-align: center;">
+                    <input type="hidden" id="infoCoverimg" name="infoCoverimg" th:value="${(articleInfo != null && articleInfo.infoCoverimg != null) ? articleInfo.infoCoverimg : ''}"/>
+                    <img id="showimg" th:src="@{/{infoCoverimg}(infoCoverimg=${(articleInfo != null && articleInfo.infoCoverimg != null && articleInfo.infoCoverimg != '') ? articleInfo.infoCoverimg : 'image/temp.png'})}" style="outline:1px solid #ccc;width: 100%;cursor: pointer;max-height: 200px;" />
+                </div>
+                <div class="layui-col-md1"></div>
+            </div>
+            <br/>
+            <div class="layui-row">
+                <div class="layui-col-md11">
+                    <div class="layui-form-item" pane="">
+                        <label class="layui-form-label"><span class="span-red">*</span>是否公开</label>
+                        <div class="layui-input-block">
+                            <input th:checked="${articleInfo == null} ? true : ${articleInfo.infoOpen == 1}" type="radio" name="infoOpen" value="1" title="公开" checked>
+                            <input th:checked="${articleInfo != null}?${articleInfo.infoOpen == 0}" type="radio" name="infoOpen" value="0" title="私有">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md1"></div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md11">
+                    <div class="layui-form-item" pane="">
+                        <label class="layui-form-label"><span class="span-red">*</span>开启评论</label>
+                        <div class="layui-input-block">
+                            <input th:checked="${articleInfo == null} ? true : ${articleInfo.infoIscomment == 1}" type="radio" name="infoIscomment" value="1" title="开启" checked>
+                            <input th:checked="${articleInfo != null}?${articleInfo.infoIscomment == 0}" type="radio" name="infoIscomment" value="0" title="关闭">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md1"></div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md11">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><span class="span-red">*</span>选择分类</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" id="editTypeId" th:value="${(articleInfo != null && articleInfo.typeId != null) ? articleInfo.typeId : ''}"/>
+                            <select name="typeId" id="typeId" lay-verify="required">
+                                <option value="">请选择分类</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md1"></div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md11">
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">标签（回车结束）</label>
+                        <div class="layui-input-block">
+                            <textarea name="infoTags" id="infoTags" placeholder="请输入标签" class="layui-textarea" th:text="${(articleInfo != null && articleInfo.infoTags != null) ? articleInfo.infoTags : ''}"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md1"></div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md11">
+                    <div class="layui-upload">
+                        <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                            <div class="layui-upload-list">
+                                <input type="hidden" id="infoAttachments" name="infoAttachments" th:value="${(articleInfo != null && articleInfo.infoAttachments != null) ? articleInfo.infoAttachments : ''}"/>
+                                <input type="hidden" id="infoFilename" name="infoFilename" th:value="${(articleInfo != null && articleInfo.infoFilename != null) ? articleInfo.infoFilename : ''}"/>
+                                <span>附件：</span>
+                                <span id="infoAttachmentsFile">
+                                    <a th:if="${articleInfo != null && articleInfo.infoAttachments != null}" th:href="@{/common/downFile(filepath=${articleInfo.infoAttachments},filename=${articleInfo.infoFilename})}" th:text="${(articleInfo != null && articleInfo.infoFilename != null) ? articleInfo.infoFilename : '附件'}" href="javascript:void(0)">附件</a><i th:if="${articleInfo != null && articleInfo.infoAttachments != null}" onclick="removeAttachment();" class="layui-icon layui-icon-delete" style="font-size: 24px; color: #1E9FFF;vertical-align: bottom;cursor: pointer"></i>
+                                </span>
+                            </div>
+                        </blockquote>
+                        <button type="button" class="layui-btn" id="infoAttachmentsButton">上传附件</button>
+                    </div>
+                </div>
+                <div class="layui-col-md1"></div>
+            </div>
+        </div>
+        <div class="layui-col-md9">
+            <div class="layui-row">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><span class="span-red">*</span>标题</label>
+                        <div class="layui-input-block">
+                            <input th:value="${(articleInfo != null && articleInfo.infoTitle != null) ? articleInfo.infoTitle : ''}" type="text" id="infoTitle" name="infoTitle" lay-verify="required|dasLength" daslength="20" placeholder="请输入标题" autocomplete="off" class="layui-input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">摘要</label>
+                        <div class="layui-input-block">
+                            <textarea th:text="${(articleInfo != null && articleInfo.infoAbstract != null) ? articleInfo.infoAbstract : ''}" name="infoAbstract" id="infoAbstract" style="min-height: 80px;" placeholder="请输入摘要" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md12">
+                    <textarea th:text="${(articleInfo != null && articleInfo.infoContent != null) ? articleInfo.infoContent : ''}" id="infoContent" name="infoContent" style="height: 420px;" lay-verify="required"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="layui-row" th:if="${articleInfo == null}">
+        <div class="layui-col-md12" style="text-align: center;">
+            <button type="button" id="articleSubmit" class="layui-btn" onclick="saveArticle();">
+                保存
+            </button>
+        </div>
+    </div>
+</form>
+</div>
+<script th:src="@{/js/jquery-2.1.4.min.js}"></script>
+<script th:src="@{/plugin/layui/layui.js}"></script>
+<script th:src="@{/plugin/layui/xm-select.js}"></script>
+<script th:src="@{/js/common/layuiFromVerify.js}"></script>
+<script th:src="@{/plugin/zTree_v3/js/jquery.ztree.all.js}"></script>
+<script th:src="@{/js/common/common.js}"></script>
+<script th:src="@{/js/articleManage/saveOrUpdateArticle.js}"></script>
+<script th:src="@{/plugin/ueditor/ueditor.config.js}" type="text/javascript" charset="utf-8" src="ueditor.config.js"></script>
+<script th:src="@{/plugin/ueditor/ueditor.all.min.js}" type="text/javascript" charset="utf-8" src="ueditor.all.min.js"> </script>
+<script th:src="@{/plugin/tagsinput/js/jquery.tagsinput.min.js}"></script>
+<!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+<!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+<script th:src="@{/plugin/ueditor/lang/zh-cn/zh-cn.js}" type="text/javascript" charset="utf-8" src="lang/zh-cn/zh-cn.js"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        form.render();
+    });
+    var ueConfig={
+        autoHeightEnabled: false,
+        toolbars: [
+            [
+                'fullscreen', 'source', '|', 'undo', 'redo', '|',
+                'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+                'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+                'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
+                'directionalityltr', 'directionalityrtl', 'indent', '|',
+                'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
+                'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
+                'simpleupload', 'insertimage', 'emotion', 'scrawl', 'insertvideo', 'music', 'map', 'insertframe', 'insertcode', 'pagebreak', 'template', 'background', '|',
+                'horizontal', 'date', 'time', 'spechars', 'wordimage', '|',
+                'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
+                'print', 'preview', 'searchreplace', 'drafts', 'help'
+            ]
+        ]
+    };
+    //实例化编辑器
+    var ue = UE.getEditor('infoContent',ueConfig);
+    $('#infoTags').tagsInput();
+</script>
+</body>

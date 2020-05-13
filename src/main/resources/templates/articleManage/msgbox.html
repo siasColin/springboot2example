@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>消息盒子</title>
+    <style>
+        .layim-msgbox {
+            margin: 15px;
+        }
+
+        .layim-msgbox li {
+            position: relative;
+            margin-bottom: 10px;
+            padding: 0 0 0 60px;
+            line-height: 22px;
+            border-bottom: 1px dotted #e2e2e2;
+        }
+
+        .layim-msgbox .layim-msgbox-tips {
+            margin: 0;
+            padding: 10px 0;
+            border: none;
+            text-align: center;
+            color: #999;
+        }
+
+        .layim-msgbox .layim-msgbox-system {
+            padding: 0 10px 10px 10px;
+        }
+
+        .layim-msgbox li p span {
+            padding-left: 5px;
+            color: #999;
+        }
+
+        .layim-msgbox li p em {
+            font-style: normal;
+            color: #FF5722;
+        }
+
+        .layim-msgbox-avatar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 50px;
+        }
+
+        .layim-msgbox-user {
+            padding-top: 5px;
+        }
+
+        .layim-msgbox-content {
+            margin-top: 3px;
+        }
+
+        .layim-msgbox .layui-btn-small {
+            padding: 0 15px;
+            margin-left: 5px;
+        }
+
+        .layim-msgbox-btn {
+            position: absolute;
+            right: 0;
+            top: 12px;
+            color: #999;
+        }
+    </style>
+    <link rel="stylesheet" th:href="@{/plugin/layui/css/layui.css}" media="all">
+</head>
+<body>
+
+<ul class="layim-msgbox" id="msgbox_view">
+
+</ul>
+
+<script th:src="@{/js/jquery-2.1.4.min.js}" src="../static/js/jquery-2.1.4.min.js"></script>
+<script th:src="@{/plugin/layui/layui.js}"></script>
+<script th:src="@{/js/common/common.js}"></script>
+<script th:src="@{/js/articleManage/msgbox.js}"></script>
+
+</body>
+</html>
