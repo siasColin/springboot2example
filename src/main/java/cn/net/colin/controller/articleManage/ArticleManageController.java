@@ -8,6 +8,7 @@ import cn.net.colin.model.articleManage.*;
 import cn.net.colin.model.sysManage.SysUser;
 import cn.net.colin.service.articleManage.IArticleCommentService;
 import cn.net.colin.service.articleManage.IArticleInfoService;
+import cn.net.colin.service.articleManage.IArticleLikesService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -36,6 +37,9 @@ public class ArticleManageController {
 
     @Autowired
     private IArticleCommentService articleCommentService;
+
+    @Autowired
+    private IArticleLikesService articleLikesService;
 
     /**
      * 跳转到文章发布页面
@@ -167,6 +171,19 @@ public class ArticleManageController {
     public String articleView(@PathVariable("articleId") long articleId, Map<String,Object> modelMap){
         ArticleInfo articleInfo = articleInfoService.selectByPrimaryKey(articleId);
         modelMap.put("articleInfo",articleInfo);
+        int isLike = 0;//当前登录用户是否已点赞，0 未点赞 1 已点赞
+        SysUser sysUser = SpringSecurityUtil.getPrincipal();
+        if(sysUser != null && sysUser.getId() != null){
+            ArticleLikesCriteria articleLikesCriteria = new ArticleLikesCriteria();
+            ArticleLikesCriteria.Criteria criteria = articleLikesCriteria.createCriteria();
+            criteria.andUserIdEqualTo(sysUser.getId());
+            criteria.andInfoIdEqualTo(articleId);
+            long count = articleLikesService.countByExample(articleLikesCriteria);
+            if(count > 0){
+                isLike = 1;
+            }
+        }
+        modelMap.put("isLike",isLike);
         //查询评论信息
         /*ArticleCommentCriteria articleCommentCriteria = new ArticleCommentCriteria();
         articleCommentCriteria.setOrderByClause("id asc");
@@ -358,7 +375,6 @@ public class ArticleManageController {
     public ResultInfo msgboxcount(){
         ResultInfo resultInfo = ResultInfo.of(ResultCode.SUCCESS);
         Map<String,Long> countMap = new HashMap<String,Long>();
-        countMap.put("count",0l);
         try{
             SysUser sysUser = SpringSecurityUtil.getPrincipal();
             List<ArticleComment> listComment = new ArrayList<ArticleComment>();
@@ -378,6 +394,78 @@ public class ArticleManageController {
         return resultInfo;
     }
 
+    /**
+     * 点赞
+     * @param articleLikes
+     * @return
+     */
+    @PostMapping("/likes")
+    @ResponseBody
+    public ResultInfo likes(ArticleLikes articleLikes){
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        try{
+            SysUser sysUser = SpringSecurityUtil.getPrincipal();
+            if(sysUser != null && sysUser.getId() != null){
+                articleLikes.setId(SnowflakeIdWorker.generateId());
+                articleLikes.setCreateTime(new Date());
+                articleLikes.setUserId(sysUser.getId());
+                int num = articleLikesService.insertSelective(articleLikes);
+                if(num > 0){
+                    resultInfo = ResultInfo.of(ResultCode.SUCCESS);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return resultInfo;
+    }
+
+    /**
+     * 取消点赞
+     * @param infoId
+     * @return
+     */
+    @DeleteMapping("/likes/{infoId}")
+    @ResponseBody
+    public ResultInfo deleteLikes(@PathVariable("infoId") Long infoId){
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        try{
+            SysUser sysUser = SpringSecurityUtil.getPrincipal();
+            if(sysUser != null && sysUser.getId() != null){
+                ArticleLikesCriteria articleLikesCriteria = new ArticleLikesCriteria();
+                ArticleLikesCriteria.Criteria criteria = articleLikesCriteria.createCriteria();
+                criteria.andUserIdEqualTo(sysUser.getId());
+                criteria.andInfoIdEqualTo(infoId);
+                int num = articleLikesService.deleteByExample(articleLikesCriteria);
+                resultInfo = ResultInfo.of(ResultCode.SUCCESS);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return resultInfo;
+    }
+
+    /**
+     * 消息中心消息数量
+     * @return
+     */
+    @GetMapping("/likescount/{infoId}")
+    @ResponseBody
+    public ResultInfo likescount(@PathVariable("infoId") Long infoId) {
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.SUCCESS);
+        Map<String, Long> countMap = new HashMap<String, Long>();
+        try{
+            ArticleLikesCriteria articleLikesCriteria = new ArticleLikesCriteria();
+            ArticleLikesCriteria.Criteria criteria = articleLikesCriteria.createCriteria();
+            criteria.andInfoIdEqualTo(infoId);
+            long count = articleLikesService.countByExample(articleLikesCriteria);
+            countMap.put("count",count);
+            resultInfo = ResultInfo.ofData(ResultCode.SUCCESS,countMap);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return resultInfo;
+    }
 
 
 }

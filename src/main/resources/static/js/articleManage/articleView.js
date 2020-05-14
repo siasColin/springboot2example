@@ -2,19 +2,31 @@ var _header = $("meta[name='_csrf_header']").attr("content");
 var _token =$("meta[name='_csrf']").attr("content");
 $(function(){
     $('.date-dz-z').on('click',function(){
+        var sysUserId = $("#sysUserId").val();
+        if($.isEmpty(sysUserId)){
+            alert("请先登录！");
+            return false;
+        }
+        var articleInfoId = $("#articleId").val();
         var obj = $(this);
         var zNum = obj.find('.z-num').html();
         if(obj.is('.date-dz-z-click')){
             zNum--;
-            obj.removeClass('date-dz-z-click red');
+            obj.removeClass('date-dz-z-click');
             obj.find('.z-num').html(zNum);
             obj.find('.date-dz-z-click-red').removeClass('red');
+            Common.ajax('articleManage/likes/'+articleInfoId,null,true,'DELETE',null);
         }else {
             zNum++;
             obj.addClass('date-dz-z-click');
             obj.find('.z-num').html(zNum);
             obj.find('.date-dz-z-click-red').addClass('red');
+            Common.ajax('articleManage/likes',{"infoId":articleInfoId},true,'POST',null);
         }
+    });
+    //加载点赞数量
+    Common.ajax('articleManage/likescount/'+$("#articleId").val(),null,true,'GET',function (data) {
+        $('.date-dz-z').find('.z-num').html(data.count);
     });
 })
 function reply1(obj,keyid,touserid){

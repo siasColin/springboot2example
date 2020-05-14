@@ -34,7 +34,7 @@
         <abbr title="" th:text="${articleInfo.publishUser.userName}">&nbsp;&nbsp;</abbr>
         <span th:text="${#dates.format(articleInfo.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
         &nbsp;&nbsp;阅读量:<span style="color: #52f7f2;" th:text="${articleInfo.infoAmount}"></span>
-        <a href="javascript:void(0);" class="date-dz-z" style="float: right !important;line-height:17px;"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">666</i>)</a>
+        <a href="javascript:void(0);" th:class="${isLike == 1 ? 'date-dz-z date-dz-z-click' : 'date-dz-z'}" class="date-dz-z" style="float: right !important;line-height:17px;"><i th:class="${isLike == 1 ? 'date-dz-z-click-red red' : 'date-dz-z-click-red'}" class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)</a>
     </p>
     <p class="cssp"style="background:#f2f2f2;width:800px;line-height:35px;padding: 10px;"><b>摘要:</b> [[${articleInfo.infoAbstract}]] </p>
 
