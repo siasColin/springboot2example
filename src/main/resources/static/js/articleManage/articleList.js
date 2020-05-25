@@ -32,9 +32,9 @@ $(function(){
             ,height: "full-135"
             ,limit:10
             ,method:'GET'
-            ,url: Common.ctxPath+'articleManage/articleListData/1' //数据接口
+            ,url: Common.ctxPath+'articleManage/articleListData/0' //数据接口
             ,parseData :parseDataFun
-            ,title: '已发布文章列表'
+            ,title: '文章列表'
             ,page: true //开启分页
             ,toolbar: '#info_toolbar' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
             ,defaultToolbar: ['filter', 'print']
@@ -104,22 +104,6 @@ $(function(){
                 Common.openConfirm("确定删除吗?",function () {
                     Common.ajax('articleManage/article/'+data.id,null,true,'DELETE',search);
                 })
-            } else if(layEvent === 'edit'){
-                layer.open({
-                    title:"编辑文章",
-                    type: 2,
-                    area: ['75%','90%'],
-                    btn: ['修改', '取消'],
-                    //maxmin: true, //开启最大化最小化按钮
-                    content: Common.ctxPath+'articleManage/article/'+data.id,
-                    yes: function(index,layero){
-                        // 获取iframe层的body
-                        var body = layer.getChildFrame('body', index);
-                        // 找到隐藏的提交按钮模拟点击提交
-                        body.find('#permissionSubmit').click();
-
-                    }
-                });
             }
         });
         $("#chongzhi").click(function () {

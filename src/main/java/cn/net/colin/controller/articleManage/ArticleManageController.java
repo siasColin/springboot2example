@@ -86,13 +86,13 @@ public class ArticleManageController {
      * @param paramMap
      *      typeId 分类id
      *      infoTitle 标题（模糊查询）
-     *
+     * @param own 1 返回自己发布的， 0 表示管理员登录，返回所有
      * @return ResultInfo 自定义结果返回实体类
      * @throws IOException
      */
-    @GetMapping("/myArticleListData")
+    @GetMapping("/articleListData/{own}")
     @ResponseBody
-    public ResultInfo myArticleListData(@RequestParam Map<String,Object> paramMap) throws IOException {
+    public ResultInfo articleListData(@RequestParam Map<String,Object> paramMap,@PathVariable("own") int own) throws IOException {
         int pageNum = paramMap.get("page") == null ? 1 : Integer.parseInt(paramMap.get("page").toString());
         int pageSize = paramMap.get("limit") == null ? 10 : Integer.parseInt(paramMap.get("limit").toString());
         ArticleInfoCriteria articleInfoCriteria = new ArticleInfoCriteria();
@@ -104,9 +104,17 @@ public class ArticleManageController {
         if(paramMap.get("infoTitle") != null){
             criteria.andInfoTitleLike("%"+paramMap.get("infoTitle").toString().trim()+"%");
         }
-        SysUser sysUser = SpringSecurityUtil.getPrincipal();
-        if(sysUser != null && sysUser.getId() != null){
-            criteria.andUserIdEqualTo(sysUser.getId());
+        if(own == 1){//查询自己发布的
+            SysUser sysUser = SpringSecurityUtil.getPrincipal();
+            if(sysUser != null && sysUser.getId() != null){
+                criteria.andUserIdEqualTo(sysUser.getId());
+            }else{
+                return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,null,0l);//没有登录，则返回空数据
+            }
+        }else{
+            if(!SpringSecurityUtil.hasRole("ADMIN_AUTH")) {//非管理员，没有获取权限
+                return  ResultInfo.of(ResultCode.STATUS_CODE_403);
+            }
         }
         PageHelper.startPage(pageNum,pageSize);
         List<ArticleInfo> articleList = articleInfoService.selectByExample(articleInfoCriteria);
@@ -114,6 +122,15 @@ public class ArticleManageController {
         return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,articleList,result.getTotal());
     }
 
+    /**
+     * 跳转到文章管理页面
+     * @return
+     */
+    @PreAuthorize("hasAnyAuthority('ADMIN_AUTH')")
+    @GetMapping("/articleList")
+    public String articleList(){
+        return "articleManage/articleList";
+    }
 
     /**
      * 跳转到文章更新页面
