@@ -201,6 +201,12 @@ public class ArticleManageController {
             }
         }
         modelMap.put("isLike",isLike);
+        //阅读量+1
+        ArticleInfo updateArticle = new ArticleInfo();
+        updateArticle.setId(articleId);
+        updateArticle.setInfoAmount(articleInfo.getInfoAmount()+1);
+        articleInfoService.updateByPrimaryKeySelective(updateArticle);
+
         //查询评论信息
         /*ArticleCommentCriteria articleCommentCriteria = new ArticleCommentCriteria();
         articleCommentCriteria.setOrderByClause("id asc");
