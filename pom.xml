@@ -92,6 +92,11 @@
 			<artifactId>pagehelper-spring-boot-starter</artifactId>
 			<version>1.2.13</version>
 		</dependency>
+		<!--整合spring-session-->
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-data-redis</artifactId>
+		</dependency>
 		<!--整合安全框架 springsecurity-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
