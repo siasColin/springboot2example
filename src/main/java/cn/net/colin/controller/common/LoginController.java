@@ -8,9 +8,13 @@ import cn.net.colin.service.sysManage.ISysModullistService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +29,23 @@ public class LoginController {
     private ISysModullistService sysModullistService;
 
     @RequestMapping("/loginerror")
-    public String loginerror(Map<String,Object> modelMap){
-        modelMap.put("msg","认证失败，请检查用户名或密码是否正确！");
+    public String loginerror(HttpServletRequest request, Map<String,Object> modelMap){
+        AuthenticationException authenticationException =
+                (AuthenticationException)request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
+        if (authenticationException instanceof UsernameNotFoundException || authenticationException instanceof BadCredentialsException) {
+            modelMap.put("msg","用户名或密码错误");
+        } else if (authenticationException instanceof DisabledException) {
+            modelMap.put("msg","用户已被禁用");
+        } else if (authenticationException instanceof LockedException) {
+            modelMap.put("msg","账户被锁定");
+        } else if (authenticationException instanceof AccountExpiredException) {
+            modelMap.put("msg","账户过期");
+        } else if (authenticationException instanceof CredentialsExpiredException) {
+            modelMap.put("msg","证书过期");
+        } else {
+            modelMap.put("msg","登录失败");
+        }
+//        modelMap.put("msg","认证失败，请检查用户名或密码是否正确！");
         return  "login";
     }
 
