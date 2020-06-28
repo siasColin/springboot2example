@@ -40,8 +40,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *      在需要缓存的方法上加响应注解例如：
  *          @Cacheable(cacheNames = "my-redis-cache2",keyGenerator ="keyGenerator")
  */
-//@Configuration
-//@EnableCaching // 开启缓存支持
+@Configuration
+@EnableCaching // 开启缓存支持
 public class RedisConfig extends CachingConfigurerSupport {
     @Resource
     private LettuceConnectionFactory lettuceConnectionFactory;

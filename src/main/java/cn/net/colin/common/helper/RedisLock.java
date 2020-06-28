@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  *                      }
  *                 }
  */
-//@Component
+@Component
 public class RedisLock {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

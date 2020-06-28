@@ -7,7 +7,7 @@ server:
 spring:
   profiles:
     # 使用单数据源环境(default) 需要禁用掉配置类：MultipleDataSourceConfig
-    active: default
+    active: withRedis
   thymeleaf:
   # 禁用缓存
     cache: false

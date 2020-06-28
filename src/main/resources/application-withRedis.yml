@@ -3,7 +3,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     #   数据源基本配置
-    url: jdbc:mysql://127.0.0.1:3306/management?allowMultiQueries=true&rewriteBatchedStatements=true&zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/management?allowMultiQueries=true&rewriteBatchedStatements=true&zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: root
@@ -42,6 +42,7 @@ spring:
         url-pattern: /*
         # 忽略过滤格式
         exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        aop-patterns: cn.net.colin.controller.*,cn.net.colin.service.*,cn.net.colin.mapper.*
   redis:
     database: 0
     host: 127.0.0.1

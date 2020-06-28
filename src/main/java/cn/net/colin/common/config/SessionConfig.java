@@ -9,8 +9,8 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  * @Date: 2020-6-18
  * @Description: spirngsession 配置类,结合redis可实现多模块建session共享
  */
-//@Configuration
+@Configuration
 //启用ResisSession存储
-//@EnableRedisHttpSession(maxInactiveIntervalInSeconds= 1800)
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds= 1800)
 public class SessionConfig {
 }

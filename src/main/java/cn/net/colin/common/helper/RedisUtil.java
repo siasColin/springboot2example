@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  *       redisTemplate.opsForSet();//操作set
  *       redisTemplate.opsForZSet();//操作有序se
  */
-//@Component
+@Component
 public final class RedisUtil {
     public static final String LOCK_PREFIX = "redis_lock";
     public static final int LOCK_EXPIRE = 1000*60*2; // ms
