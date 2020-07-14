@@ -24,8 +24,9 @@ import org.springframework.security.web.authentication.rememberme.TokenBasedReme
  * @Author: sxf
  * @Date: 2020-3-4
  * @Description: 安全配置
- * 开启方法注解支持，我们设置prePostEnabled = true是为了后面能够使用hasRole()这类表达式
+ * 开启方法注解支持，我们设置prePostEnabled = true，支持spring表达式注解 ，是为了后面能够使用hasRole()这类表达式
  *
+ * securedEnabled，SpringSecurity提供的注解，@Secured({"ROLE_ADMIN","ROLE_PRODUCT"})//SpringSecurity注解
  * 基于SpringBoot的spring-boot-starter-security
  * 我们可以看到自动配置类中导入了WebSecurityEnablerConfiguration，
  * 而WebSecurityEnablerConfiguration上已经加了 @EnableWebSecurity注解
