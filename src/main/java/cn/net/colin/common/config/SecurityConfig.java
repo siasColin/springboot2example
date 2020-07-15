@@ -81,6 +81,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http)throws Exception{
         http
+            .cors()
+            .and()
             //允许iframe加载同源的资源
             .headers().frameOptions().sameOrigin()
             //.headers().frameOptions().disable()
@@ -91,7 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             //允许访问的路径，但是依然会走spring security内部流程
             .antMatchers("/","/login","/loginerror","/authException","/error","/common/sessionInvalid",
-                    "/articleManage/articleView/*","/articleManage/comment/*","/test/*").permitAll()
+                    "/articleManage/articleView/*","/articleManage/comment/*","/test/*","/api/*").permitAll()
             //所有的请求需要认证即登陆后才能访问
             .anyRequest().authenticated()
             .and()
@@ -141,6 +143,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/plugin/**");
         web.ignoring().antMatchers("/json/**");
         web.ignoring().antMatchers("/uploadfile/**");
+        //Swagger2
+        web.ignoring(). antMatchers("/swagger-ui.html")
+                .antMatchers("/v2/**")
+                .antMatchers("/swagger-resources/**");
     }
 
 

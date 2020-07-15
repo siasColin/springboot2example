@@ -9,10 +9,10 @@ import cn.net.colin.model.common.Role;
 import cn.net.colin.model.sysManage.SysUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.*;
 
 import javax.servlet.FilterChain;
@@ -46,7 +46,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
                 Map<String,String> usermap = new ObjectMapper().readValue(request.getInputStream(), Map.class);
                 String username = usermap.get("username");
                 String password = usermap.get("password");
-                if (username.equals("") || password.equals("")){
+                if (checkNull(username) || checkNull(password)){
                     response(response,ResultCode.LOGIN_ERROR);
                 }else{
                     authRequest = new UsernamePasswordAuthenticationToken(username, password);
@@ -70,8 +70,8 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         user.setRoles((List<Role>) authResult.getAuthorities());
         //生成token，有效期10分钟
         String token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 10);
-        //再生成一个refresh_token，用于刷新token,有效期24小时
-        String refresh_token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 24*60);
+        //再生成一个refresh_token，用于刷新token,有效期2小时
+        String refresh_token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 2*60);
         //将两个Token写入response头信息中
         response.addHeader("Authorization", "Bearer "+token);
         response.addHeader("Refresh_token", refresh_token);
@@ -82,7 +82,19 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
      * 登录失败时返回给客户端提示信息
      */
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        response(response,ResultCode.LOGIN_ERROR);
+        ResultCode resultCode = ResultCode.USER_LOGINFAIL;
+        if (failed instanceof UsernameNotFoundException || failed instanceof BadCredentialsException) {
+            resultCode = ResultCode.LOGIN_ERROR;
+        } else if (failed instanceof DisabledException) {
+            resultCode = ResultCode.USER_DISABLED;
+        } else if (failed instanceof LockedException) {
+            resultCode = ResultCode.USER_LOCKED;
+        } else if (failed instanceof AccountExpiredException) {
+            resultCode = ResultCode.USER_ACCOUNTEXPIRED;
+        } else if (failed instanceof CredentialsExpiredException) {
+            resultCode = ResultCode.USER_CREDENTIALSEXPIRED;
+        }
+        response(response,resultCode);
     }
 
 
@@ -95,7 +107,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         PrintWriter out = null;
         try{
             response.setContentType("application/json;charset=utf-8");
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_OK);
             out = response.getWriter();
             ResultInfo resultInfo = ResultInfo.of(resultCode);
             out.write(JsonUtils.toString(resultInfo));
@@ -109,6 +121,10 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
             }
         }
 
+    }
+
+    private boolean checkNull(String value){
+        return value == null || (value != null &&("".equals(value.trim()) || "null".equalsIgnoreCase(value.trim())));
     }
 
 }

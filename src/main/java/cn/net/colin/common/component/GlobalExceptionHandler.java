@@ -3,6 +3,7 @@ package cn.net.colin.common.component;
 import cn.net.colin.common.exception.BusinessRuntimeException;
 import cn.net.colin.common.exception.entity.ResultInfo;
 import cn.net.colin.common.exception.entity.ResultCode;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -20,10 +21,14 @@ public class GlobalExceptionHandler {
             BusinessRuntimeException bex = (BusinessRuntimeException)e;
             result = ResultInfo.of(bex.getResultCode());
         }else{
-            if(e instanceof InvocationTargetException && e.getMessage() == null){
-                result.setReturnMessage(((InvocationTargetException) e).getTargetException().getMessage());
-            }else {
-                result.setReturnMessage(e.toString());
+            if(e instanceof AccessDeniedException){//没有权限
+                result = ResultInfo.of(ResultCode.STATUS_CODE_406);
+            }else{
+                if(e instanceof InvocationTargetException && e.getMessage() == null){
+                    result.setReturnMessage(((InvocationTargetException) e).getTargetException().getMessage());
+                }else {
+                    result.setReturnMessage(e.toString());
+                }
             }
         }
         /*result.setTotal(5l);

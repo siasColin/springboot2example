@@ -42,7 +42,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
     @Autowired
     private RsaKeyProperties prop;
 
-    private List<String> doUrls = new ArrayList<String>(Arrays.asList("/hello/\\S*"));
+    private List<String> doUrls = new ArrayList<String>(Arrays.asList("/hello/\\S*","/api/\\S*"));
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -91,8 +91,8 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
                             SecurityContextHolder.getContext().setAuthentication(authentication);
                             //生成新的token
                             String newToken = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 10);
-                            //再生成一个refresh_token，用于刷新token,有效期24小时
-                            String newRefresh_token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 24*60);
+                            //再生成一个refresh_token，用于刷新token,有效期2小时
+                            String newRefresh_token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 2*60);
                             //将两个Token写入response头信息中
                             response.addHeader("Authorization", "Bearer "+newToken);
                             response.addHeader("Refresh_token", newRefresh_token);
@@ -124,7 +124,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
         PrintWriter out = null;
         try{
             response.setContentType("application/json;charset=utf-8");
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_OK);
             out = response.getWriter();
             ResultInfo resultInfo = ResultInfo.of(resultCode);
             out.write(JsonUtils.toString(resultInfo));
