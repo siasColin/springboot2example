@@ -71,7 +71,8 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
                 try{
                     Payload<SysUser> payload = JwtUtils.getInfoFromToken(token, prop.getPublicKey(), SysUser.class);
                     SysUser user = payload.getUserInfo();
-                    if(user!=null){//验证通过
+                    //refreshToken_ 开头的是用于刷新的token
+                    if(user!=null && !user.getLoginName().startsWith("refreshToken_")){//验证通过
                         UserDetails userDetails = sysUserService.loadUserByUsername(user.getLoginName());
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -85,8 +86,9 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
                     try{
                         Payload<SysUser> payload = JwtUtils.getInfoFromToken(refresh_token, prop.getPublicKey(), SysUser.class);
                         SysUser user = payload.getUserInfo();
-                        if(user!=null){//验证通过
-                            UserDetails userDetails = sysUserService.loadUserByUsername(user.getLoginName());
+                        if(user!=null && user.getLoginName().startsWith("refreshToken_")){//验证通过
+                            String loginName = user.getLoginName().replace("refreshToken_","");
+                            UserDetails userDetails = sysUserService.loadUserByUsername(loginName);
                             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                             SecurityContextHolder.getContext().setAuthentication(authentication);
                             //生成新的token

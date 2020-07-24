@@ -20,6 +20,7 @@ import java.util.List;
  * @author sxf
  * date:2020/03/04 17:48
  */
+@JsonSerialize(include =  JsonSerialize.Inclusion.NON_NULL)
 public class SysUser implements Serializable, UserDetails {
     /** 
      * 串行版本ID

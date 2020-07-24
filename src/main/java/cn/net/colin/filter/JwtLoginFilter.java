@@ -47,7 +47,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
                 String username = usermap.get("username");
                 String password = usermap.get("password");
                 if (checkNull(username) || checkNull(password)){
-                    response(response,ResultCode.LOGIN_ERROR);
+                    response(response,ResultInfo.of(ResultCode.LOGIN_ERROR));
                 }else{
                     authRequest = new UsernamePasswordAuthenticationToken(username, password);
                 }
@@ -56,7 +56,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
             }
             return authenticationManager.authenticate(authRequest);
         }else{
-            response(response,ResultCode.CONTENT_TYPE_ERROR);
+            response(response,ResultInfo.of(ResultCode.CONTENT_TYPE_ERROR));
             return null;
         }
     }
@@ -66,16 +66,24 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
      */
     public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         SysUser user = new SysUser();
+        //添加需要放入token中的信息，登录名必须，其他按需添加
         user.setLoginName(authResult.getName());
-        user.setRoles((List<Role>) authResult.getAuthorities());
+//        user.setRoles((List<Role>) authResult.getAuthorities());
         //生成token，有效期10分钟
         String token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 10);
         //再生成一个refresh_token，用于刷新token,有效期2小时
-        String refresh_token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 2*60);
+        //重置登录账号，防止使用Refresh_token当做Authorization，Refresh_token 登录账号以 refreshToken_ 开头
+        SysUser refreshTokenUser = new SysUser();
+        refreshTokenUser.setLoginName("refreshToken_"+user.getLoginName());
+        String refresh_token = JwtUtils.generateTokenExpireInMinutes(refreshTokenUser, prop.getPrivateKey(), 2*60);
         //将两个Token写入response头信息中
         response.addHeader("Authorization", "Bearer "+token);
         response.addHeader("Refresh_token", refresh_token);
-        response(response,ResultCode.SUCCESS);
+        SysUser pSysUser = (SysUser) authResult.getPrincipal();
+        user.setUserName(pSysUser.getUserName());
+        user.setHeadImg(pSysUser.getHeadImg());
+        user.setRoles(null);
+        response(response,ResultInfo.ofData(ResultCode.SUCCESS,user));
     }
 
     /**
@@ -94,22 +102,22 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         } else if (failed instanceof CredentialsExpiredException) {
             resultCode = ResultCode.USER_CREDENTIALSEXPIRED;
         }
-        response(response,resultCode);
+        response(response,ResultInfo.of(resultCode));
     }
 
 
     /**
      * 给客户端返回提示数据
      * @param response
-     * @param resultCode
+     * @param resultInfo
      */
-    private void response(HttpServletResponse response,ResultCode resultCode){
+    private void response(HttpServletResponse response,ResultInfo resultInfo){
         PrintWriter out = null;
         try{
             response.setContentType("application/json;charset=utf-8");
             response.setStatus(HttpServletResponse.SC_OK);
             out = response.getWriter();
-            ResultInfo resultInfo = ResultInfo.of(resultCode);
+//            ResultInfo resultInfo = ResultInfo.of(resultCode);
             out.write(JsonUtils.toString(resultInfo));
             out.flush();
         }catch (Exception e){
