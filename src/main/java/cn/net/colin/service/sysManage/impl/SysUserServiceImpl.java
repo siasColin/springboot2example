@@ -9,6 +9,7 @@ import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.*;
 import cn.net.colin.service.sysManage.ISysOrgService;
 import cn.net.colin.service.sysManage.ISysUserService;
+import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,6 +154,9 @@ public class SysUserServiceImpl implements ISysUserService {
                 paramMap.put("orgList",orgList);
             }
         }
+        int pageNum = paramMap.get("page") == null ? 1 : Integer.parseInt(paramMap.get("page").toString());
+        int pageSize = paramMap.get("limit") == null ? 10 : Integer.parseInt(paramMap.get("limit").toString());
+        PageHelper.startPage(pageNum,pageSize);
         return this.sysUserMapper.selectByParams(paramMap);
     }
 

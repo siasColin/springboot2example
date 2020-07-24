@@ -56,9 +56,6 @@ public class UserManageController {
     @GetMapping("/userList")
     @ResponseBody
     public ResultInfo userList(@RequestParam Map<String,Object> paramMap) throws IOException {
-        int pageNum = paramMap.get("page") == null ? 1 : Integer.parseInt(paramMap.get("page").toString());
-        int pageSize = paramMap.get("limit") == null ? 10 : Integer.parseInt(paramMap.get("limit").toString());
-        PageHelper.startPage(pageNum,pageSize);
         List<SysUser> userList = sysUserService.selectByParams(paramMap);
         PageInfo<SysUser> result = new PageInfo(userList);
         return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,userList,result.getTotal());

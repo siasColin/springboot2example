@@ -58,9 +58,6 @@ public class RoleManageController {
     @GetMapping("/roleList")
     @ResponseBody
     public ResultInfo roleList(@RequestParam Map<String,Object> paramMap) throws IOException {
-        int pageNum = paramMap.get("page") == null ? 1 : Integer.parseInt(paramMap.get("page").toString());
-        int pageSize = paramMap.get("limit") == null ? 10 : Integer.parseInt(paramMap.get("limit").toString());
-        PageHelper.startPage(pageNum,pageSize);
         List<SysRole> roleList = sysRoleService.selectByParams(paramMap);
         PageInfo<SysRole> result = new PageInfo(roleList);
         return ResultInfo.ofDataAndTotal(ResultCode.SUCCESS,roleList,result.getTotal());
