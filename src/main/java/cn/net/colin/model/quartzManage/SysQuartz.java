@@ -44,19 +44,23 @@ public class SysQuartz implements Serializable {
      */ 
     private Integer running;
 
-    /** 
+    /**
+     * 上次任务开始执行时间
      */ 
     private String exp1;
 
-    /** 
+    /**
+     * 上次任务执行完成时间
      */ 
     private String exp2;
 
-    /** 
+    /**
+     * quartz定时任务的服务标识码，启动多个服务时用于区分一个任务属于哪个服务
      */ 
     private String exp3;
 
-    /** 
+    /**
+     * 当前服务的标识码，前端用于和exp3进行比较，判断是否允许修改和删除
      */ 
     private String exp4;
 

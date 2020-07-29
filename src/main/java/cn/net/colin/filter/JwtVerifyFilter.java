@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -42,7 +43,20 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
     @Autowired
     private RsaKeyProperties prop;
 
-    private List<String> doUrls = new ArrayList<String>(Arrays.asList("/hello/\\S*","/api/\\S*"));
+    /*private List<String> doUrls = new ArrayList<String>(Arrays.asList(
+            "/hello/\\S*",
+            "/api/\\S*"
+    ));*/
+    /**
+     * 支持 Apache Ant的样式路径，有三种通配符的匹配方式
+     *      ?（匹配任何单字符）
+     *      *（匹配0或者任意数量的字符）
+     *      **（匹配0或者更多的目录）
+     */
+    private List<String> doUrls = new ArrayList<String>(Arrays.asList(
+            "/hello/*",
+            "/api/**"
+    ));
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -53,7 +67,12 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
         for(String oneallowUrl:doUrls){//判断是否拦截
 //            Pattern mpattern = Pattern.compile(oneallowUrl);
 //            Matcher mmatcher = mpattern.matcher(uri);
-            if(Pattern.matches(oneallowUrl,uri)){
+            /*if(Pattern.matches(oneallowUrl,uri)){
+                doFlag = true;
+                break;
+            }*/
+            AntPathRequestMatcher matcher = new AntPathRequestMatcher(oneallowUrl);
+            if(matcher.matches(request)){//匹配上，则进行拦截
                 doFlag = true;
                 break;
             }

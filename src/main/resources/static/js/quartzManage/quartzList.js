@@ -53,7 +53,8 @@ $(function(){
                 }}
                 ,{field: 'exp1', title: '上次执行开始时间'}
                 ,{field: 'exp2', title: '上次执行结束时间'}
-                ,{fixed: 'right',  align:'center', toolbar: '#barQuartzlist',width:230}
+                ,{field: 'exp3', title: '服务编码'}
+                ,{fixed: 'right',  align:'center',title: '操作', toolbar: '#barQuartzlist',width:230}
             ]]
         });
 
@@ -84,10 +85,12 @@ $(function(){
                     } else {
                         var ids = "";
                         for(var i=0;i<data.length;i++){
-                            if(i == data.length - 1){
-                                ids+=data[i].id
-                            }else{
-                                ids+=data[i].id+',';
+                            if(data[i].exp3 === data[i].exp4){ // 只能删除当前服务的任务
+                                if(i == data.length - 1){
+                                    ids+=data[i].id
+                                }else{
+                                    ids+=data[i].id+',';
+                                }
                             }
                         }
                         var params = {};
@@ -134,9 +137,14 @@ $(function(){
             // console.log(obj.value);
             // console.log(obj.field);
             // console.log(obj.data);
-            var params = {};
-            params.cron = obj.value;
-            Common.ajax('quartzManage/quartzCron/'+obj.data.id,params,true,'PUT',updateCron);
+            if(obj.data.exp3 === obj.data.exp4){
+                var params = {};
+                params.cron = obj.value;
+                Common.ajax('quartzManage/quartzCron/'+obj.data.id,params,true,'PUT',updateCron);
+            }else{
+                Common.info('非当前服务的任务，编辑无效！')
+                return false
+            }
         });
         $("#chongzhi").click(function () {
             $("input").val("");
@@ -146,12 +154,14 @@ $(function(){
 function search(){
     var quartzname = $('#quartzname');
     var running = $('#running');
+    var exp3 = $('#exp3');
     roleTable.reload({
         page: {
             curr: 1 //重新从第 1 页开始
         }
         ,where: {
             quartzname: quartzname.val(),
+            exp3: exp3.val(),
             running: running.val()
         }
     });

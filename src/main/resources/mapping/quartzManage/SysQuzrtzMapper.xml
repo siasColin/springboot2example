@@ -23,7 +23,7 @@
     params
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-    select 
+    select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
@@ -38,8 +38,11 @@
       <if test="quartzname != null and quartzname != ''.toString()">
         and quartzname like '%${quartzname}%'
       </if>
-      <if test="running != null and running != ''.toString()">
+      <if test="running != null and running != ''">
         and running = #{running,jdbcType=INTEGER}
+      </if>
+      <if test="exp3 != null and exp3 != ''">
+        and exp3 = #{exp3,jdbcType=VARCHAR}
       </if>
     </where>
     order by running desc,id desc
@@ -54,8 +57,11 @@
       <if test="quartzname != null and quartzname != ''.toString()">
         and quartzname like '%${quartzname}%'
       </if>
-      <if test="running != null and running != ''.toString() or running == '0'.toString()">
+      <if test="running != null and running != ''">
         and running = #{running,jdbcType=INTEGER}
+      </if>
+      <if test="quartzWorkID != null and quartzWorkID != ''">
+        and exp3 = #{quartzWorkID,jdbcType=VARCHAR}
       </if>
     </where>
   </select>

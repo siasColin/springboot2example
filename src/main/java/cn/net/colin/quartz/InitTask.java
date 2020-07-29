@@ -6,6 +6,7 @@ import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -28,11 +29,14 @@ public class InitTask implements ApplicationRunner {
     private Scheduler scheduler;
     @Autowired
     private ISysQuzrtzService sysQuzrtzService;
+    @Value("${quartzWorkID}")
+    private String quartzWorkID;
 
     @Override
     public void run(ApplicationArguments var) throws Exception{
         Map<String,Object> quartzParams = new HashMap<String,Object>();
-        quartzParams.put("running",1);//查询状态为“启动”的任务
+        quartzParams.put("running","1");//查询状态为“启动”的任务
+        quartzParams.put("quartzWorkID",quartzWorkID);//只查询当前服务的任务
         List<SysQuartz> sysQuartzList = sysQuzrtzService.selectByParamsWithBlobs(quartzParams);
         if(sysQuartzList != null && sysQuartzList.size() > 0){
             for(int i=0;i<sysQuartzList.size();i++){

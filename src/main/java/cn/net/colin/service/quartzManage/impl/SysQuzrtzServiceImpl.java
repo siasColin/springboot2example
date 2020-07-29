@@ -7,6 +7,7 @@ import cn.net.colin.service.quartzManage.ISysQuzrtzService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,8 @@ import java.util.Map;
 public class SysQuzrtzServiceImpl implements ISysQuzrtzService {
     @Autowired
     private SysQuzrtzMapper sysQuzrtzMapper;
+    @Value("${quartzWorkID}")
+    private String quartzWorkID;
 
     private static final Logger logger = LoggerFactory.getLogger(SysQuzrtzServiceImpl.class);
 
@@ -42,12 +45,15 @@ public class SysQuzrtzServiceImpl implements ISysQuzrtzService {
     }
 
     public int insertSelective(SysQuartz record) {
+        record.setExp3(quartzWorkID);
         return this.sysQuzrtzMapper.insertSelective(record);
     }
 
     @Override
     public List<SysQuartz> selectByParams(Map<String, Object> paramMap) {
-        return this.sysQuzrtzMapper.selectByParams(paramMap);
+        List<SysQuartz> resultList = this.sysQuzrtzMapper.selectByParams(paramMap);
+        resultList.parallelStream().forEach(sq -> sq.setExp4(quartzWorkID));
+        return resultList;
     }
 
     @Override

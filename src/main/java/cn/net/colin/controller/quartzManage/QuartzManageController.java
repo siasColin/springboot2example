@@ -14,6 +14,7 @@ import org.quartz.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,8 @@ public class QuartzManageController {
     private ISysQuzrtzService sysQuzrtzService;
     @Autowired
     private Scheduler scheduler;
+    @Value("${quartzWorkID}")
+    private String quartzWorkID;
 
     @GetMapping("/quzrtzManagelist")
     public String quzrtzManagelist(){
@@ -142,6 +145,9 @@ public class QuartzManageController {
     @DeleteMapping("/quartz")
     @ResponseBody
     public ResultInfo deleteQuartz(Long [] ids){
+        if(ids ==  null || (ids != null && ids.length == 0)){
+            return ResultInfo.of(ResultCode.SUCCESS);
+        }
         //先查询要删除的任务集合，用于删除成功后从quartz定时任务中移除
         List<SysQuartz> sysQuartzList = sysQuzrtzService.selectByPrimaryKeys(ids);
         int num = sysQuzrtzService.deleteBatchByPrimaryKey(ids);
