@@ -5,9 +5,11 @@ server:
 #      timeout: 60m
 #    context-path: /springboot2example
 spring:
+  application:
+    name: springboot2example
   profiles:
     # 使用单数据源环境(default) 需要禁用掉配置类：MultipleDataSourceConfig
-    active: withRedis
+    active: dynamic
   thymeleaf:
   # 禁用缓存
     cache: false
@@ -67,7 +69,7 @@ logging:
   level:
     root: info
     cn.net.colin.common.util: debug
-    com.github.pagehelper: debug
+    com.github.pagehelper: info
     cn.net.colin.mapper.sysManage.SysUserMapper: debug
     cn.net.colin.mapper.quartzManage: debug
     cn.net.colin.mapper.articleManage.ArticleCommentMapper: debug

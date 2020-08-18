@@ -7,7 +7,7 @@ spring:
     druid:
       db1:
         #   数据源基本配置
-        url: jdbc:mysql://127.0.0.1:3306/webchatnew?allowMultiQueries=true&rewriteBatchedStatements=true&zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8&serverTimezone=UTC
+        url: jdbc:mysql://127.0.0.1:3306/management?allowMultiQueries=true&rewriteBatchedStatements=true&zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
         driver-class-name: com.mysql.jdbc.Driver
         username: root
         password: root
@@ -34,9 +34,25 @@ spring:
         #   合并多个DruidDataSource的监控数据
         useGlobalDataSourceStat: true
         connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+        stat-view-servlet:
+          enabled: true
+          login-username: admin
+          login-password: 123456
+          reset-enable: false
+          url-pattern: /druid/*
+        #        allow:
+        web-stat-filter:
+          session-stat-enable: true
+          enabled: true
+          profile-enable: true
+          # 添加过滤规则
+          url-pattern: /*
+          # 忽略过滤格式
+          exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        aop-patterns: cn.net.colin.controller.*,cn.net.colin.service.*,cn.net.colin.mapper.*
       db2:
         #   数据源基本配置
-        url: jdbc:mysql://127.0.0.1:3306/webchat?allowMultiQueries=true&rewriteBatchedStatements=true&zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8&serverTimezone=UTC
+        url: jdbc:mysql://127.0.0.1:6001/management?allowMultiQueries=true&rewriteBatchedStatements=true&zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
         driver-class-name: com.mysql.jdbc.Driver
         username: root
         password: root
@@ -63,5 +79,51 @@ spring:
         #   合并多个DruidDataSource的监控数据
         useGlobalDataSourceStat: true
         connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+        stat-view-servlet:
+          enabled: true
+          login-username: admin
+          login-password: 123456
+          reset-enable: false
+          url-pattern: /druid/*
+        #        allow:
+        web-stat-filter:
+          session-stat-enable: true
+          enabled: true
+          profile-enable: true
+          # 添加过滤规则
+          url-pattern: /*
+          # 忽略过滤格式
+          exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        aop-patterns: cn.net.colin.controller.*,cn.net.colin.service.*,cn.net.colin.mapper.*
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+    lettuce:
+      pool:
+        #连接池最大连接数（负值表示没有限制）默认8
+        max-active: 100
+        #连接池中最大空闲连接 默认8
+        max-idle: 8
+        #连接池中最小空闲连接 默认0
+        min-idle: 0
 
-
+seata:
+  enabled: true
+  application-id: ${spring.application.name}  # 可以自定义
+  txServiceGroup: seller_seata_group # 此处的名称一定要与 vgroup-mapping下配置的参数保持一致
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: localhost:8848
+      namespace:
+  config:
+    type: nacos
+    nacos:
+      namespace:
+      serverAddr: localhost:8848
+      group: SEATA_GROUP
+  # 这边自动代理关掉，此处自己代码做了处理
+  enableAutoDataSourceProxy: false

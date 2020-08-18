@@ -4,6 +4,7 @@ import cn.net.colin.common.util.DynamicDataSource;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import io.seata.rm.datasource.DataSourceProxy;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -22,7 +23,7 @@ import java.util.Map;
  * 多数据源bean的配置类
  * Created by sxf on 2020-3-1.
  */
-//@Configuration
+@Configuration
 public class MultipleDataSourceConfig {
     @Bean("db1")
     @ConfigurationProperties("spring.datasource.druid.db1")
@@ -35,11 +36,21 @@ public class MultipleDataSourceConfig {
         return DruidDataSourceBuilder.create().build();
     }
 
+    @Bean(name = "db1Proxy")
+    public DataSourceProxy masterDataSourceProxy(@Qualifier("db1") DataSource dataSource) {
+        return new DataSourceProxy(dataSource);
+    }
+
+    @Bean(name = "db2Proxy")
+    public DataSourceProxy storageDataSourceProxy(@Qualifier("db2") DataSource dataSource) {
+        return new DataSourceProxy(dataSource);
+    }
+
     /**
      * 设置动态数据源，通过@Primary 来确定主DataSource
      * @return
      */
-    @Bean
+/*    @Bean
     @Primary
     public DataSource createDynamicDataSource(@Qualifier("db1") DataSource db1, @Qualifier("db2") DataSource db2){
         DynamicDataSource dynamicDataSource = new DynamicDataSource();
@@ -51,8 +62,21 @@ public class MultipleDataSourceConfig {
         map.put("db2",db2);
         dynamicDataSource.setTargetDataSources(map);
         return  dynamicDataSource;
-    }
+    }*/
 
+    @Bean("dynamicDataSource")
+    @Primary
+    public DataSource createDynamicDataSource(@Qualifier("db1Proxy") DataSource db1, @Qualifier("db2Proxy") DataSource db2){
+        DynamicDataSource dynamicDataSource = new DynamicDataSource();
+        //设置默认数据源
+        dynamicDataSource.setDefaultTargetDataSource(db1);
+        //配置多数据源
+        Map<Object, Object> map = new HashMap<>();
+        map.put("db1",db1);
+        map.put("db2",db2);
+        dynamicDataSource.setTargetDataSources(map);
+        return  dynamicDataSource;
+    }
 
     //配置Druid的监控
     //1、配置一个管理后台的Servlet
