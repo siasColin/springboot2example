@@ -112,7 +112,7 @@ spring:
 seata:
   enabled: true
   application-id: ${spring.application.name}  # 可以自定义
-  txServiceGroup: seller_seata_group # 此处的名称一定要与 vgroup-mapping下配置的参数保持一致
+  txServiceGroup: springboot2example_seata_group # 此处的名称一定要与 vgroupMapping下配置的参数保持一致
   registry:
     type: nacos
     nacos:
