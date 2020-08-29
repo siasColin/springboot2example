@@ -40,7 +40,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/common")
 public class CommonController {
-    Logger logger = LoggerFactory.getLogger(AreaManageController.class);
+    Logger logger = LoggerFactory.getLogger(CommonController.class);
 
     @Autowired
     private ICommonservice commonservice;
@@ -135,7 +135,6 @@ public class CommonController {
 
     /**
      * 文件下载,写入response流
-     * @param request
      * @param response
      * @param filepath
      * @return
@@ -143,6 +142,8 @@ public class CommonController {
     @ResponseBody
     @RequestMapping("/downFile")
     public Object downFile(HttpServletResponse response, String filepath,String filename)  {
+        FileInputStream in = null;
+        OutputStream out = null;
         try {
             filepath = java.net.URLDecoder.decode(filepath,"UTF-8");
             //兼容windows,linux分隔符
@@ -162,18 +163,34 @@ public class CommonController {
             response.setHeader("content-disposition", "attachment;fileName=\""+filename+"\"");
             response.setContentType("application/octet-stream");
             response.setHeader("content-type", "application/octet-stream");
-            FileInputStream in = new FileInputStream(path);
+            in = new FileInputStream(path);
             int len = 0;
             byte buffer[]=new byte[1024];
-            OutputStream out = response.getOutputStream();
+            out = response.getOutputStream();
             while((len = in.read(buffer))>0){
                 out.write(buffer, 0, len);
             }
-            in.close();
             return null;//如果方法带返回值，一定要return null，否则会出现文件损坏
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        }finally {
+            if(in != null){
+                try {
+                    in.close();
+                    in = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(out != null){
+                try {
+                    out.close();
+                    out = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

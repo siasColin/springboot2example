@@ -9,9 +9,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
-/**
- * @author 黑马程序员
- */
 public class RsaUtils {
 
     private static final int DEFAULT_KEY_SIZE = 2048;
@@ -102,9 +99,9 @@ public class RsaUtils {
     }
 
     public static void main(String[] args) throws Exception {
-        String privateFilePath = "D:\\auth_key\\id_key_rsa";String publicFilePath = "D:\\auth_key\\id_key_rsa.pub";
+        String privateFilePath = "H:\\auth_key\\id_key_rsa";String publicFilePath = "H:\\auth_key\\id_key_rsa.pub";
         RsaUtils.generateKey(publicFilePath, privateFilePath, "colin", 2048);
-        System.out.println(RsaUtils.getPublicKey(publicFilePath));
-        System.out.println(RsaUtils.getPrivateKey(privateFilePath));
+        System.out.println("公钥："+RsaUtils.getPublicKey(publicFilePath));
+        System.out.println("私钥："+RsaUtils.getPrivateKey(privateFilePath));
     }
 }
