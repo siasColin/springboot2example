@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @Controller
 public class LoginController {
-    Logger logger = LoggerFactory.getLogger(MenuManageController.class);
+    Logger logger = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     private ISysModullistService sysModullistService;
 
@@ -45,7 +45,6 @@ public class LoginController {
         } else {
             modelMap.put("msg","登录失败");
         }
-//        modelMap.put("msg","认证失败，请检查用户名或密码是否正确！");
         return  "login";
     }
 

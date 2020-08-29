@@ -40,7 +40,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/common")
 public class CommonController {
-    Logger logger = LoggerFactory.getLogger(AreaManageController.class);
+    Logger logger = LoggerFactory.getLogger(CommonController.class);
 
     @Autowired
     private ICommonservice commonservice;
