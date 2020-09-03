@@ -8,6 +8,7 @@ import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysArea;
 import cn.net.colin.model.sysManage.SysUser;
 import cn.net.colin.service.sysManage.ISysAreaService;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/areaManage")
+@ApiSort(value = 1)
+@Api(tags = "地区管理")
 public class AreaManageController {
     Logger logger = LoggerFactory.getLogger(AreaManageController.class);
 
@@ -91,6 +94,14 @@ public class AreaManageController {
      */
     @GetMapping("/areaListTree")
     @ResponseBody
+    @ApiOperationSupport(order = 1)
+    @ApiOperation(value = "获取zTree结构的地区信息", notes = "返回满足zTree结构的地区信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="areaName",value="地区名",required=false,paramType="query"),
+            @ApiImplicitParam(name="areaLevel",value="行政级别",required=false,paramType="query"),
+            @ApiImplicitParam(name="minAreaLevel",value="最小行政级别",required=false,paramType="query",dataType="String")
+    })
     public ResultInfo areaListTree(String areaName,String areaLevel,String minAreaLevel) throws IOException {
 //        List<SysArea> sysAreas = sysAreaService.selectAll();
         Map<String,Object> paramMap = new HashMap<String,Object>();
@@ -115,6 +126,12 @@ public class AreaManageController {
      */
     @GetMapping("/childsAreaListTree/{minAreaLevel}")
     @ResponseBody
+    @ApiOperationSupport(order = 2)
+    @ApiOperation(value = "获取当前登录地区以及子地区信息", notes = "返回当前登录地区以及子地区信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="minAreaLevel",value="最小行政级别",required=true,paramType="path",dataType="String")
+    })
     public ResultInfo childsAreaListTree(@PathVariable("minAreaLevel") String minAreaLevel) throws IOException {
         Map<String,Object> paramMap = new HashMap<String,Object>();
         if(minAreaLevel != null && !minAreaLevel.equals("")){
@@ -126,6 +143,12 @@ public class AreaManageController {
 
     @GetMapping("/area/{areaid}")
     @ResponseBody
+    @ApiOperationSupport(order = 3)
+    @ApiOperation(value = "根据id查询地区信息", notes = "根据id查询地区信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="areaid",value="地区ID",required=true,paramType="path",dataType="String")
+    })
     public ResultInfo area(@PathVariable("areaid") String areaid){
         SysArea sysArea = sysAreaService.selectByPrimaryKey(Long.parseLong(areaid));
         return ResultInfo.ofData(ResultCode.SUCCESS,sysArea);
@@ -133,6 +156,12 @@ public class AreaManageController {
 
     @GetMapping("/areaOnCode/{areacode}")
     @ResponseBody
+    @ApiOperationSupport(order = 4)
+    @ApiOperation(value = "根据地区编码查询地区信息", notes = "根据地区编码查询地区信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="areacode",value="地区编码",required=true,paramType="path",dataType="String")
+    })
     public ResultInfo areaOnCode(@PathVariable("areacode") String areacode){
         SysArea sysArea = sysAreaService.selectByAreaCode(areacode);
         return ResultInfo.ofData(ResultCode.SUCCESS,sysArea);
@@ -146,6 +175,12 @@ public class AreaManageController {
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH')")
     @PostMapping("/area")
     @ResponseBody
+    @ApiOperationSupport(order = 5)
+    @ApiOperation(value = "保存地区信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="areaCode",value="地区编码",required=true,paramType="query"),
+    })
     public ResultInfo saveArea(SysArea sysArea){
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         //父级ID为空，默认取当前登录用户所属地区的父级地区
@@ -171,6 +206,18 @@ public class AreaManageController {
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','UPDATE_AUTH')")
     @PutMapping("/area")
     @ResponseBody
+    @ApiOperationSupport(order = 6)
+    @ApiOperation(value = "更新地区信息,但是不更新areaCode",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id",value="地区ID",required=true,paramType="query",example = "0"),
+            @ApiImplicitParam(name="areaName",value="地区名称",required=false,paramType="query"),
+            @ApiImplicitParam(name="areaLevel",value="地区等级(0 国家 1 省 2 直辖市 3 地级市 4 县 5 乡/镇 6 村)",required=false,paramType="query"),
+            @ApiImplicitParam(name="parentCode",value="父级地区编码",required=false,paramType="query"),
+            @ApiImplicitParam(name="longitude",value="经度",required=false,paramType="query",example = "116.403406"),
+            @ApiImplicitParam(name="latitude",value="纬度",required=false,paramType="query",example = "39.924073"),
+            @ApiImplicitParam(name="sortNum",value="排序",required=false,paramType="query",example = "0")
+    })
     public ResultInfo updateArea(SysArea sysArea){
         //父级ID为空，默认去当前登录用户所属地区的父级地区
         if(sysArea.getParentCode() == null && (sysArea.getParentCode() != null && sysArea.getParentCode().trim().equals(""))){
@@ -190,9 +237,23 @@ public class AreaManageController {
      * @return
      */
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','UPDATE_AUTH')")
-    @PutMapping("/area/{areaCode}")
+    @PutMapping("/area/{oldAreaCode}")
     @ResponseBody
-    public ResultInfo updateAreaWithFK(SysArea sysArea,@PathVariable("areaCode") String areaCode){
+    @ApiOperationSupport(order = 7)
+    @ApiOperation(value = "更新地区信息,areaCode也更新",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id",value="地区ID",required=true,paramType="query",example = "0"),
+            @ApiImplicitParam(name="areaName",value="地区名称",required=false,paramType="query"),
+            @ApiImplicitParam(name="oldAreaCode",value="更新前的地区编码",required=true,paramType="path"),
+            @ApiImplicitParam(name="areaCode",value="更新后的地区编码",required=true,paramType="query"),
+            @ApiImplicitParam(name="areaLevel",value="地区等级(0 国家 1 省 2 直辖市 3 地级市 4 县 5 乡/镇 6 村)",required=false,paramType="query"),
+            @ApiImplicitParam(name="parentCode",value="父级地区编码",required=false,paramType="query"),
+            @ApiImplicitParam(name="longitude",value="经度",required=false,paramType="query",example = "116.403406"),
+            @ApiImplicitParam(name="latitude",value="纬度",required=false,paramType="query",example = "39.924073"),
+            @ApiImplicitParam(name="sortNum",value="排序",required=false,paramType="query",example = "0")
+    })
+    public ResultInfo updateAreaWithFK(SysArea sysArea,@PathVariable("oldAreaCode") String areaCode){
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         //父级ID为空，默认去当前登录用户所属地区的父级地区
         if(sysArea.getParentCode() == null && (sysArea.getParentCode() != null && sysArea.getParentCode().trim().equals(""))){
@@ -221,6 +282,12 @@ public class AreaManageController {
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')")
     @DeleteMapping("/area/{id}")
     @ResponseBody
+    @ApiOperationSupport(order = 8)
+    @ApiOperation(value = "删除地区",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id",value="地区ID",required=true,paramType="path",example = "0"),
+    })
     public ResultInfo deleteArea(@PathVariable("id") Long id){
         int num = sysAreaService.deleteByPrimaryKey(id);
          ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
@@ -237,6 +304,12 @@ public class AreaManageController {
      */
     @GetMapping("/areaRelation/{areaCode}")
     @ResponseBody
+    @ApiOperationSupport(order = 9)
+    @ApiOperation(value = "校验地区编码是否被引用",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="areaCode",value="地区编码",required=true,paramType="path"),
+    })
     public ResultInfo areaRelation(@PathVariable("areaCode") String areaCode){
         ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
         Map<String,Object> resultMap = sysAreaService.areaRelation(areaCode);

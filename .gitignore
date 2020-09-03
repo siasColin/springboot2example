@@ -7,3 +7,14 @@ target/
 .project
 .settings/
 .classpath
+.idea/
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/inspectionProfiles/Project_Default.xml
+springboot2example.iml
+logs/springboot2example/spring.log
+.idea/misc.xml
+.idea/libraries/Maven__org_springframework_boot_spring_boot_configuration_processor_2_2_4_RELEASE.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/encodings.xml
+springboot2example.iml

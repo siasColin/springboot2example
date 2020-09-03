@@ -642,7 +642,7 @@ public final class RedisUtil {
      *
      * @param key
      */
-    public void delete(String key) {
-        redisTemplate.delete(key);
+    public boolean delete(String key) {
+        return redisTemplate.delete(key);
     }
 }

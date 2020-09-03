@@ -116,19 +116,19 @@ public class SysAreaServiceImpl implements ISysAreaService {
         int childNum = this.sysAreaMapper.selectChildNumByAreaCode(areaCode);
         if(childNum > 0){
             resultMap.put("isQuote",true);
-            resultMap.put("msg","存在子地区，不允许删除！");
+            resultMap.put("msg","存在子地区，不允许更新/删除！");
         }
         //2.查询该地区编码是否被机构表引用
         int orgNum = this.sysOrgMapper.selectOrgNumByAreaCode(areaCode);
         if(orgNum > 0){
             resultMap.put("isQuote",true);
-            resultMap.put("msg","机构表中存在外键引用，不允许删除！");
+            resultMap.put("msg","机构表中存在外键引用，不允许更新/删除！");
         }
         //3.查询该地区编码是否被角色表引用
         int roleNum = this.sysRoleMapper.selectRoleNumByAreaCode(areaCode);
         if(roleNum > 0){
             resultMap.put("isQuote",true);
-            resultMap.put("msg","角色表中存在外键引用，不允许删除！");
+            resultMap.put("msg","角色表中存在外键引用，不允许更新/删除！");
         }
         return resultMap;
     }

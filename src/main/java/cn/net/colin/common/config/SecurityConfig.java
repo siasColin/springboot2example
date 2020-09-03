@@ -4,6 +4,7 @@ import cn.net.colin.common.component.MyAccessDeniedHandler;
 import cn.net.colin.common.component.MyAuthenticationEntryPoint;
 import cn.net.colin.filter.JwtVerifyFilter;
 import cn.net.colin.filter.JwtLoginFilter;
+import cn.net.colin.filter.LoginFilter;
 import cn.net.colin.filter.RequestURIFilter;
 import cn.net.colin.service.sysManage.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public RequestURIFilter requestURIFilter(){
         return new RequestURIFilter();
     }
+    @Bean
+    public LoginFilter loginFilter(){
+        return new LoginFilter();
+    }
 
     @Bean
     public AccessDeniedHandler myAccessDeniedHandler() {
@@ -89,11 +94,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
 //            .csrf().disable()
             //可以针对项目中对外提供的接口（基于jwt+rsa认证的）可在这里设置忽略csrf
-            .csrf().ignoringAntMatchers("/auth/login","/hello/*","/common/uploadSingle","/common/uploadMany","/ueditor/config").and()
+            .csrf().ignoringAntMatchers("/auth/login",
+                "/hello/*",
+                "/common/uploadSingle",
+                "/common/uploadMany",
+                "/ueditor/config",
+                "/swagger-ui.html").and()
             .authorizeRequests()
             //允许访问的路径，但是依然会走spring security内部流程
             .antMatchers("/","/login","/loginerror","/authException","/error","/common/sessionInvalid",
-                    "/articleManage/articleView/*","/articleManage/comment/*","/test/*","/api/*").permitAll()
+                    "/articleManage/articleView/*","/articleManage/comment/*","/test/*","/api/*","/redis/*","/swagger/*").permitAll()
             //所有的请求需要认证即登陆后才能访问
             .anyRequest().authenticated()
             .and()
@@ -120,7 +130,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .addFilter(new JwtLoginFilter(super.authenticationManager(),prop))
             .addFilterAfter(jwtVerifyFilter(),JwtLoginFilter.class)
-            .addFilterAfter(requestURIFilter(),JwtVerifyFilter.class);
+            .addFilterAfter(requestURIFilter(),JwtVerifyFilter.class)
+            .addFilterBefore(loginFilter(),JwtVerifyFilter.class);
     }
 
 
@@ -147,6 +158,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring(). antMatchers("/swagger-ui.html")
                 .antMatchers("/v2/**")
                 .antMatchers("/swagger-resources/**");
+        web.ignoring().antMatchers("/doc.html");
     }
 
 

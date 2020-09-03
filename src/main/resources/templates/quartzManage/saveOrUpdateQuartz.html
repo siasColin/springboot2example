@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
+    <meta name="_csrf" th:content="${_csrf !=null} ? ${_csrf.token} : ''"/>
+    <meta name="_csrf_header"  th:content="${_csrf !=null} ? ${_csrf.headerName} : ''"/>
     <title>任务管理</title>
     <link rel="stylesheet" th:href="@{/plugin/layui/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/common/dasui.css}">

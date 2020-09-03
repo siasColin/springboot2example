@@ -55,14 +55,14 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
      */
     private List<String> doUrls = new ArrayList<String>(Arrays.asList(
             "/hello/*",
-            "/api/**"
+            "/csrf"
     ));
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
-        String uri = request.getRequestURI();//获取访问的url
+//        String uri = request.getRequestURI();//获取访问的url
         boolean doFlag = false;
         for(String oneallowUrl:doUrls){//判断是否拦截
 //            Pattern mpattern = Pattern.compile(oneallowUrl);
@@ -78,57 +78,65 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             }
         }
         if(doFlag){
-            String header = request.getHeader("Authorization");
-            if (header == null || !header.startsWith("Bearer ")) {
-                //如果携带错误的token，则给用户提示请登录！
+            //由于添加了LoginFilter过滤器，这里判断一下避免重复验证。
+            if(SecurityContextHolder.getContext().getAuthentication() != null
+                    && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+                    && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null){
+                chain.doFilter(request, response);
+            }else{
+                String header = request.getHeader("Authorization");
+                if (header == null || !header.startsWith("Bearer ")) {
+                    //如果携带错误的token，则给用户提示请登录！
 //                chain.doFilter(request, response);
-                response(response,ResultCode.TOKEN_NOTFOUND);
-            } else {
-                //如果携带了正确格式的token要先得到token
-                String token = header.replace("Bearer ", "");
-                //验证tken是否正确
-                try{
-                    Payload<SysUser> payload = JwtUtils.getInfoFromToken(token, prop.getPublicKey(), SysUser.class);
-                    SysUser user = payload.getUserInfo();
-                    //refreshToken_ 开头的是用于刷新的token
-                    if(user!=null && !user.getLoginName().startsWith("refreshToken_")){//验证通过
-                        UserDetails userDetails = sysUserService.loadUserByUsername(user.getLoginName());
-                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                        chain.doFilter(request, response);
-                    }else{
-                        response(response,ResultCode.TOKEN_ERROR);
-                    }
-                }catch (ExpiredJwtException e){//token过期
-                    //判断用于刷新的token是否过期
-                    String refresh_token = request.getHeader("Refresh_token");
+                    response(response,ResultCode.TOKEN_NOTFOUND);
+                } else {
+                    //2020-08-29 如果添加了LoginFilter过滤器，其实是走不到这里的
+                    //如果携带了正确格式的token要先得到token
+                    String token = header.replace("Bearer ", "");
+                    //验证tken是否正确
                     try{
-                        Payload<SysUser> payload = JwtUtils.getInfoFromToken(refresh_token, prop.getPublicKey(), SysUser.class);
+                        Payload<SysUser> payload = JwtUtils.getInfoFromToken(token, prop.getPublicKey(), SysUser.class);
                         SysUser user = payload.getUserInfo();
-                        if(user!=null && user.getLoginName().startsWith("refreshToken_")){//验证通过
-                            String loginName = user.getLoginName().replace("refreshToken_","");
-                            UserDetails userDetails = sysUserService.loadUserByUsername(loginName);
+                        //refreshToken_ 开头的是用于刷新的token
+                        if(user!=null && !user.getLoginName().startsWith("refreshToken_")){//验证通过
+                            UserDetails userDetails = sysUserService.loadUserByUsername(user.getLoginName());
                             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                             SecurityContextHolder.getContext().setAuthentication(authentication);
-                            //生成新的token
-                            String newToken = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 10);
-                            //再生成一个refresh_token，用于刷新token,有效期2小时
-                            String newRefresh_token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 2*60);
-                            //将两个Token写入response头信息中
-                            response.addHeader("Authorization", "Bearer "+newToken);
-                            response.addHeader("Refresh_token", newRefresh_token);
                             chain.doFilter(request, response);
                         }else{
                             response(response,ResultCode.TOKEN_ERROR);
                         }
-                        //尽可能让老的refresh_token失效，可以配合redis完成
-                    }catch (ExpiredJwtException ex){//refresh_token过期
-                        response(response,ResultCode.TOKEN_ERROR);
-                    }catch (Exception exc){
+                    }catch (ExpiredJwtException e){//token过期
+                        //判断用于刷新的token是否过期
+                        String refresh_token = request.getHeader("Refresh_token");
+                        try{
+                            Payload<SysUser> payload = JwtUtils.getInfoFromToken(refresh_token, prop.getPublicKey(), SysUser.class);
+                            SysUser user = payload.getUserInfo();
+                            if(user!=null && user.getLoginName().startsWith("refreshToken_")){//验证通过
+                                String loginName = user.getLoginName().replace("refreshToken_","");
+                                UserDetails userDetails = sysUserService.loadUserByUsername(loginName);
+                                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                                SecurityContextHolder.getContext().setAuthentication(authentication);
+                                //生成新的token
+                                String newToken = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 10);
+                                //再生成一个refresh_token，用于刷新token,有效期2小时
+                                String newRefresh_token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 2*60);
+                                //将两个Token写入response头信息中
+                                response.addHeader("Authorization", "Bearer "+newToken);
+                                response.addHeader("Refresh_token", newRefresh_token);
+                                chain.doFilter(request, response);
+                            }else{
+                                response(response,ResultCode.TOKEN_ERROR);
+                            }
+                            //尽可能让老的refresh_token失效，可以配合redis完成
+                        }catch (ExpiredJwtException ex){//refresh_token过期
+                            response(response,ResultCode.TOKEN_ERROR);
+                        }catch (Exception exc){
+                            response(response,ResultCode.TOKEN_ERROR);
+                        }
+                    }catch (Exception e){
                         response(response,ResultCode.TOKEN_ERROR);
                     }
-                }catch (Exception e){
-                    response(response,ResultCode.TOKEN_ERROR);
                 }
             }
         }else{

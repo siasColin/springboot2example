@@ -4,6 +4,7 @@ import cn.net.colin.common.helper.LongJsonDeserializer;
 import cn.net.colin.common.helper.LongJsonSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -25,56 +26,67 @@ public class SysArea implements Serializable {
      */
     @JsonSerialize(using = LongJsonSerializer.class)
     @JsonDeserialize(using = LongJsonDeserializer.class)
+    @ApiModelProperty(hidden = true)
     private Long id;
 
     /** 
      * 地区名称
-     */ 
+     */
+    @ApiModelProperty(value = "地区名称",required = true)
     private String areaName;
 
     /** 
      * 地区编码
-     */ 
+     */
+    @ApiModelProperty(value = "地区编码",hidden = true)
     private String areaCode;
 
     /** 
      * 地区等级(0 国家 1 省 2 直辖市 3 地级市 4 县 5 乡/镇 6 村)
-     */ 
+     */
+    @ApiModelProperty(value = "地区等级(0 国家 1 省 2 直辖市 3 地级市 4 县 5 乡/镇 6 村)",required = true,example = "0")
     private Integer areaLevel;
 
     /** 
      * 父地区编码
-     */ 
+     */
+    @ApiModelProperty(value = "父级地区编码",required = true)
     private String parentCode;
 
     /** 
      * 经度
-     */ 
+     */
+    @ApiModelProperty(value = "经度",required = false,example = "116.403406")
     private BigDecimal longitude;
 
     /** 
      * 纬度
-     */ 
+     */
+    @ApiModelProperty(value = "纬度",required = false,example = "39.924073")
     private BigDecimal latitude;
 
     /** 
      * 创建人
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private String createUser;
 
     /** 
      * 创建时间
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private Date createTime;
 
     /** 
      * 排序字段
-     */ 
+     */
+    @ApiModelProperty(value = "排序",required = false,example = "0")
     private Integer sortNum;
 
     /**
      * 非持久化属性 start
      */
+    @ApiModelProperty(hidden = true)
     private String parentName;
     /**
      * 非持久化属性 end

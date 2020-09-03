@@ -59,7 +59,9 @@ var Common = {
     			data:paras,
                 dataType: "json",
                 beforeSend : function(xhr) {
-                    xhr.setRequestHeader(_header, _token);
+                    if (!$.isEmpty(_header) && !$.isEmpty(_token)) {
+                        xhr.setRequestHeader(_header, _token);
+                    }
                 },
     			success:function(rsp){
     				if(rsp.returnCode == '0'){
