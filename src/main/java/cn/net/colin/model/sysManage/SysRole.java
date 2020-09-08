@@ -4,6 +4,7 @@ import cn.net.colin.common.helper.LongJsonDeserializer;
 import cn.net.colin.common.helper.LongJsonSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -24,57 +25,69 @@ public class SysRole implements Serializable {
      */
     @JsonSerialize(using = LongJsonSerializer.class)
     @JsonDeserialize(using = LongJsonDeserializer.class)
+    @ApiModelProperty(hidden = true)
     private Long id;
 
     /** 
      * 角色编码
-     */ 
+     */
+    @ApiModelProperty(value = "角色编码",required = true)
     private String roleCode;
 
     /** 
      * 角色名称
-     */ 
+     */
+    @ApiModelProperty(value = "角色名称",required = true)
     private String roleName;
 
     /** 
      * 角色属性(0 共享，1 私有)
-     */ 
+     */
+    @ApiModelProperty(value = "角色属性(0 共享，1 私有)",required = true)
     private Integer roleAttr;
 
     /** 
      * 机构编码（role_attr为1时该字段不能为空）
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private String orgCode;
 
     /** 
      * 关联地区表地区编码
-     */ 
+     */
+    @ApiModelProperty(value = "地区编码",required = true)
     private String areaCode;
 
     /** 
      * 状态，1启用，0禁用
-     */ 
+     */
+    @ApiModelProperty(value = "状态，1启用，0禁用",required = true)
     private Integer roleStatus;
 
     /** 
      * 创建人
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private String createUser;
 
     /** 
      * 创建时间
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private Date createTime;
 
     /** 
      * 排序字段
-     */ 
+     */
+    @ApiModelProperty(value = "排序",required = false)
     private Integer sortNum;
 
     /**
      * 非持久化属性 start
      */
+    @ApiModelProperty(hidden = true)
     private  String orgName;
+    @ApiModelProperty(hidden = true)
     private  String areaName;
     /**
      * 非持久化属性 end

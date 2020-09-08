@@ -1,13 +1,17 @@
 package cn.net.colin.model.sysManage;
 
+import cn.net.colin.common.helper.IgnoreSwaggerParameter;
 import cn.net.colin.common.helper.LongJsonDeserializer;
 import cn.net.colin.common.helper.LongJsonSerializer;
 import cn.net.colin.model.common.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModelProperty;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -32,16 +36,19 @@ public class SysUser implements Serializable, UserDetails {
      */
     @JsonSerialize(using = LongJsonSerializer.class)
     @JsonDeserialize(using = LongJsonDeserializer.class)
+    @ApiModelProperty(hidden = true)
     private Long id;
 
     /** 
      * 登录名
-     */ 
+     */
+    @ApiModelProperty(value = "账号",hidden = true)
     private String loginName;
 
     /** 
      * 登录密码
-     */ 
+     */
+    @ApiModelProperty(value = "密码",hidden = true)
     private String password;
 
     /** 
@@ -52,71 +59,85 @@ public class SysUser implements Serializable, UserDetails {
 
     /** 
      * 姓名
-     */ 
+     */
+    @ApiModelProperty(value = "姓名",required = true)
     private String userName;
 
     /** 
      * 性别(0 男，1 女)
-     */ 
+     */
+    @ApiModelProperty(value = "性别(0 男，1 女)",required = true,example = "0")
     private Integer userGender;
 
     /** 
      * 电话号码
-     */ 
+     */
+    @ApiModelProperty(value = "电话号码",required = true)
     private String phoneNumber;
 
     /** 
      * 邮箱
-     */ 
+     */
+    @ApiModelProperty(value = "邮箱",required = false)
     private String userEmail;
 
     /** 
      * 关联机构表机构编码
-     */ 
+     */
+    @ApiModelProperty(value = "所属机构编码",required = true)
     private String orgCode;
 
     /** 
      * 最后登录时间
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private Date lastLoginTime;
 
     /** 
      * 最后登录IP
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private String lastLoginIp;
 
     /**
      * 用户状态(0 正常，2 禁用， 3 过期， 4 锁定)
      */
+    @ApiModelProperty(value = "用户状态(0 正常，2 禁用， 3 过期， 4 锁定)",required = true,example = "0")
     private Integer userStatus;
 
     /** 
      * 创建人
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private String createUser;
 
     /** 
      * 创建时间
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private Date createTime;
 
     /**
      * 存储角色信息
      */
+    @IgnoreSwaggerParameter
     private List<Role> roles;
     /**
      * 存储所属机构信息
      */
+    @IgnoreSwaggerParameter
     private SysOrg sysOrg;
 
     /**
      * 所属机构名称
      */
+    @ApiModelProperty(hidden = true)
     private String orgName;
 
     /**
      * 头像
      */
+    @ApiModelProperty(value = "头像",required = false)
     private String headImg = "image/boy-01.png";
 
 
@@ -152,6 +173,9 @@ public class SysUser implements Serializable, UserDetails {
         this.loginName = loginName == null ? null : loginName.trim();
     }
 
+    @IgnoreSwaggerParameter
+    @JsonIgnore
+    private Collection<? extends GrantedAuthority> authorities;
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -169,6 +193,7 @@ public class SysUser implements Serializable, UserDetails {
 
     @Override
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     public String getUsername() {
         return loginName;
     }
@@ -179,6 +204,7 @@ public class SysUser implements Serializable, UserDetails {
      */
     @Override
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     public boolean isAccountNonExpired() {
         if(this.userStatus == 3){
             return false;
@@ -193,6 +219,7 @@ public class SysUser implements Serializable, UserDetails {
      */
     @Override
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     public boolean isAccountNonLocked() {
         if(this.userStatus == 4){
             return false;
@@ -207,6 +234,7 @@ public class SysUser implements Serializable, UserDetails {
      */
     @Override
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     public boolean isCredentialsNonExpired() {
         return true;
     }
@@ -216,6 +244,7 @@ public class SysUser implements Serializable, UserDetails {
      */
     @Override
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     public boolean isEnabled() {
         if(this.userStatus == 0){
             return true;

@@ -21,6 +21,7 @@ public enum ResultCode {
     USER_ACCOUNTEXPIRED("011","账户过期"),
     USER_CREDENTIALSEXPIRED("012","证书过期"),
     USER_LOGINFAIL("013","登录失败"),
+    UN_RELATION("014","未发现引用"),
     STATUS_CODE_400("400","请求无效"),
     STATUS_CODE_403("403","禁止访问"),
     STATUS_CODE_404("404","请求的网页不存在"),

@@ -4,6 +4,7 @@ import cn.net.colin.common.helper.LongJsonDeserializer;
 import cn.net.colin.common.helper.LongJsonSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -24,6 +25,7 @@ public class SysModulelist implements Serializable {
      */
     @JsonSerialize(using = LongJsonSerializer.class)
     @JsonDeserialize(using = LongJsonDeserializer.class)
+    @ApiModelProperty(hidden = true)
     private Long id;
 
     /** 
@@ -31,61 +33,73 @@ public class SysModulelist implements Serializable {
      */
     @JsonSerialize(using = LongJsonSerializer.class)
     @JsonDeserialize(using = LongJsonDeserializer.class)
+    @ApiModelProperty(value = "父级菜单ID",required = false,position = 0)
     private Long pid;
 
     /** 
      * 菜单名称
-     */ 
+     */
+    @ApiModelProperty(value = "菜单名称",required = true,position = 1)
     private String moduleName;
 
     /** 
      * 菜单编码
-     */ 
+     */
+    @ApiModelProperty(value = "菜单编码",required = true,position = 2)
     private String moduleCode;
 
     /** 
      * 菜单图标（样式）
-     */ 
+     */
+    @ApiModelProperty(value = "菜单图标（样式）",required = false,position = 3)
     private String moduleIcon;
 
     /** 
      * 菜单链接地址
-     */ 
+     */
+    @ApiModelProperty(value = "菜单链接地址",required = false,position = 4)
     private String moduleUrl;
 
     /** 
      * 打开位置navTab（系统内打开）、_blank(新窗口打开) ,默认（navTab）
      */
+    @ApiModelProperty(value = "打开位置navTab（系统内打开）、_blank(新窗口打开) ,默认（navTab）",required = true,position = 5)
     private String moduleTarget;
 
     /** 
      * 菜单还是功能点，1菜单，0功能点
-     */ 
+     */
+    @ApiModelProperty(value = "菜单还是功能点，1菜单，0功能点",required = true,position = 6)
     private Integer moduleType;
 
     /** 
      * 菜单状态，1启用，0禁用
-     */ 
+     */
+    @ApiModelProperty(value = "菜单状态，1启用，0禁用",required = true,position = 7)
     private Integer moduleStatus;
 
     /** 
      * 创建人
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private String createUser;
 
     /** 
      * 创建时间
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private Date createTime;
 
     /**
      * 排序字段
      */
+    @ApiModelProperty(value = "菜单状态，1启用，0禁用",required = false,position = 8)
     private Integer sortNum;
 
     /**
      * 非持久化属性 start
      */
+    @ApiModelProperty(hidden = true)
     private String parentName;
     /**
      * 非持久化属性 end

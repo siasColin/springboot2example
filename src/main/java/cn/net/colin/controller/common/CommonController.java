@@ -5,14 +5,13 @@ import cn.net.colin.common.exception.entity.ResultInfo;
 import cn.net.colin.common.util.DateUtils;
 import cn.net.colin.common.util.GetServerRealPathUnit;
 import cn.net.colin.common.util.JsonUtils;
-import cn.net.colin.controller.sysManage.AreaManageController;
 import cn.net.colin.service.common.ICommonservice;
+import io.swagger.annotations.*;
 import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,6 +38,8 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/common")
+@ApiSort(value = 0)
+@Api(tags = "公用接口",description = "公用接口相关API")
 public class CommonController {
     Logger logger = LoggerFactory.getLogger(CommonController.class);
 
@@ -53,6 +54,12 @@ public class CommonController {
      */
     @PostMapping("/uploadSingle")
     @ResponseBody
+    @ApiOperationSupport(order = 1)
+    @ApiOperation(value = "单文件上传", notes = "单文件上传")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "file",value = "文件，",paramType = "formData",required = true,dataType = "file"),
+            @ApiImplicitParam(name = "prefixPath", value = "保存目录", required = true, example = "temp", paramType = "query")
+    })
     public ResultInfo uploadSingle(@RequestParam("file") MultipartFile file,String prefixPath)
             throws IOException {
         ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
@@ -96,6 +103,12 @@ public class CommonController {
      */
     @PostMapping("/uploadMany")
     @ResponseBody
+    @ApiOperationSupport(order = 2)
+    @ApiOperation(value = "多文件上传", notes = "多文件上传")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "files",value = "多文文件",paramType = "formData",required = true,dataType = "file",allowMultiple = true),
+            @ApiImplicitParam(name = "prefixPath", value = "保存目录", required = true, example = "temp", paramType = "query")
+    })
     public ResultInfo uploadMany(@RequestParam("files") MultipartFile[] files,String prefixPath)
             throws IOException {
         ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);

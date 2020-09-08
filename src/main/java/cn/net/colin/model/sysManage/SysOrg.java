@@ -1,9 +1,11 @@
 package cn.net.colin.model.sysManage;
 
+import cn.net.colin.common.helper.IgnoreSwaggerParameter;
 import cn.net.colin.common.helper.LongJsonDeserializer;
 import cn.net.colin.common.helper.LongJsonSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -24,26 +26,31 @@ public class SysOrg implements Serializable {
      */
     @JsonSerialize(using = LongJsonSerializer.class)
     @JsonDeserialize(using = LongJsonDeserializer.class)
+    @ApiModelProperty(hidden = true)
     private Long id;
 
     /** 
      * 关联地区表
-     */ 
+     */
+    @ApiModelProperty(value = "所属地区编码",required = true)
     private String areaCode;
 
     /** 
      * 机构名称
-     */ 
+     */
+    @ApiModelProperty(value = "机构名称",required = true)
     private String orgName;
 
     /** 
      * 机构编码
-     */ 
+     */
+    @ApiModelProperty(value = "机构编码",hidden = true)
     private String orgCode;
 
     /** 
      * 父级机构编码
-     */ 
+     */
+    @ApiModelProperty(value = "父级机构编码",required = false)
     private String parentCode;
 
     /** 
@@ -51,43 +58,52 @@ public class SysOrg implements Serializable {
      */
     @JsonSerialize(using = LongJsonSerializer.class)
     @JsonDeserialize(using = LongJsonDeserializer.class)
+    @ApiModelProperty(value = "行业id",hidden = true)
     private Long industryid;
 
     /** 
      * 机构地址
-     */ 
+     */
+    @ApiModelProperty(value = "机构地址",required = false)
     private String orgAddress;
 
     /** 
      * 机构logo
-     */ 
+     */
+    @ApiModelProperty(value = "机构logo",required = false)
     private String orgLogo;
 
     /** 
      * 创建人
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private String createUser;
 
     /** 
      * 创建时间
-     */ 
+     */
+    @ApiModelProperty(hidden = true)
     private Date createTime;
 
     /** 
      * 排序字段
-     */ 
+     */
+    @ApiModelProperty(value = "排序",required = false)
     private Integer sortNum;
 
     /**
      * 存储所属地区信息
      */
+    @IgnoreSwaggerParameter
     private SysArea sysArea;
 
 
     /**
      * 非持久化属性 start
      */
+    @ApiModelProperty(hidden = true)
     private String parentName;
+    @ApiModelProperty(hidden = true)
     private String areaName;
     /**
      * 非持久化属性 end

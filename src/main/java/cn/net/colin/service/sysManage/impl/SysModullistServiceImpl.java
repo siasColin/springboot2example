@@ -92,10 +92,12 @@ public class SysModullistServiceImpl implements ISysModullistService {
         if(sysUser != null && sysUser.getId() != null){
             //查询用户的系统角色
             List<SysRole> sysRoleList = this.sysRoleMapper.selectByUserId(sysUser.getId());
-            Map<String,Object> roleParams = new HashMap<String,Object>();
-            roleParams.put("sysRoleList",sysRoleList);
-            roleParams.put("pid",1);
-            firstMuneList = this.sysModullistMapper.selectMenu(roleParams);
+            if(sysRoleList != null && sysRoleList.size() >0){
+                Map<String,Object> roleParams = new HashMap<String,Object>();
+                roleParams.put("sysRoleList",sysRoleList);
+                roleParams.put("pid",1);
+                firstMuneList = this.sysModullistMapper.selectMenu(roleParams);
+            }
         }
         return firstMuneList;
     }
@@ -108,19 +110,20 @@ public class SysModullistServiceImpl implements ISysModullistService {
         if(sysUser != null && sysUser.getId() != null){
             //查询用户的系统角色
             List<SysRole> sysRoleList = this.sysRoleMapper.selectByUserId(sysUser.getId());
-            Map<String,Object> roleParams = new HashMap<String,Object>();
-            roleParams.put("sysRoleList",sysRoleList);
-            roleParams.put("pid",Long.parseLong(moduleId));
-            secondMuneList = this.sysModullistMapper.selectMenu(roleParams);
-            if(secondMuneList != null && secondMuneList.size() > 0){
-                resultMap.put("allSecondMenu",secondMuneList);
-                for (int i=0;i<secondMuneList.size();i++){
-                    roleParams.put("pid",secondMuneList.get(i).getId());
-                    List<SysModulelist> thirdMuneList = this.sysModullistMapper.selectMenu(roleParams);
-                    resultMap.put("secondMenu_"+secondMuneList.get(i).getId(),thirdMuneList);
+            if(sysRoleList != null && sysRoleList.size() > 0){
+                Map<String,Object> roleParams = new HashMap<String,Object>();
+                roleParams.put("sysRoleList",sysRoleList);
+                roleParams.put("pid",Long.parseLong(moduleId));
+                secondMuneList = this.sysModullistMapper.selectMenu(roleParams);
+                if(secondMuneList != null && secondMuneList.size() > 0){
+                    resultMap.put("allSecondMenu",secondMuneList);
+                    for (int i=0;i<secondMuneList.size();i++){
+                        roleParams.put("pid",secondMuneList.get(i).getId());
+                        List<SysModulelist> thirdMuneList = this.sysModullistMapper.selectMenu(roleParams);
+                        resultMap.put("secondMenu_"+secondMuneList.get(i).getId(),thirdMuneList);
+                    }
                 }
             }
-
         }
         return resultMap;
     }

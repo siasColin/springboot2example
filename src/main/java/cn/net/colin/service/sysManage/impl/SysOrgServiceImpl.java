@@ -138,19 +138,19 @@ public class SysOrgServiceImpl implements ISysOrgService {
         int childNum = this.sysOrgMapper.selectChildNumByOrgCode(orgCode);
         if(childNum > 0){
             resultMap.put("isQuote",true);
-            resultMap.put("msg","存在子机构，不允许删除！");
+            resultMap.put("msg","存在子机构，不允许更新/删除！");
         }
         //2.查询该机构编码是否被用户表引用
         int userNum = this.sysUserMapper.selectUserNumByOrgCode(orgCode);
         if(userNum > 0){
             resultMap.put("isQuote",true);
-            resultMap.put("msg","用户表中存在外键引用，不允许删除！");
+            resultMap.put("msg","用户表中存在外键引用，不允许更新/删除！");
         }
         //3.查询该地区编码是否被角色表引用
         int roleNum = this.sysRoleMapper.selectRoleNumByOrgCode(orgCode);
         if(roleNum > 0){
             resultMap.put("isQuote",true);
-            resultMap.put("msg","角色表中存在外键引用，不允许删除！");
+            resultMap.put("msg","角色表中存在外键引用，不允许更新/删除！");
         }
         return resultMap;
     }

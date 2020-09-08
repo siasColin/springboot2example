@@ -8,6 +8,7 @@ import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysModulelist;
 import cn.net.colin.model.sysManage.SysUser;
 import cn.net.colin.service.sysManage.ISysModullistService;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/menuManage")
+@ApiSort(value = 3)
+@Api(tags = "菜单管理")
 public class MenuManageController {
     Logger logger = LoggerFactory.getLogger(MenuManageController.class);
 
@@ -48,6 +51,12 @@ public class MenuManageController {
      */
     @GetMapping("/menuListTree")
     @ResponseBody
+    @ApiOperationSupport(order = 1)
+    @ApiOperation(value = "获取菜单树", notes = "返回满足zTree结构的菜单信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="menuName",value="菜单名称",required=false,paramType="query")
+    })
     public ResultInfo menuListTree(String menuName) throws IOException {
         Map<String,Object> paramMap = new HashMap<String,Object>();
         if(menuName != null && !menuName.equals("")){
@@ -87,6 +96,9 @@ public class MenuManageController {
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH')")
     @PostMapping("/menu")
     @ResponseBody
+    @ApiOperationSupport(order = 2)
+    @ApiOperation(value = "保存菜单信息", notes = "保存菜单信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
     public ResultInfo saveMenu(SysModulelist sysModulelist){
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         //父级ID为空，查询pid=-1的记录，默认pid=-1为根节点。如果没有记录那么新增节点作为根节点
@@ -116,6 +128,12 @@ public class MenuManageController {
      */
     @GetMapping("/menu/{id}")
     @ResponseBody
+    @ApiOperationSupport(order = 3)
+    @ApiOperation(value = "根据菜单id，查询菜单信息", notes = "根据菜单id，查询菜单信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id",value="菜单ID",required=true,paramType="path")
+    })
     public ResultInfo menu(@PathVariable("id") String id){
         SysModulelist sysModulelist = sysModullistService.selectByPrimaryKey(Long.parseLong(id));
         return ResultInfo.ofData(ResultCode.SUCCESS,sysModulelist);
@@ -129,6 +147,14 @@ public class MenuManageController {
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','UPDATE_AUTH')")
     @PutMapping("/menu")
     @ResponseBody
+    @ApiOperationSupport(order = 4)
+    @ApiOperation(value = "更新菜单信息", notes = "更新菜单信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id",value="菜单ID",required=true,paramType="query"),
+            @ApiImplicitParam(name="moduleName",value="菜单名称",required=false,paramType="query"),
+            @ApiImplicitParam(name="moduleCode",value="菜单编码",required=false,paramType="query")
+    })
     public ResultInfo updateMenu(SysModulelist sysModulelist){
         //父级ID为空，查询pid=-1的记录，默认pid=-1为根节点。如果没有记录那么新增节点作为根节点
         if(sysModulelist.getPid() == null){
@@ -155,6 +181,12 @@ public class MenuManageController {
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')")
     @DeleteMapping("/menu/{id}")
     @ResponseBody
+    @ApiOperationSupport(order = 4)
+    @ApiOperation(value = "根据id删除菜单", notes = "根据id删除菜单",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id",value="菜单ID",required=true,paramType="path")
+    })
     public ResultInfo deleteMenu(@PathVariable("id") Long id){
         int num = sysModullistService.deleteByPrimaryKey(id);
         ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);

@@ -76,7 +76,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         /**
          * 判断是否拥有管理员权限
-         *      有则返回，当前地区及子地区所有角色信息；
+         *      有则返回当前地区及子地区所有角色信息；
          *      无则只返回当前登录地区的共享角色信息，以及本机构的私有角色信息
          */
         if(sysUser != null && !SpringSecurityUtil.hasRole("ADMIN_AUTH")){

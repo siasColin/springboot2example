@@ -8,6 +8,7 @@ import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysOrg;
 import cn.net.colin.model.sysManage.SysUser;
 import cn.net.colin.service.sysManage.ISysOrgService;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/orgManage")
+@ApiSort(value = 2)
+@Api(tags = "机构管理",description = "机构管理相关API")
 public class OrgManageController {
     Logger logger = LoggerFactory.getLogger(OrgManageController.class);
 
@@ -47,6 +50,13 @@ public class OrgManageController {
      */
     @GetMapping("/orgListTree")
     @ResponseBody
+    @ApiOperationSupport(order = 1)
+    @ApiOperation(value = "获取机构树", notes = "返回满足zTree结构的机构信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="orgName",value="机构名字",required=false,paramType="query"),
+            @ApiImplicitParam(name="areaCode",value="地区编码",required=false,paramType="query"),
+    })
     public ResultInfo orgListTree(String orgName, String areaCode) throws IOException {
         Map<String,Object> paramMap = new HashMap<String,Object>();
         if(orgName != null && !orgName.equals("")){
@@ -89,6 +99,12 @@ public class OrgManageController {
      */
     @GetMapping("/orgOnCode/{orgcode}")
     @ResponseBody
+    @ApiOperationSupport(order = 2)
+    @ApiOperation(value = "根据机构编码查询机构信息", notes = "返回指定机构详细信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="orgcode",value="机构编码",required=true,paramType="path"),
+    })
     public ResultInfo orgOnCode(@PathVariable("orgcode") String orgcode){
         SysOrg sysOrg = sysOrgService.selectByOrgCode(orgcode);
         return ResultInfo.ofData(ResultCode.SUCCESS,sysOrg);
@@ -102,6 +118,12 @@ public class OrgManageController {
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','INSERT_AUTH')")
     @PostMapping("/org")
     @ResponseBody
+    @ApiOperationSupport(order = 4)
+    @ApiOperation(value = "保存机构信息", notes = "保存机构信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="orgCode",value="机构编码",required=true,paramType="query"),
+    })
     public ResultInfo saveOrg(SysOrg sysOrg){
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         //父级ID为空，查询parentcode=-1的记录，默认parentcode=-1为根节点。如果没有记录那么新增节点作为根节点
@@ -131,6 +153,12 @@ public class OrgManageController {
      */
     @GetMapping("/org/{orgid}")
     @ResponseBody
+    @ApiOperationSupport(order = 3)
+    @ApiOperation(value = "根据机构id查询机构信息", notes = "根据机构id查询机构信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="orgid",value="机构ID",required=true,paramType="path"),
+    })
     public ResultInfo org(@PathVariable("orgid") String orgid){
         SysOrg sysOrg = sysOrgService.selectByPrimaryKey(Long.parseLong(orgid));
         return ResultInfo.ofData(ResultCode.SUCCESS,sysOrg);
@@ -143,8 +171,14 @@ public class OrgManageController {
      */
     @GetMapping("/orgRelation/{orgCode}")
     @ResponseBody
+    @ApiOperationSupport(order = 6)
+    @ApiOperation(value = "验证一个机构编码是否被其他表引用", notes = "验证一个机构编码是否被其他表引用",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="orgCode",value="机构编码",required=true,paramType="path")
+    })
     public ResultInfo orgRelation(@PathVariable("orgCode") String orgCode){
-        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UN_RELATION);
         Map<String,Object> resultMap = sysOrgService.orgRelation(orgCode);
         //是否被引用
         boolean isQuote = false;
@@ -158,13 +192,21 @@ public class OrgManageController {
     }
 
     /**
-     * 更新地区信息
+     * 更新机构信息
      * @param sysOrg
      * @return
      */
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','UPDATE_AUTH')")
     @PutMapping("/org")
     @ResponseBody
+    @ApiOperationSupport(order = 5)
+    @ApiOperation(value = "更新机构信息，orgCode不更新", notes = "更新机构信息，orgCode不更新",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id",value="机构ID",required=true,paramType="query",example = "0"),
+            @ApiImplicitParam(name="orgName",value="机构名称",required=false,paramType="query"),
+            @ApiImplicitParam(name="areaCode",value="所属地区编码",required=false,paramType="query")
+    })
     public ResultInfo updateOrg(SysOrg sysOrg){
         //父级ID为空，查询parentcode=-1的记录，默认parentcode=-1为根节点。如果没有记录那么新增节点作为根节点
         if(sysOrg.getParentCode() == null && (sysOrg.getParentCode() != null && sysOrg.getParentCode().trim().equals(""))){
@@ -189,9 +231,19 @@ public class OrgManageController {
      * @return
      */
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','UPDATE_AUTH')")
-    @PutMapping("/org/{orgCode}")
+    @PutMapping("/org/{oldOrgCode}")
     @ResponseBody
-    public ResultInfo updateAreaWithFK(SysOrg sysOrg,@PathVariable("orgCode") String orgCode){
+    @ApiOperationSupport(order = 7)
+    @ApiOperation(value = "更新机构信息，orgCode也更新", notes = "更新机构信息，orgCode不更新",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id",value="机构ID",required=true,paramType="query"),
+            @ApiImplicitParam(name="orgName",value="机构名称",required=false,paramType="query"),
+            @ApiImplicitParam(name="orgCode",value="新编码",required=true,paramType="query"),
+            @ApiImplicitParam(name="areaCode",value="所属地区编码",required=false,paramType="query"),
+            @ApiImplicitParam(name="oldOrgCode",value="原始机构编码",required=false,paramType="path")
+    })
+    public ResultInfo updateAreaWithFK(SysOrg sysOrg,@PathVariable("oldOrgCode") String orgCode){
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         //父级ID为空，查询parentcode=-1的记录，默认parentcode=-1为根节点。如果没有记录那么新增节点作为根节点
         if(sysOrg.getParentCode() == null && (sysOrg.getParentCode() != null && sysOrg.getParentCode().trim().equals(""))){
@@ -231,6 +283,12 @@ public class OrgManageController {
     @PreAuthorize("hasAnyAuthority('ADMIN_AUTH','DELETE_AUTH')")
     @DeleteMapping("/org/{id}")
     @ResponseBody
+    @ApiOperationSupport(order = 8)
+    @ApiOperation(value = "删除机构信息", notes = "删除机构信息",
+            consumes = "application/x-www-form-urlencoded",produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id",value="机构ID",required=true,paramType="path"),
+    })
     public ResultInfo deleteOrg(@PathVariable("id") Long id){
         int num = sysOrgService.deleteByPrimaryKey(id);
         ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);

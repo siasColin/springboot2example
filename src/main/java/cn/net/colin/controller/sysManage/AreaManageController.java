@@ -246,7 +246,7 @@ public class AreaManageController {
             @ApiImplicitParam(name="id",value="地区ID",required=true,paramType="query",example = "0"),
             @ApiImplicitParam(name="areaName",value="地区名称",required=false,paramType="query"),
             @ApiImplicitParam(name="oldAreaCode",value="更新前的地区编码",required=true,paramType="path"),
-            @ApiImplicitParam(name="areaCode",value="更新后的地区编码",required=true,paramType="query"),
+            @ApiImplicitParam(name="areaCode",value="新的地区编码",required=true,paramType="query"),
             @ApiImplicitParam(name="areaLevel",value="地区等级(0 国家 1 省 2 直辖市 3 地级市 4 县 5 乡/镇 6 村)",required=false,paramType="query"),
             @ApiImplicitParam(name="parentCode",value="父级地区编码",required=false,paramType="query"),
             @ApiImplicitParam(name="longitude",value="经度",required=false,paramType="query",example = "116.403406"),
@@ -311,7 +311,7 @@ public class AreaManageController {
             @ApiImplicitParam(name="areaCode",value="地区编码",required=true,paramType="path"),
     })
     public ResultInfo areaRelation(@PathVariable("areaCode") String areaCode){
-        ResultInfo resultInfo = ResultInfo.of(ResultCode.UNKNOWN_ERROR);
+        ResultInfo resultInfo = ResultInfo.of(ResultCode.UN_RELATION);
         Map<String,Object> resultMap = sysAreaService.areaRelation(areaCode);
         //是否被引用
         boolean isQuote = false;

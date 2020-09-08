@@ -38,7 +38,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label"><span class="span-red">*</span>登录名</label>
                     <div class="layui-input-block">
-                        <input th:value="${sysUser!=null}?${sysUser.loginName}" type="text" id="loginName" name="loginName" tableColumn="login_name" lay-verify="required|dasLength|repeatCheck" daslength="30" placeholder="请输入登录" autocomplete="off" class="layui-input">
+                        <input th:readonly="${sysUser!=null}" th:value="${sysUser!=null}?${sysUser.loginName}" type="text" id="loginName" name="loginName" tableColumn="login_name" lay-verify="required|dasLength|repeatCheck" daslength="30" placeholder="请输入登录" autocomplete="off" class="layui-input">
                     </div>
                 </div>
             </div>

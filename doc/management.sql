@@ -296,10 +296,9 @@ CREATE TABLE `sys_quartz`  (
 -- ----------------------------
 -- Records of sys_quartz
 -- ----------------------------
-INSERT INTO `sys_quartz` VALUES (2, '测试2', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `sys_quartz` VALUES (4, '测试4', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `sys_quartz` VALUES (5, '测试5', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, '2020-05-13 17:52:30', '2020-05-13 17:52:30', NULL, NULL, NULL);
-INSERT INTO `sys_quartz` VALUES (6, '测试6', '0 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, '2020-05-25 15:19:00', '2020-05-25 15:19:00', NULL, NULL, NULL);
+INSERT INTO `sys_quartz` VALUES (2, '测试2', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, '2020-07-29 14:40:30', '2020-07-29 14:40:30', '1', NULL, NULL);
+INSERT INTO `sys_quartz` VALUES (4, '测试4', '0/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, '2020-07-29 14:40:30', '2020-07-29 14:40:30', '1', NULL, NULL);
+INSERT INTO `sys_quartz` VALUES (5, '测试5', '1/30 * * * * ?', 'cn.net.colin.quartz.job.HelloJob', 0, NULL, '2020-07-29 14:40:01', '2020-07-29 14:40:01', '0', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_role
