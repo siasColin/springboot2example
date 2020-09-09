@@ -66,8 +66,22 @@ public class MyErrorController implements ErrorController {
     @RequestMapping("/error")
     @ResponseBody
     public ResultInfo handleError(HttpServletRequest request) {
-        ResultInfo result = request.getAttribute("ext") == null ? ResultInfo.of(ResultCode.UNKNOWN_ERROR) :
-                (ResultInfo) request.getAttribute("ext");
+        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+        ResultInfo result = null;
+        if(statusCode == 400) {
+            result = ResultInfo.of(ResultCode.STATUS_CODE_400);
+        }else if(statusCode == 403) {
+            result = ResultInfo.of(ResultCode.STATUS_CODE_403);
+        }else if(statusCode == 404) {
+            result = ResultInfo.of(ResultCode.STATUS_CODE_404);
+        }else if(statusCode == 405) {
+            result = ResultInfo.of(ResultCode.STATUS_CODE_405);
+        }else if(statusCode == 500) {
+            result = ResultInfo.of(ResultCode.STATUS_CODE_500);
+        }else{
+            result = request.getAttribute("ext") == null ? ResultInfo.of(ResultCode.UNKNOWN_ERROR) :
+                    (ResultInfo) request.getAttribute("ext");
+        }
         return result;
     }
 
