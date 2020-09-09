@@ -79,7 +79,7 @@ function setSecondMenu(data) {
         //得到二级菜单对应的三级菜单
         var thirdMenu = data["secondMenu_" + moduleId];
 
-        var secondmenuurl = secondMenu[i].moduleUrl;
+        var secondmenuurl = secondMenu[i].moduleUrl == null ? "" : secondMenu[i].moduleUrl;
 
         //判断如果不是以http开头,说明是系统内菜单，加上项目路径
         if (!(secondmenuurl.indexOf("http") != 0 || secondmenuurl.indexOf("https") != 0)) {
@@ -97,7 +97,7 @@ function setSecondMenu(data) {
         if (!$.isEmpty(thirdMenu) && thirdMenu.length > 0) {
             html += '<ul class="submenu">';
             for (var j = 0; j < thirdMenu.length; j++) {
-                var urlPa = thirdMenu[j].moduleUrl;
+                var urlPa = thirdMenu[j].moduleUrl == null ? "" : thirdMenu[j].moduleUrl;
                 if (!(urlPa.indexOf("http") != 0 || urlPa.indexOf("https") != 0)) {
                     urlPa = Common.ctxPath + urlPa;
                 }
