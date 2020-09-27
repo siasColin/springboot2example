@@ -2,7 +2,7 @@ package cn.net.colin.controller.articleManage;
 
 import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.exception.entity.ResultInfo;
-import cn.net.colin.common.util.SnowflakeIdWorker;
+import cn.net.colin.common.util.IdWorker;
 import cn.net.colin.common.util.SpringSecurityUtil;
 import cn.net.colin.model.articleManage.*;
 import cn.net.colin.model.sysManage.SysUser;
@@ -58,7 +58,7 @@ public class ArticleManageController {
     @PostMapping("/article")
     @ResponseBody
     public ResultInfo saveArticle(ArticleInfo articleInfo){
-        articleInfo.setId(SnowflakeIdWorker.generateId());
+        articleInfo.setId(IdWorker.getInstance().generateId());
         articleInfo.setCreateTime(new Date());
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         if(sysUser != null){
@@ -259,7 +259,7 @@ public class ArticleManageController {
     @PostMapping("/comment")
     @ResponseBody
     public ResultInfo saveComment(ArticleComment articleComment){
-        articleComment.setId(SnowflakeIdWorker.generateId());
+        articleComment.setId(IdWorker.getInstance().generateId());
         articleComment.setCommentTime(new Date());
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         if(sysUser != null){
@@ -429,7 +429,7 @@ public class ArticleManageController {
         try{
             SysUser sysUser = SpringSecurityUtil.getPrincipal();
             if(sysUser != null && sysUser.getId() != null){
-                articleLikes.setId(SnowflakeIdWorker.generateId());
+                articleLikes.setId(IdWorker.getInstance().generateId());
                 articleLikes.setCreateTime(new Date());
                 articleLikes.setUserId(sysUser.getId());
                 int num = articleLikesService.insertSelective(articleLikes);

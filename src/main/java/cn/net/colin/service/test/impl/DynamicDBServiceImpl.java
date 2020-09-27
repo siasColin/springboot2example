@@ -2,16 +2,12 @@ package cn.net.colin.service.test.impl;
 
 import cn.net.colin.common.aop.DataSourceAnnotation;
 import cn.net.colin.common.util.DynamicDataSourceSwitcher;
-import cn.net.colin.common.util.SnowflakeIdWorker;
+import cn.net.colin.common.util.IdWorker;
 import cn.net.colin.mapper.sysManage.SysAreaMapper;
 import cn.net.colin.model.sysManage.SysArea;
 import cn.net.colin.service.test.IDynamicDBService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by sxf on 2020-3-1.
@@ -39,7 +35,7 @@ public class DynamicDBServiceImpl implements IDynamicDBService {
 //    @Transactional(rollbackFor = Exception.class)
     public void testTransactional_db1() {
         SysArea sysArea = new SysArea();
-        sysArea.setId(SnowflakeIdWorker.generateId());
+        sysArea.setId(IdWorker.getInstance().generateId());
         sysArea.setAreaCode(sysArea.getId()+"");
         sysArea.setAreaName(sysArea.getId()+"name");
         sysArea.setParentCode("0");
@@ -52,7 +48,7 @@ public class DynamicDBServiceImpl implements IDynamicDBService {
     @DataSourceAnnotation(DynamicDataSourceSwitcher.db2)
     public void testTransactional_db2() {
         SysArea sysArea = new SysArea();
-        sysArea.setId(SnowflakeIdWorker.generateId());
+        sysArea.setId(IdWorker.getInstance().generateId());
         sysArea.setAreaCode(sysArea.getId()+"");
         sysArea.setAreaName(sysArea.getId()+"name");
         sysArea.setParentCode("0");

@@ -2,8 +2,8 @@ package cn.net.colin.controller.quartzManage;
 
 import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.exception.entity.ResultInfo;
+import cn.net.colin.common.util.IdWorker;
 import cn.net.colin.common.util.JsonUtils;
-import cn.net.colin.common.util.SnowflakeIdWorker;
 import cn.net.colin.model.quartzManage.SysQuartz;
 import cn.net.colin.quartz.util.QuartzManager;
 import cn.net.colin.service.quartzManage.ISysQuzrtzService;
@@ -84,7 +84,7 @@ public class QuartzManageController {
     @ResponseBody
     public ResultInfo saveQuartz(SysQuartz sysQuartz){
         sysQuartz.setRunning(1);
-        sysQuartz.setId(SnowflakeIdWorker.generateId());
+        sysQuartz.setId(IdWorker.getInstance().generateId());
         if(sysQuartz.getParams() != null && !sysQuartz.getParams().trim().equals("")){//格式化json字符串
             sysQuartz.setParams(JsonUtils.jsonPretty(sysQuartz.getParams()));
         }

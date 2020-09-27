@@ -2,7 +2,7 @@ package cn.net.colin.controller.sysManage;
 
 import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.exception.entity.ResultInfo;
-import cn.net.colin.common.util.SnowflakeIdWorker;
+import cn.net.colin.common.util.IdWorker;
 import cn.net.colin.common.util.SpringSecurityUtil;
 import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.SysOrg;
@@ -135,7 +135,7 @@ public class OrgManageController {
                 sysOrg.setParentCode("-1");
             }
         }
-        sysOrg.setId(SnowflakeIdWorker.generateId());
+        sysOrg.setId(IdWorker.getInstance().generateId());
         sysOrg.setCreateTime(new Date());
         sysOrg.setCreateUser(sysUser.getLoginName());
         int num = sysOrgService.insertSelective(sysOrg);

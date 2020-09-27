@@ -2,6 +2,7 @@ package cn.net.colin.controller.sysManage;
 
 import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.exception.entity.ResultInfo;
+import cn.net.colin.common.util.IdWorker;
 import cn.net.colin.common.util.SnowflakeIdWorker;
 import cn.net.colin.common.util.SpringSecurityUtil;
 import cn.net.colin.model.sysManage.SysUser;
@@ -102,7 +103,7 @@ public class UserManageController {
     })
     public ResultInfo saveUser(SysUser user,String [] roleIds){
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
-        user.setId(SnowflakeIdWorker.generateId());
+        user.setId(IdWorker.getInstance().generateId());
         user.setCreateTime(new Date());
         if(sysUser != null){
             user.setCreateUser(sysUser.getLoginName());

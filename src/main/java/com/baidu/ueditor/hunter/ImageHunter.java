@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import cn.net.colin.common.util.GetServerRealPathUnit;
 import com.baidu.ueditor.PathFormat;
 import com.baidu.ueditor.define.AppInfo;
 import com.baidu.ueditor.define.BaseState;
@@ -35,7 +36,8 @@ public class ImageHunter {
 		
 		this.filename = (String)conf.get( "filename" );
 		this.savePath = (String)conf.get( "savePath" );
-		this.rootPath = (String)conf.get( "rootPath" );
+//		this.rootPath = (String)conf.get( "rootPath" );
+		this.rootPath = GetServerRealPathUnit.getPath("static");
 		this.maxSize = (Long)conf.get( "maxSize" );
 		this.allowTypes = Arrays.asList( (String[])conf.get( "allowFiles" ) );
 		this.filters = Arrays.asList( (String[])conf.get( "filter" ) );

@@ -2,16 +2,14 @@ package cn.net.colin.controller.sysManage;
 
 import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.exception.entity.ResultInfo;
-import cn.net.colin.common.util.SnowflakeIdWorker;
+import cn.net.colin.common.util.IdWorker;
 import cn.net.colin.common.util.SpringSecurityUtil;
 import cn.net.colin.model.common.TreeNode;
 import cn.net.colin.model.sysManage.*;
 import cn.net.colin.service.sysManage.ISysOrgService;
 import cn.net.colin.service.sysManage.ISysRoleService;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,7 +125,7 @@ public class RoleManageController {
     })
     public ResultInfo saveRole(SysRole sysRole,String [] systemPermissions){
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
-        sysRole.setId(SnowflakeIdWorker.generateId());
+        sysRole.setId(IdWorker.getInstance().generateId());
         sysRole.setCreateTime(new Date());
         if(sysUser != null){
             sysRole.setCreateUser(sysUser.getLoginName());

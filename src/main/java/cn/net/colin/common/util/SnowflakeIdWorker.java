@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 /**
  * Twitter_Snowflake<br>
  * SnowFlake的结构如下(每部分用-分开):<br>
@@ -69,8 +71,15 @@ public class SnowflakeIdWorker {
 
     private static SnowflakeIdWorker idWorker;
 
+    /** id池，可一定程度上减小时间回拨造成的影响 */
+    private static ConcurrentLinkedQueue<Long> idQueue;
+
     static {
         idWorker = new SnowflakeIdWorker(getWorkId(),getDataCenterId());
+        idQueue = new ConcurrentLinkedQueue<Long>();
+        for (int i = 0; i < 100000; i++) {// id池 初始化放入10W id,可以根据业务需求适当调整这个数值以减小时间回拨造成的影响
+            idQueue.offer(idWorker.nextId());
+        }
     }
 
     //==============================Constructors=====================================
@@ -184,15 +193,20 @@ public class SnowflakeIdWorker {
      * @return
      */
     public static Long generateId(){
-        long id = idWorker.nextId();
-        return id;
+//        long id = idWorker.nextId();
+        try {
+            idQueue.offer(idWorker.nextId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return idQueue.poll();
     }
 
     /** 测试 */
     public static void main(String[] args) {
         System.out.println(System.currentTimeMillis());
         long startTime = System.nanoTime();
-        for (int i = 0; i < 50000; i++) {
+        for (int i = 0; i < 20; i++) {
             long id = SnowflakeIdWorker.generateId();
             System.out.println(id);
         }

@@ -2,6 +2,7 @@ package cn.net.colin.common.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @Package: cn.net.colin
@@ -63,6 +64,9 @@ public class IdWorker {
      * 上次ID生成的时间
      */
     private long lastTimestamp = -1L;
+
+    /** id池，可一定程度上减小时间回拨造成的影响 */
+    private static ConcurrentLinkedQueue<Long> idQueue;
 
     /**
      * Constructor
@@ -150,14 +154,26 @@ public class IdWorker {
     }
 
     public static void init(Long serverNodeId) {
-//        System.out.println("serverNodeId:"+serverNodeId);
+        System.out.println("serverNodeId:"+serverNodeId);
         if (idWorker == null) {
             synchronized (IdWorker.class) {
                 if (idWorker == null) {
                     idWorker = new IdWorker(serverNodeId);
+                    idQueue = new ConcurrentLinkedQueue<Long>();
+                    for (int i = 0; i < 100000; i++) {// id池 初始化放入10W id,可以根据业务需求适当调整这个数值以减小时间回拨造成的影响
+                        idQueue.offer(idWorker.nextId());
+                    }
                 }
             }
         }
+    }
+    public Long generateId(){
+        try {
+            idQueue.offer(idWorker.nextId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return idQueue.poll();
     }
 
     public static void main(String[] args) {

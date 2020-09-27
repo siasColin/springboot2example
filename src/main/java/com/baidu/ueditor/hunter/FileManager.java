@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
+import cn.net.colin.common.util.GetServerRealPathUnit;
 import org.apache.commons.io.FileUtils;
 
 import com.baidu.ueditor.PathFormat;
@@ -22,7 +23,8 @@ public class FileManager {
 	
 	public FileManager ( Map<String, Object> conf ) {
 
-		this.rootPath = (String)conf.get( "rootPath" );
+//		this.rootPath = (String)conf.get( "rootPath" );
+		this.rootPath = GetServerRealPathUnit.getPath("static");
 		this.dir = this.rootPath + (String)conf.get( "dir" );
 		this.allowFiles = this.getAllowFiles( conf.get("allowFiles") );
 		this.count = (Integer)conf.get( "count" );

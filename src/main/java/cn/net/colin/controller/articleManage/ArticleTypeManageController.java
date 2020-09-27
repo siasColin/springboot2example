@@ -2,7 +2,7 @@ package cn.net.colin.controller.articleManage;
 
 import cn.net.colin.common.exception.entity.ResultCode;
 import cn.net.colin.common.exception.entity.ResultInfo;
-import cn.net.colin.common.util.SnowflakeIdWorker;
+import cn.net.colin.common.util.IdWorker;
 import cn.net.colin.common.util.SpringSecurityUtil;
 import cn.net.colin.model.articleManage.ArticleType;
 import cn.net.colin.model.articleManage.ArticleTypeCriteria;
@@ -84,7 +84,7 @@ public class ArticleTypeManageController {
     @PostMapping("/articleType")
     @ResponseBody
     public ResultInfo saveUser(ArticleType articleType){
-        articleType.setId(SnowflakeIdWorker.generateId());
+        articleType.setId(IdWorker.getInstance().generateId());
         articleType.setCreateTime(new Date());
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         if(sysUser != null){
