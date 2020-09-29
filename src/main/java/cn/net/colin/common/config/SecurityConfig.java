@@ -95,6 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //            .csrf().disable()
             //可以针对项目中对外提供的接口（基于jwt+rsa认证的）可在这里设置忽略csrf
             .csrf().ignoringAntMatchers("/auth/login",
+                "/common/login",
                 "/hello/*",
                 "/actuator/*",
                 "/common/uploadSingle",

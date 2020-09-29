@@ -11,11 +11,16 @@ import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +50,9 @@ public class CommonController {
 
     @Autowired
     private ICommonservice commonservice;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * 单文件上传
@@ -144,6 +152,30 @@ public class CommonController {
             e.printStackTrace();
         }
         return resultInfo;
+    }
+
+    @PostMapping("/login")
+    @ResponseBody
+    @ApiOperationSupport(order = 3)
+    @ApiOperation(value = "获取token", notes = "根据用户名密码获取token")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username",value = "用户名",paramType = "query",required = true),
+            @ApiImplicitParam(name = "password",value = "密码",paramType = "query",required = true)
+    })
+    public ResponseEntity<ResultInfo> login(String username,String password,HttpServletRequest request){
+        String path = request.getContextPath();
+        String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+        //请求头
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        //请求体
+        Map<String, Object> requestParam = new HashMap<>();
+        requestParam.put("username", username);
+        requestParam.put("password", password);
+        //封装成一个请求对象
+        HttpEntity entity = new HttpEntity(requestParam, headers);
+        ResponseEntity<ResultInfo> response = restTemplate.postForEntity(basePath+"auth/login", entity, ResultInfo.class);
+        return response;
     }
 
     /**

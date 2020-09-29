@@ -129,7 +129,7 @@ public class RoleManageController {
         sysRole.setCreateTime(new Date());
         if(sysUser != null){
             sysRole.setCreateUser(sysUser.getLoginName());
-            if(sysRole.getRoleAttr() == 1){//私有
+            if(sysRole.getRoleAttr() != null && sysRole.getRoleAttr() == 1){//私有
                 sysRole.setOrgCode(sysUser.getOrgCode());
             }
         }
@@ -175,7 +175,7 @@ public class RoleManageController {
     public ResultInfo updateRole(SysRole sysRole,String [] systemPermissions){
         SysUser sysUser = SpringSecurityUtil.getPrincipal();
         if(sysUser != null){
-            if(sysRole.getRoleAttr() == 1){//私有
+            if(sysRole.getRoleAttr() != null && sysRole.getRoleAttr() == 1){//私有
                 SysRole role = sysRoleService.selectByPrimaryKey(sysRole.getId());
                 if(role.getRoleAttr() != 1){//共享改私有
                     sysRole.setOrgCode(sysUser.getOrgCode());
