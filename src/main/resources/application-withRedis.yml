@@ -30,24 +30,8 @@ spring:
       filters: stat,wall,slf4j
       #   合并多个DruidDataSource的监控数据
       useGlobalDataSourceStat: true
-      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
-      stat-view-servlet:
-        enabled: true
-        login-username: admin
-        login-password: 123456
-        reset-enable: false
-        url-pattern: /druid/*
-        allow:
-      web-stat-filter:
-        # 添加过滤规则
-        url-pattern: /*
-        # 忽略过滤格式
-        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
-      aop-patterns: cn.net.colin.controller.*,cn.net.colin.service.*,cn.net.colin.mapper.*
-      filter:
-        wall:
-          config:
-            multi-statement-allow: true
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=3000
   redis:
     database: 0
     host: 127.0.0.1

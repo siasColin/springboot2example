@@ -75,16 +75,16 @@
 			<scope>runtime</scope>
 		</dependency>
 		<!--引入alibaba 连接池 druid-->
-		<!--<dependency>
+		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid</artifactId>
-			<version>1.1.20</version>
-		</dependency>-->
-		<dependency>
+			<version>1.1.21</version>
+		</dependency>
+		<!--<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid-spring-boot-starter</artifactId>
 			<version>1.1.21</version>
-		</dependency>
+		</dependency>-->
 		<!--mybatis 官方提供的和springboot整合的启动器-->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
@@ -96,6 +96,19 @@
 			<groupId>com.github.pagehelper</groupId>
 			<artifactId>pagehelper-spring-boot-starter</artifactId>
 			<version>1.2.13</version>
+		</dependency>
+		<!--整合sharding-jdbc-->
+		<dependency>
+			<groupId>org.apache.shardingsphere</groupId>
+			<artifactId>sharding-jdbc-spring-boot-starter</artifactId>
+			<version>4.1.1</version>
+			<exclusions>
+				<!--guava版本和swagger冲突，排除-->
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!--整合spring-session-->
 		<dependency>
